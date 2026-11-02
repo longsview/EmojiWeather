@@ -9,6 +9,7 @@ enum PlusFeature: CaseIterable, Identifiable {
     case noAds
     case unlimitedCities
     case widgets
+    case weatherMap
     case scenePacks
     case customEmoji
     case cleanShareClips
@@ -20,6 +21,7 @@ enum PlusFeature: CaseIterable, Identifiable {
         case .noAds: "🙅"
         case .unlimitedCities: "🌍"
         case .widgets: "🧩"
+        case .weatherMap: "🗺️"
         case .scenePacks: "🎃"
         case .customEmoji: "🎨"
         case .cleanShareClips: "🎬"
@@ -31,6 +33,7 @@ enum PlusFeature: CaseIterable, Identifiable {
         case .noAds: "No ads, ever"
         case .unlimitedCities: "Unlimited cities"
         case .widgets: "Home and Lock Screen widgets"
+        case .weatherMap: "Emoji weather map"
         case .scenePacks: "Seasonal scene packs"
         case .customEmoji: "Pick your own weather emoji"
         case .cleanShareClips: "Share clips without the watermark"

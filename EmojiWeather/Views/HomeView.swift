@@ -1,3 +1,4 @@
+import CoreLocation
 import SwiftUI
 
 /// iPhone: full-screen pages, one per place; swipe left and right between them.
@@ -6,12 +7,15 @@ struct HomeView: View {
     @Environment(CityStore.self) private var cityStore
     @Environment(PurchaseManager.self) private var purchases
     @Environment(AdsManager.self) private var ads
+    @Environment(LocationService.self) private var location
     @Environment(\.horizontalSizeClass) private var sizeClass
 
     /// Per device on purpose: each device remembers which place it was last showing.
     @AppStorage("selectedPlaceID") private var selectedPlaceID = Place.currentLocationID
 
     @State private var showingPlaces = false
+    @State private var showingMap = false
+    @State private var showingPaywall = false
     @State private var previewScene: WeatherScene?
     @State private var showingGallery = false
     /// The visible page's scene. On iPhone it's drawn once behind all pages, so swiping
@@ -46,6 +50,12 @@ struct HomeView: View {
         .preferredColorScheme(activeSky.isDark ? .dark : .light)
         .sheet(isPresented: $showingPlaces) {
             PlacesView(selectedPlaceID: $selectedPlaceID)
+        }
+        .fullScreenCover(isPresented: $showingMap) {
+            WeatherMapView(center: mapCenter)
+        }
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView(reason: "The emoji weather map is part of EmojiWeather+.")
         }
         #if DEBUG
         .fullScreenCover(isPresented: $showingGallery) {
@@ -124,6 +134,7 @@ struct HomeView: View {
             debugMenu
             #endif
             Spacer()
+            mapButton(circled: true)
             Button {
                 showingPlaces = true
             } label: {
@@ -145,6 +156,9 @@ struct HomeView: View {
                     ToolbarItem(placement: .topBarTrailing) { debugMenu }
                 }
                 #endif
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) { mapButton(circled: false) }
+                }
         } detail: {
             CityPageView(
                 place: currentPlace,
@@ -162,6 +176,31 @@ struct HomeView: View {
     }
 
     // MARK: - Shared
+
+    /// Plus only in Release; open to everyone in Debug for testing.
+    private var mapUnlocked: Bool {
+        #if DEBUG
+        true
+        #else
+        purchases.hasPlus
+        #endif
+    }
+
+    private var mapCenter: CLLocationCoordinate2D? {
+        switch currentPlace {
+        case .currentLocation: location.location?.coordinate
+        case .city(let city): city.location.coordinate
+        }
+    }
+
+    private func mapButton(circled: Bool) -> some View {
+        Button {
+            if mapUnlocked { showingMap = true } else { showingPaywall = true }
+        } label: {
+            if circled { circleIcon("map") } else { Image(systemName: "map") }
+        }
+        .accessibilityLabel("Weather map")
+    }
 
     private func circleIcon(_ systemName: String) -> some View {
         Image(systemName: systemName)
