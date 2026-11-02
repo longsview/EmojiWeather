@@ -40,15 +40,22 @@ struct SelectPlaceIntent: WidgetConfigurationIntent {
     init() {}
 }
 
-/// The widget's arrow button: shows the next place.
-struct NextPlaceIntent: AppIntent {
-    static var title: LocalizedStringResource = "Next Place"
+/// The widget's back and next buttons.
+struct StepPlaceIntent: AppIntent {
+    static var title: LocalizedStringResource = "Change Place"
     static var isDiscoverable = false
+
+    @Parameter(title: "Forward")
+    var forward: Bool
 
     init() {}
 
+    init(forward: Bool) {
+        self.forward = forward
+    }
+
     func perform() async throws -> some IntentResult {
-        SharedStore.cycleIndex += 1
+        SharedStore.cycleIndex += forward ? 1 : -1
         return .result()
     }
 }

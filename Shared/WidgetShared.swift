@@ -11,7 +11,8 @@ enum SharedStore {
     private static let cycleIndexKey = "widget.cycleIndex"
     private static func weatherKey(_ placeID: String) -> String { "widget.weather.v1.\(placeID)" }
 
-    static var defaults: UserDefaults { UserDefaults(suiteName: appGroup) ?? .standard }
+    /// One instance for the process; creating a suite per read makes cfprefsd noisy.
+    static let defaults: UserDefaults = UserDefaults(suiteName: appGroup) ?? .standard
 
     static var places: [WidgetPlace] {
         get { decode([WidgetPlace].self, forKey: placesKey) ?? [] }

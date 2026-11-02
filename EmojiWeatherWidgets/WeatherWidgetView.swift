@@ -71,23 +71,43 @@ private struct HomeWidgetView: View {
             layoutBody
         }
         .foregroundStyle(sky.textColor)
+        // Widgets render dates with the environment's time zone, so set it to the place's.
+        .environment(\.timeZone, place.timeZone)
     }
+
+    /// Back and next, pinned to the right edge so they never cover the temperature.
+    @ViewBuilder
+    private var placeButtons: some View {
+        if entry.isCycling {
+            VStack(spacing: 8) {
+                PlaceStepButton(direction: .previous, tint: sky.textColor)
+                PlaceStepButton(direction: .next, tint: sky.textColor)
+            }
+            .padding(.trailing, 8)
+        }
+    }
+
+    /// Room the text leaves for the buttons.
+    private var buttonInset: CGFloat { entry.isCycling ? 34 : 0 }
 
     @ViewBuilder
     private var layoutBody: some View {
         switch layout {
         case .small:
-            sceneCard
+            sceneCard(textInset: buttonInset)
+                .overlay(alignment: .trailing) { placeButtons.padding(.top, 30) }
         case .medium:
             HStack(spacing: 0) {
-                sceneCard
+                sceneCard(textInset: 0)
                 HourlyStrip(hours: Array(weather.hours.prefix(5)), timeZone: place.timeZone)
-                    .padding(.trailing, 14)
+                    .padding(.trailing, 14 + buttonInset)
                     .padding(.vertical, 16)
             }
+            .overlay(alignment: .trailing) { placeButtons }
         case .large:
             VStack(spacing: 0) {
-                sceneCard
+                sceneCard(textInset: buttonInset)
+                    .overlay(alignment: .trailing) { placeButtons.padding(.top, 40) }
                     .frame(maxHeight: .infinity)
                 VStack(spacing: 12) {
                     HourlyStrip(hours: Array(weather.hours.prefix(6)), timeZone: place.timeZone)
@@ -100,7 +120,7 @@ private struct HomeWidgetView: View {
         }
     }
 
-    private var sceneCard: some View {
+    private func sceneCard(textInset: CGFloat) -> some View {
         ZStack(alignment: .topLeading) {
             SceneDecor(scene: weather.weatherScene, compact: layout == .small)
 
@@ -111,6 +131,7 @@ private struct HomeWidgetView: View {
                     .minimumScaleFactor(0.7)
                     .padding(.trailing, 44)
                 Text(entry.date, format: Date.FormatStyle(timeZone: place.timeZone).hour().minute())
+                    .id(place.id)
                     .font(.system(.caption, design: .rounded, weight: .semibold))
                     .opacity(0.7)
 
@@ -129,17 +150,12 @@ private struct HomeWidgetView: View {
                     }
                 }
                 .font(.system(.caption, design: .rounded, weight: .semibold))
+                .padding(.trailing, textInset)
             }
             .foregroundStyle(sky.textColor)
             .shadow(color: sky.haloColor, radius: 4)
             .padding(14)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-
-            if entry.isCycling {
-                NextPlaceButton(tint: sky.textColor)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-                    .padding(10)
-            }
         }
     }
 }
@@ -180,7 +196,7 @@ private struct SceneDecor: View {
 
     /// Fixed spots, so the widget doesn't jump around between updates.
     private static let spots: [(x: CGFloat, y: CGFloat, size: CGFloat)] = [
-        (0.52, 0.30, 18), (0.90, 0.58, 16), (0.70, 0.50, 13), (0.95, 0.82, 12),
+        (0.52, 0.30, 18), (0.78, 0.62, 16), (0.66, 0.46, 13), (0.58, 0.80, 12),
     ]
 
     var body: some View {
@@ -309,7 +325,7 @@ private struct CycleButton<Content: View>: View {
 
     var body: some View {
         if enabled {
-            Button(intent: NextPlaceIntent()) { content }
+            Button(intent: StepPlaceIntent(forward: true)) { content }
                 .buttonStyle(.plain)
         } else {
             content
@@ -317,19 +333,22 @@ private struct CycleButton<Content: View>: View {
     }
 }
 
-private struct NextPlaceButton: View {
+private struct PlaceStepButton: View {
+    enum Direction { case previous, next }
+
+    let direction: Direction
     let tint: Color
 
     var body: some View {
-        Button(intent: NextPlaceIntent()) {
-            Image(systemName: "chevron.right")
+        Button(intent: StepPlaceIntent(forward: direction == .next)) {
+            Image(systemName: direction == .next ? "chevron.right" : "chevron.left")
                 .font(.system(size: 13, weight: .heavy))
                 .foregroundStyle(tint)
                 .frame(width: 28, height: 28)
                 .background(tint.opacity(0.12), in: Circle())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel("Next place")
+        .accessibilityLabel(direction == .next ? "Next place" : "Previous place")
     }
 }
 

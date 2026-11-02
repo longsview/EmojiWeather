@@ -12,6 +12,10 @@ struct WeatherEntry: TimelineEntry {
     let isCycling: Bool
     let placeCount: Int
 
+    func at(_ date: Date) -> WeatherEntry {
+        WeatherEntry(date: date, place: place, weather: weather, isUnlocked: isUnlocked, isCycling: isCycling, placeCount: placeCount)
+    }
+
     static let sample = WeatherEntry(
         date: .now,
         place: WidgetPlace(id: "sample", name: "Cupertino", latitude: 37.32, longitude: -122.03),
@@ -48,8 +52,14 @@ struct WeatherTimelineProvider: AppIntentTimelineProvider {
     }
 
     func timeline(for configuration: SelectPlaceIntent, in context: Context) async -> Timeline<WeatherEntry> {
-        let entry = await entry(for: configuration, allowFetch: true)
-        return Timeline(entries: [entry], policy: .after(.now.addingTimeInterval(30 * 60)))
+        let first = await entry(for: configuration, allowFetch: true)
+        // One entry a minute for the next half hour keeps the local time current.
+        let calendar = Calendar.current
+        let startOfMinute = calendar.dateInterval(of: .minute, for: .now)?.start ?? .now
+        let entries = [first] + (1...30).map { minute in
+            first.at(startOfMinute.addingTimeInterval(Double(minute) * 60))
+        }
+        return Timeline(entries: entries, policy: .atEnd)
     }
 
     private func entry(for configuration: SelectPlaceIntent, allowFetch: Bool) async -> WeatherEntry {
@@ -62,7 +72,7 @@ struct WeatherTimelineProvider: AppIntentTimelineProvider {
 
         let places = SharedStore.places
         let pinned = configuration.place.flatMap { pinned in places.first { $0.id == pinned.id } }
-        let place: WidgetPlace? = pinned ?? (places.isEmpty ? nil : places[abs(SharedStore.cycleIndex) % places.count])
+        let place: WidgetPlace? = pinned ?? (places.isEmpty ? nil : places[((SharedStore.cycleIndex % places.count) + places.count) % places.count])
 
         var weather = place.flatMap { SharedStore.weather(for: $0.id) }
         if allowFetch, isUnlocked, let place,
