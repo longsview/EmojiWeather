@@ -1,6 +1,9 @@
 import CoreLocation
+import os
 import SwiftUI
 import WeatherKit
+
+private let logger = Logger(subsystem: "EmojiWeather", category: "Weather")
 
 struct HomeView: View {
     @Environment(LocationService.self) private var location
@@ -67,6 +70,8 @@ struct HomeView: View {
 
                         if case .currentLocation = place, !location.isAuthorized {
                             LocationPermissionCard()
+                        } else if case .currentLocation = place, location.location == nil {
+                            locationStatus
                         }
 
                         if let snapshot {
@@ -89,7 +94,12 @@ struct HomeView: View {
                     .padding(.bottom, 32)
                 }
                 .scrollIndicators(.hidden)
-                .refreshable { await load(forceRefresh: true) }
+                .refreshable {
+                    if case .currentLocation = place, location.location == nil {
+                        location.refresh()
+                    }
+                    await load(forceRefresh: true)
+                }
             }
             .environment(\.colorScheme, .dark)
             .toolbar {
@@ -141,6 +151,21 @@ struct HomeView: View {
         .shadow(color: .black.opacity(0.35), radius: 6, y: 2)
     }
 
+    private var locationStatus: some View {
+        HStack(spacing: 10) {
+            if location.isLocating {
+                ProgressView()
+                Text("Finding your location…")
+            } else {
+                Text(location.failureMessage ?? "Waiting for your location…")
+            }
+        }
+        .font(.subheadline)
+        .frame(maxWidth: .infinity)
+        .padding()
+        .background(.ultraThinMaterial, in: .rect(cornerRadius: 20))
+    }
+
     #if DEBUG
     private var debugMenu: some View {
         Menu {
@@ -174,7 +199,13 @@ struct HomeView: View {
         } catch is CancellationError {
             // The user switched places; the next load takes over.
         } catch {
+            logger.error("WeatherKit failed: \(String(describing: error), privacy: .public)")
+            #if DEBUG
+            // Usually WeatherKit isn't enabled for the App ID yet, or signing has no team.
+            errorMessage = "Couldn't load the weather.\n\(error.localizedDescription)\nCheck that WeatherKit is enabled for this App ID (Capabilities and App Services)."
+            #else
             errorMessage = "Couldn't load the weather. Pull down to try again."
+            #endif
         }
     }
 }

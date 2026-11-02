@@ -1,6 +1,7 @@
 import CoreLocation
 import Foundation
 import Observation
+import os
 
 /// Asks for "When In Use" location permission and provides the user's current location.
 /// City-level accuracy is plenty for weather and is easier on the battery.
@@ -11,6 +12,12 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
     private(set) var location: CLLocation?
     /// A short name for the current location, such as "Cupertino".
     private(set) var placeName: String?
+    /// True while waiting for the first location fix.
+    private(set) var isLocating = false
+    /// Set when Core Location couldn't get a fix, so the UI can say so instead of showing nothing.
+    private(set) var failureMessage: String?
+
+    @ObservationIgnored private let logger = Logger(subsystem: "EmojiWeather", category: "Location")
 
     @ObservationIgnored private let manager: CLLocationManager
     @ObservationIgnored private let geocoder = CLGeocoder()
@@ -41,6 +48,8 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
 
     func refresh() {
         guard isAuthorized else { return }
+        isLocating = location == nil
+        failureMessage = nil
         manager.requestLocation()
     }
 
@@ -62,13 +71,28 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
     }
 
     nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        // Usually a temporary failure (no GPS fix yet). The next refresh will try again.
+        let code = (error as? CLError)?.code
+        let description = error.localizedDescription
+        Task { @MainActor in
+            self.logger.error("Location failed: \(description, privacy: .public)")
+            self.isLocating = false
+            guard self.location == nil else { return }
+            #if targetEnvironment(simulator)
+            self.failureMessage = "The simulator has no location set. In the Simulator menu, choose Features > Location > Apple, then pull down to refresh."
+            #else
+            self.failureMessage = code == .denied
+                ? "Location access is off."
+                : "Couldn't find your location. Pull down to try again."
+            #endif
+        }
     }
 
     private func update(to newLocation: CLLocation) async {
         // Ignore small moves so the weather isn't refetched for every few meters.
         if let location, location.distance(from: newLocation) < 1_000, placeName != nil { return }
         location = newLocation
+        isLocating = false
+        failureMessage = nil
         let placemark = try? await geocoder.reverseGeocodeLocation(newLocation).first
         placeName = placemark?.locality ?? placemark?.name
     }
