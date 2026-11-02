@@ -157,7 +157,13 @@ final class EmojiParticleSystem {
         let fontSize = Double.random(in: emitter.size)
         let jitter = emitter.angleJitter > 0 ? Double.random(in: -emitter.angleJitter...emitter.angleJitter) : 0
         // Tilting the phone right pulls the stream toward the right (a smaller angle).
-        let degrees = emitter.angle + jitter - tilt * emitter.tiltResponse
+        let baseAngle: Double
+        if let rays = emitter.rays, let ray = rays.randomElement() {
+            baseAngle = ray + elapsed * emitter.rayRotation
+        } else {
+            baseAngle = emitter.angle
+        }
+        let degrees = baseAngle + jitter - tilt * emitter.tiltResponse
         let radians = degrees * .pi / 180
         let speed = Double.random(in: emitter.speed) * speedScale
 

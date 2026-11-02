@@ -101,51 +101,32 @@ struct CityPageView: View {
 
     // MARK: - First page
 
+    private var isCurrentLocation: Bool {
+        if case .currentLocation = place { return true }
+        return false
+    }
+
+    @ViewBuilder
     private var summary: some View {
-        VStack(spacing: 4) {
-            HStack(spacing: 6) {
-                if case .currentLocation = place {
-                    Image(systemName: "location.fill").font(.subheadline)
-                }
-                Text(placeName)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
-            }
-            .font(.system(.title2, design: .rounded, weight: .bold))
-
-            if let current = snapshot?.current {
-                Text(current.temperature.shortTemperature)
-                    .font(.system(size: 112, weight: .heavy, design: .rounded))
-                    .contentTransition(.numericText())
-                    .padding(.vertical, -10)
-
-                Text(current.condition.description)
-                    .font(.system(.title3, design: .rounded, weight: .semibold))
-
-                if let today = snapshot?.daily.first {
-                    HStack(spacing: 14) {
-                        Label(today.highTemperature.shortTemperature, systemImage: "arrow.up")
-                        Label(today.lowTemperature.shortTemperature, systemImage: "arrow.down")
-                    }
-                    .font(.system(.headline, design: .rounded))
-                    .labelStyle(TightLabelStyle())
-                }
-
-                Text(sceneConditions.scene.tagline)
-                    .font(.system(.body, design: .rounded))
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
-                    .padding(.top, 6)
-            } else {
+        if let current = snapshot?.current {
+            WeatherSummaryView(
+                placeName: placeName,
+                showsLocationIcon: isCurrentLocation,
+                temperature: current.temperature.shortTemperature,
+                condition: current.condition.description,
+                high: snapshot?.daily.first?.highTemperature.shortTemperature,
+                low: snapshot?.daily.first?.lowTemperature.shortTemperature,
+                tagline: sceneConditions.scene.tagline
+            )
+        } else {
+            VStack(spacing: 16) {
+                PlaceNameRow(placeName: placeName, showsLocationIcon: isCurrentLocation)
                 status
-                    .padding(.top, 16)
             }
+            .foregroundStyle(.black)
+            .frame(maxWidth: .infinity)
+            .readableOverEmoji()
         }
-        .foregroundStyle(.black)
-        .frame(maxWidth: .infinity)
-        // A soft white halo keeps text readable where it overlaps falling emoji.
-        .shadow(color: .white, radius: 8)
-        .shadow(color: .white, radius: 8)
     }
 
     @ViewBuilder
@@ -224,15 +205,6 @@ struct CityPageView: View {
             #else
             errorMessage = "Couldn't load the weather."
             #endif
-        }
-    }
-}
-
-private struct TightLabelStyle: LabelStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        HStack(spacing: 2) {
-            configuration.icon.font(.caption.weight(.heavy))
-            configuration.title
         }
     }
 }

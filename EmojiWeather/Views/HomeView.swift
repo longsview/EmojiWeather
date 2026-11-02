@@ -11,6 +11,7 @@ struct HomeView: View {
 
     @State private var showingPlaces = false
     @State private var previewScene: WeatherScene?
+    @State private var showingGallery = false
 
     private var places: [Place] {
         [.currentLocation] + cityStore.cities.map { Place.city($0) }
@@ -51,6 +52,11 @@ struct HomeView: View {
         .sheet(isPresented: $showingPlaces) {
             PlacesView(selectedPlaceID: $selectedPlaceID)
         }
+        #if DEBUG
+        .fullScreenCover(isPresented: $showingGallery) {
+            SceneGalleryView()
+        }
+        #endif
     }
 
     private var topBar: some View {
@@ -76,7 +82,12 @@ struct HomeView: View {
     #if DEBUG
     private var debugMenu: some View {
         Menu {
-            Picker("Scene", selection: $previewScene) {
+            Button {
+                showingGallery = true
+            } label: {
+                Label("Scene Gallery", systemImage: "square.grid.2x2")
+            }
+            Picker("Show scene on every page", selection: $previewScene) {
                 Text("Live weather").tag(WeatherScene?.none)
                 ForEach(WeatherScene.allCases) { scene in
                     Text("\(scene.emoji) \(scene.title)").tag(Optional(scene))

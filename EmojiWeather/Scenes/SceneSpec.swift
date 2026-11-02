@@ -56,6 +56,10 @@ struct EmitterSpec {
     var tiltResponse: Double = 0
     /// Whether `SceneConditions.intensity` scales the rate.
     var followsIntensity = false
+    /// For sun rays: particles leave only along these angles (degrees), so they form lines.
+    var rays: [Double]? = nil
+    /// Degrees per second the rays slowly turn.
+    var rayRotation: Double = 0
 }
 
 /// A big emoji that stays roughly in place. Groups of these build shapes: a sun made of a ring of
@@ -98,6 +102,9 @@ struct SceneSpec {
 
 /// Where the main emoji shape sits. The text sits below it.
 private let artCenter = UnitPoint(x: 0.5, y: 0.27)
+/// The sun and moon sit up in a corner, not in the middle.
+private let sunCorner = UnitPoint(x: 0.16, y: 0.11)
+private let moonCorner = UnitPoint(x: 0.8, y: 0.12)
 private let cloudLine = UnitPoint(x: 0.5, y: 0.17)
 
 extension SceneSpec {
@@ -110,53 +117,45 @@ extension SceneSpec {
         case .sunny:
             return SceneSpec(
                 emitters: [
-                    // Sparkles shooting out of the sun like rays.
-                    EmitterSpec(
-                        emoji: ["✨"], rate: 7, size: 12...22, speed: 50...110, angle: 0,
-                        angleJitter: 180, lifetime: 1.6...2.6, origin: .point(artCenter),
-                        spawnRadius: 95, fades: true
-                    ),
+                    // Rays of sparkles streaming out of the sun in the corner.
+                    sunRays(emoji: ["✨"]),
                     EmitterSpec(
                         emoji: ["☁️"], rate: 0.05, size: 44...64, speed: 12...20, angle: 0,
                         lifetime: 60...80, origin: .left, band: 0.5...0.62, opacity: 0.9...1
                     ),
                 ],
-                heroes: sun(core: "☀️", ring: "🟡", outer: "✨"),
+                heroes: [HeroSpec(emoji: "☀️", position: sunCorner, size: 180, spin: 4, pulse: 0.04)],
                 prewarm: 30
             )
 
         case .hot:
             return SceneSpec(
                 emitters: [
+                    sunRays(emoji: ["✨", "🔥"]),
                     EmitterSpec(
-                        emoji: ["🔥"], rate: 5, size: 14...26, speed: 30...70, angle: -90,
+                        emoji: ["🔥"], rate: 3, size: 14...24, speed: 30...70, angle: -90,
                         angleJitter: 8, lifetime: 4...7, origin: .bottom, wobble: 10, fades: true
                     ),
-                    EmitterSpec(
-                        emoji: ["✨"], rate: 5, size: 12...20, speed: 50...100, angle: 0,
-                        angleJitter: 180, lifetime: 1.4...2.2, origin: .point(artCenter),
-                        spawnRadius: 100, fades: true
-                    ),
                 ],
-                heroes: sun(core: "🥵", ring: "🔥", outer: "☀️"),
+                heroes: [HeroSpec(emoji: "☀️", position: sunCorner, size: 200, spin: 5, pulse: 0.07)],
                 prewarm: 5
             )
 
         case .clearNight:
             return SceneSpec(
                 emitters: [
+                    // Stars twinkle in and out all over the sky.
                     EmitterSpec(
-                        emoji: ["⭐️", "✨"], rate: 3, size: 8...16, lifetime: 2...5,
-                        origin: .scattered, band: 0.02...0.55, fades: true
+                        emoji: ["⭐️", "⭐️", "✨"], rate: 7, size: 7...18, lifetime: 2.5...6,
+                        origin: .scattered, band: 0.02...0.98, fades: true
                     ),
                     EmitterSpec(
                         emoji: ["🌠"], rate: 0.1, size: 22...30, speed: 380...480, angle: 20,
-                        lifetime: 3...3, origin: .left, band: 0.02...0.3
+                        lifetime: 3...3, origin: .left, band: 0.02...0.35
                     ),
                 ],
-                heroes: [HeroSpec(emoji: "🌙", position: artCenter, size: 150, pulse: 0.03, bob: 4)]
-                    + ring("⭐️", count: 9, radius: 125, size: 20, orbitSpeed: 5, pulse: 0.25),
-                prewarm: 4
+                heroes: [HeroSpec(emoji: "🌙", position: moonCorner, size: 130, pulse: 0.03, bob: 4)],
+                prewarm: 6
             )
 
         case .thunderstorm:
@@ -250,22 +249,13 @@ extension SceneSpec {
 
     // MARK: - Emoji shapes
 
-    /// A sun made of emoji: a big core, a ring of smaller emoji turning around it and a twinkling
-    /// outer ring.
-    private static func sun(core: String, ring inner: String, outer: String) -> [HeroSpec] {
-        [HeroSpec(emoji: core, position: artCenter, size: 140, spin: 6, pulse: 0.05)]
-            + ring(inner, count: 12, radius: 96, size: 26, orbitSpeed: 12)
-            + ring(outer, count: 16, radius: 138, size: 20, orbitSpeed: -7, pulse: 0.3)
-    }
-
-    private static func ring(_ emoji: String, count: Int, radius: Double, size: Double,
-                             orbitSpeed: Double, pulse: Double = 0, anchor: UnitPoint = artCenter) -> [HeroSpec] {
-        (0..<count).map { index in
-            HeroSpec(
-                emoji: emoji, position: anchor, size: size, pulse: pulse, orbitRadius: radius,
-                orbitSpeed: orbitSpeed, phase: Double(index) / Double(count) * 360
-            )
-        }
+    /// Twelve straight rays of small emoji flowing out of the corner sun and slowly turning.
+    private static func sunRays(emoji: [String]) -> EmitterSpec {
+        EmitterSpec(
+            emoji: emoji, rate: 34, size: 10...17, speed: 75...90, angle: 0, angleJitter: 1.5,
+            lifetime: 2.6...3.2, origin: .point(sunCorner), spawnRadius: 100, fades: true,
+            rays: stride(from: 0.0, to: 360.0, by: 30.0).map { $0 }, rayRotation: 4
+        )
     }
 
     /// A puffy bank of ☁️ with a front row of weather clouds (⛈️, 🌧️, 🌨️) that float gently.
