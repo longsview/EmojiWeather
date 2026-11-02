@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// Simulates and draws an emoji scene. Owned by `EmojiSceneView` and driven by its `TimelineView`,
 /// so it's a plain class: changing particles must not trigger SwiftUI view updates.
@@ -27,8 +28,8 @@ final class EmojiParticleSystem {
         var age: Double = 0
     }
 
-    /// Emoji are resolved once at this size and scaled when drawn.
-    private static let baseSize: Double = 64
+    /// Emoji are rendered to images once at this size and scaled when drawn.
+    private static var baseSize: Double { EmojiImageCache.pointSize }
     private static let boltDuration: Double = 0.45
 
     private(set) var spec: SceneSpec
@@ -271,10 +272,12 @@ final class EmojiParticleSystem {
             shaken.translateBy(x: Double.random(in: -5...5) * flash, y: Double.random(in: -5...5) * flash)
         }
         let base = shaken
-        var resolved: [String: GraphicsContext.ResolvedText] = [:]
-        func text(_ emoji: String) -> GraphicsContext.ResolvedText {
+        // Each emoji is a cached bitmap; drawing an image is far cheaper than laying out text
+        // for every particle on every frame.
+        var resolved: [String: GraphicsContext.ResolvedImage] = [:]
+        func text(_ emoji: String) -> GraphicsContext.ResolvedImage {
             if let cached = resolved[emoji] { return cached }
-            let new = base.resolve(Text(emoji).font(.system(size: Self.baseSize)))
+            let new = base.resolve(Image(uiImage: EmojiImageCache.image(for: emoji)))
             resolved[emoji] = new
             return new
         }
@@ -323,7 +326,7 @@ final class EmojiParticleSystem {
         }
     }
 
-    private func draw(_ text: GraphicsContext.ResolvedText, in context: GraphicsContext,
+    private func draw(_ text: GraphicsContext.ResolvedImage, in context: GraphicsContext,
                       at point: CGPoint, size: Double, rotation: Double, opacity: Double) {
         var layer = context
         layer.opacity = opacity
@@ -334,5 +337,25 @@ final class EmojiParticleSystem {
         let scale = size / Self.baseSize
         layer.scaleBy(x: scale, y: scale)
         layer.draw(text, at: .zero, anchor: .center)
+    }
+}
+
+/// Renders each emoji to a bitmap once and keeps it for the life of the app.
+enum EmojiImageCache {
+    static let pointSize: Double = 96
+    private static var images: [String: UIImage] = [:]
+
+    static func image(for emoji: String) -> UIImage {
+        if let cached = images[emoji] { return cached }
+        let text = NSAttributedString(
+            string: emoji,
+            attributes: [.font: UIFont.systemFont(ofSize: pointSize)]
+        )
+        let size = text.size()
+        let image = UIGraphicsImageRenderer(size: size).image { _ in
+            text.draw(at: .zero)
+        }
+        images[emoji] = image
+        return image
     }
 }
