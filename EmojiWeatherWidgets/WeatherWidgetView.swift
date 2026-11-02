@@ -16,7 +16,11 @@ struct WeatherWidgetView: View {
                 if family.isAccessory {
                     Color.clear
                 } else {
-                    LinearGradient(colors: sky.background, startPoint: .top, endPoint: .bottom)
+                    LinearGradient(
+                        colors: sky.background(for: entry.weather?.weatherScene ?? .sunny),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
                 }
             }
     }

@@ -110,7 +110,7 @@ private let cloudLine = UnitPoint(x: 0.5, y: 0.17)
 extension SceneSpec {
     static func make(for conditions: SceneConditions) -> SceneSpec {
         var spec = makeScene(for: conditions)
-        spec.background = conditions.sky.background
+        spec.background = conditions.sky.background(for: conditions.scene)
         return spec
     }
 

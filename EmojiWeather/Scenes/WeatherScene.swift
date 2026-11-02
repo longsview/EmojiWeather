@@ -183,6 +183,16 @@ enum SkyMode: String, CaseIterable, Identifiable, Sendable {
         }
     }
 
+    /// The background for a scene: daytime clouds and fog get a soft grey instead of white.
+    func background(for scene: WeatherScene) -> [Color] {
+        switch (self, scene) {
+        case (.day, .cloudy), (.day, .foggy):
+            [Color(hex: 0xEEF0F3), Color(hex: 0xE2E5EA)]
+        default:
+            background
+        }
+    }
+
     var isDark: Bool { self != .day }
 
     var textColor: Color { isDark ? .white : .black }

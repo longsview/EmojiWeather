@@ -108,7 +108,7 @@ struct HomeView: View {
             .transition(.opacity)
         }
         .animation(.easeInOut(duration: 0.6), value: sceneKey)
-        .background(activeSky.background.first ?? .white)
+        .background(activeSky.background(for: activeScene.scene).first ?? .white)
         .ignoresSafeArea()
     }
 
