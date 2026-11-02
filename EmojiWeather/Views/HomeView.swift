@@ -14,8 +14,10 @@ struct HomeView: View {
     @State private var showingPlaces = false
     @State private var previewScene: WeatherScene?
     @State private var showingGallery = false
-    /// The sky of the visible page, so the buttons and status bar can match it.
-    @State private var activeSky: SkyMode = .day
+    /// The visible page's scene. On iPhone it's drawn once behind all pages, so swiping
+    /// slides only the text while the scene cross-fades.
+    @State private var activeScene = SceneConditions(scene: .cloudy)
+    private var activeSky: SkyMode { activeScene.sky }
     /// iPad: keep the places list and the city side by side.
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
     #if DEBUG
@@ -63,7 +65,8 @@ struct HomeView: View {
                         isActive: place.id == currentID,
                         isCovered: showingPlaces || showingGallery || ads.isShowingFullScreenAd,
                         previewScene: previewScene,
-                        onSkyChange: { activeSky = $0 }
+                        showsScene: false,
+                        onSceneChange: { activeScene = $0 }
                     )
                     .containerRelativeFrame([.horizontal, .vertical])
                     .id(place.id)
@@ -84,7 +87,7 @@ struct HomeView: View {
                 }
             }
         ))
-        .background(activeSky.background.first ?? .white)
+        .background { sharedScene }
         .ignoresSafeArea()
         .ignoresSafeArea(.keyboard)
         .overlay(alignment: .top) { topBar }
@@ -92,6 +95,27 @@ struct HomeView: View {
             PageDots(places: places, currentID: currentID, color: activeSky.textColor)
                 .padding(.bottom, 6)
         }
+    }
+
+    /// One scene for the whole pager. A new city's scene fades in over the old one.
+    private var sharedScene: some View {
+        ZStack {
+            EmojiSceneView(
+                conditions: activeScene,
+                paused: showingPlaces || showingGallery || ads.isShowingFullScreenAd
+            )
+            .id(sceneKey)
+            .transition(.opacity)
+        }
+        .animation(.easeInOut(duration: 0.6), value: sceneKey)
+        .background(activeSky.background.first ?? .white)
+        .ignoresSafeArea()
+    }
+
+    /// Changes when the scene or sky changes, which triggers the cross-fade. Cities with the
+    /// same weather keep the same scene running, so nothing flickers.
+    private var sceneKey: String {
+        "\(activeScene.scene.rawValue)-\(activeScene.sky.rawValue)"
     }
 
     private var topBar: some View {
@@ -127,7 +151,7 @@ struct HomeView: View {
                 isActive: true,
                 isCovered: showingGallery,
                 previewScene: previewScene,
-                onSkyChange: { activeSky = $0 }
+                onSceneChange: { activeScene = $0 }
             )
             .id(currentID)
             // Extend under the status bar and home indicator, but not under the sidebar.

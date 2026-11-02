@@ -14,8 +14,11 @@ struct CityPageView: View {
     /// True while something covers the whole page (the Places sheet), so the scene can pause.
     var isCovered = false
     var previewScene: WeatherScene?
-    /// Tells the container which sky the visible page has, so its buttons can match.
-    var onSkyChange: (SkyMode) -> Void = { _ in }
+    /// False when the container draws one shared scene behind all pages (the iPhone pager),
+    /// so the scene stays still and cross-fades while only the text slides.
+    var showsScene = true
+    /// Tells the container which scene and sky the visible page has.
+    var onSceneChange: (SceneConditions) -> Void = { _ in }
 
     @Environment(LocationService.self) private var location
     @Environment(WeatherProvider.self) private var weather
@@ -69,14 +72,9 @@ struct CityPageView: View {
     var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .top) {
-                EmojiSceneView(conditions: sceneConditions, paused: !isActive || isCovered)
-                    // While paging, hold the scene in place and cross-fade it with the
-                    // neighbor's instead of sliding it; only the text slides.
-                    .scrollTransition(.interactive, axis: .horizontal) { content, phase in
-                        content
-                            .opacity(1 - abs(phase.value))
-                            .offset(x: -phase.value * proxy.size.width)
-                    }
+                if showsScene {
+                    EmojiSceneView(conditions: sceneConditions, paused: !isActive || isCovered)
+                }
 
                 VStack(spacing: 0) {
                     Spacer()
@@ -96,11 +94,11 @@ struct CityPageView: View {
         }
         .environment(\.skyMode, sceneConditions.sky)
         .contentShape(Rectangle())
-        .onChange(of: sceneConditions.sky, initial: true) { _, sky in
-            if isActive { onSkyChange(sky) }
+        .onChange(of: sceneConditions, initial: true) { _, conditions in
+            if isActive { onSceneChange(conditions) }
         }
         .onChange(of: isActive) { _, active in
-            if active { onSkyChange(sceneConditions.sky) }
+            if active { onSceneChange(sceneConditions) }
         }
         .simultaneousGesture(
             DragGesture(minimumDistance: 24).onEnded { value in
