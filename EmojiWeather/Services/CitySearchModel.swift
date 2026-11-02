@@ -9,6 +9,7 @@ final class CitySearchModel: NSObject, MKLocalSearchCompleterDelegate {
     private(set) var results: [MKLocalSearchCompletion] = []
 
     @ObservationIgnored private let completer = MKLocalSearchCompleter()
+    @ObservationIgnored private var pendingQuery: Task<Void, Never>?
 
     enum SearchError: LocalizedError {
         case notFound
@@ -21,13 +22,22 @@ final class CitySearchModel: NSObject, MKLocalSearchCompleterDelegate {
         completer.resultTypes = .address
     }
 
+    /// Debounced: MapKit is only asked after the user pauses typing for a moment, so fast typing
+    /// doesn't queue up a search per keystroke.
     func update(query: String) {
+        pendingQuery?.cancel()
         let trimmed = query.trimmingCharacters(in: .whitespacesAndNewlines)
-        if trimmed.isEmpty {
-            results = []
-            completer.cancel()
-        } else {
-            completer.queryFragment = trimmed
+        guard !trimmed.isEmpty else {
+            if completer.isSearching { completer.cancel() }
+            if !results.isEmpty { results = [] }
+            return
+        }
+        pendingQuery = Task { [weak self] in
+            try? await Task.sleep(for: .milliseconds(250))
+            guard !Task.isCancelled, let self else { return }
+            if self.completer.queryFragment != trimmed {
+                self.completer.queryFragment = trimmed
+            }
         }
     }
 

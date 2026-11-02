@@ -11,6 +11,8 @@ struct CityPageView: View {
     let place: Place
     /// Only the visible page animates.
     let isActive: Bool
+    /// True while something covers the whole page (the Places sheet), so the scene can pause.
+    var isCovered = false
     var previewScene: WeatherScene?
 
     @Environment(LocationService.self) private var location
@@ -60,7 +62,7 @@ struct CityPageView: View {
             ZStack(alignment: .top) {
                 Color.white
 
-                EmojiSceneView(conditions: sceneConditions, paused: !isActive)
+                EmojiSceneView(conditions: sceneConditions, paused: !isActive || isCovered)
 
                 VStack(spacing: 0) {
                     Spacer()
@@ -68,7 +70,7 @@ struct CityPageView: View {
                     summary
                     Spacer(minLength: 12)
                     swipeHint
-                        .padding(.bottom, proxy.safeAreaInsets.bottom + 34)
+                        .padding(.bottom, proxy.safeAreaInsets.bottom + 64)
                 }
                 .padding(.horizontal, 24)
             }

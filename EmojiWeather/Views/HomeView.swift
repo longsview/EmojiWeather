@@ -26,7 +26,12 @@ struct HomeView: View {
         ScrollView(.horizontal) {
             LazyHStack(spacing: 0) {
                 ForEach(places, id: \.id) { place in
-                    CityPageView(place: place, isActive: place.id == currentID, previewScene: previewScene)
+                    CityPageView(
+                        place: place,
+                        isActive: place.id == currentID,
+                        isCovered: showingPlaces || showingGallery,
+                        previewScene: previewScene
+                    )
                         .containerRelativeFrame([.horizontal, .vertical])
                         .id(place.id)
                 }
@@ -38,11 +43,14 @@ struct HomeView: View {
         .scrollPosition(id: Binding(
             get: { Optional(currentID) },
             set: { newValue in
-                if let newValue { selectedPlaceID = newValue }
+                // Only write real page changes; layout passes (e.g. the keyboard appearing in a
+                // sheet) can report the same page again, and every write re-renders the pager.
+                if let newValue, newValue != selectedPlaceID { selectedPlaceID = newValue }
             }
         ))
         .background(Color.white)
         .ignoresSafeArea()
+        .ignoresSafeArea(.keyboard)
         .overlay(alignment: .top) { topBar }
         .overlay(alignment: .bottom) {
             PageDots(places: places, currentID: currentID)
