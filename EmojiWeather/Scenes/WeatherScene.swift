@@ -1,0 +1,123 @@
+import Foundation
+import WeatherKit
+
+/// The animated emoji scenes. Each WeatherKit condition maps to one of these.
+enum WeatherScene: String, CaseIterable, Identifiable, Sendable {
+    case thunderstorm
+    case rain
+    case snow
+    case sunny
+    case clearNight
+    case cloudy
+    case windy
+    case foggy
+    case hot
+
+    var id: String { rawValue }
+
+    init(condition: WeatherCondition, isDaylight: Bool) {
+        switch condition {
+        case .isolatedThunderstorms, .scatteredThunderstorms, .thunderstorms,
+             .strongStorms, .tropicalStorm, .hurricane:
+            self = .thunderstorm
+        case .drizzle, .rain, .heavyRain, .sunShowers, .freezingDrizzle,
+             .freezingRain, .hail, .sleet, .wintryMix:
+            self = .rain
+        case .snow, .heavySnow, .flurries, .sunFlurries, .blizzard, .blowingSnow, .frigid:
+            self = .snow
+        case .foggy, .haze, .smoky, .blowingDust:
+            self = .foggy
+        case .windy, .breezy:
+            self = .windy
+        case .hot:
+            self = isDaylight ? .hot : .clearNight
+        case .cloudy, .mostlyCloudy:
+            self = .cloudy
+        case .clear, .mostlyClear, .partlyCloudy:
+            self = isDaylight ? .sunny : .clearNight
+        @unknown default:
+            self = isDaylight ? .sunny : .cloudy
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .thunderstorm: "Thunderstorm"
+        case .rain: "Rain"
+        case .snow: "Snow"
+        case .sunny: "Sunny"
+        case .clearNight: "Clear Night"
+        case .cloudy: "Cloudy"
+        case .windy: "Windy"
+        case .foggy: "Fog"
+        case .hot: "Heat"
+        }
+    }
+
+    var emoji: String {
+        switch self {
+        case .thunderstorm: "⛈️"
+        case .rain: "🌧️"
+        case .snow: "❄️"
+        case .sunny: "☀️"
+        case .clearNight: "🌙"
+        case .cloudy: "☁️"
+        case .windy: "💨"
+        case .foggy: "🌫️"
+        case .hot: "🥵"
+        }
+    }
+
+    /// A single emoji for the hourly and daily rows. Finer-grained than the scenes.
+    static func emoji(for condition: WeatherCondition, isDaylight: Bool = true) -> String {
+        switch condition {
+        case .mostlyClear, .partlyCloudy:
+            return isDaylight ? "🌤️" : "🌙"
+        case .mostlyCloudy:
+            return isDaylight ? "🌥️" : "☁️"
+        case .sunShowers, .drizzle:
+            return isDaylight ? "🌦️" : "🌧️"
+        case .hail, .sleet, .freezingRain, .freezingDrizzle, .wintryMix:
+            return "🧊"
+        case .hurricane, .tropicalStorm:
+            return "🌀"
+        case .frigid:
+            return "🥶"
+        case .smoky, .blowingDust, .haze:
+            return "🌫️"
+        default:
+            return WeatherScene(condition: condition, isDaylight: isDaylight).emoji
+        }
+    }
+}
+
+/// The inputs a scene needs: which scene, plus real weather values that change how it moves.
+struct SceneConditions: Equatable, Sendable {
+    var scene: WeatherScene
+    /// 0...1. Drives how many drops or flakes fall.
+    var intensity: Double = 0.5
+    /// -1...1. Positive means the wind blows toward the right of the screen.
+    var windDrift: Double = 0
+
+    init(scene: WeatherScene, intensity: Double = 0.5, windDrift: Double = 0) {
+        self.scene = scene
+        self.intensity = intensity
+        self.windDrift = windDrift
+    }
+
+    init(current: CurrentWeather) {
+        scene = WeatherScene(condition: current.condition, isDaylight: current.isDaylight)
+
+        // WeatherKit reports precipitation as a speed; convert to millimeters per hour.
+        let millimetersPerHour = current.precipitationIntensity.converted(to: .metersPerSecond).value * 3_600_000
+        // About 8 mm/h is heavy rain, so treat that as full intensity.
+        let rawIntensity = millimetersPerHour > 0 ? millimetersPerHour / 8 : 0.5
+        intensity = (min(max(rawIntensity, 0.2), 1) * 100).rounded() / 100
+
+        let windKmh = current.wind.speed.converted(to: .kilometersPerHour).value
+        let fromDegrees = current.wind.direction.converted(to: .degrees).value
+        // Wind "from" the west (180° to 360°) blows toward the east, which is screen-right.
+        let sign: Double = (fromDegrees > 180 && fromDegrees < 360) ? 1 : -1
+        windDrift = (sign * min(windKmh, 50) / 50 * 100).rounded() / 100
+    }
+}

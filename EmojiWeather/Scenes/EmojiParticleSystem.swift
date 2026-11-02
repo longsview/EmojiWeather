@@ -1,0 +1,314 @@
+import SwiftUI
+
+/// Simulates and draws an emoji scene. Owned by `EmojiSceneView` and driven by its `TimelineView`,
+/// so it's a plain class: changing particles must not trigger SwiftUI view updates.
+final class EmojiParticleSystem {
+    private struct Particle {
+        var emitter: Int
+        var emoji: String
+        var position: CGPoint
+        var velocity: CGVector
+        var size: Double
+        var lifetime: Double
+        var age: Double = 0
+        var rotation: Double = 0
+        var spin: Double = 0
+        var wobble: Double = 0
+        var wobblePhase: Double = 0
+        var opacity: Double = 1
+        var fades = false
+        var gravity: Double = 0
+        var landedAge: Double?
+        var isSplash = false
+    }
+
+    private struct Bolt {
+        var points: [CGPoint]
+        var age: Double = 0
+    }
+
+    /// Emoji are resolved once at this size and scaled when drawn.
+    private static let baseSize: Double = 64
+    private static let boltDuration: Double = 0.45
+
+    private(set) var spec: SceneSpec
+    private var intensity: Double
+    var reduceMotion = false
+    /// Called on each lightning strike, for a haptic.
+    var onStrike: (() -> Void)?
+
+    private var particles: [Particle] = []
+    private var emitCredit: [Double] = []
+    private var lastTime: TimeInterval?
+    private var elapsed: Double = 0
+    private var nextStrike: Double = 0
+    private var flash: Double = 0
+    private var bolt: Bolt?
+
+    init(conditions: SceneConditions) {
+        spec = SceneSpec.make(for: conditions)
+        intensity = conditions.intensity
+        reset()
+    }
+
+    func configure(_ conditions: SceneConditions) {
+        spec = SceneSpec.make(for: conditions)
+        intensity = conditions.intensity
+        reset()
+    }
+
+    private func reset() {
+        particles.removeAll(keepingCapacity: true)
+        emitCredit = Array(repeating: 0, count: spec.emitters.count)
+        lastTime = nil
+        elapsed = 0
+        flash = 0
+        bolt = nil
+        nextStrike = spec.lightningInterval.map { Double.random(in: 1.5...$0.lowerBound) } ?? .infinity
+    }
+
+    // MARK: - Simulation
+
+    /// Advances the scene to `now`. `tilt` is -1...1 from the phone's tilt.
+    func update(now: TimeInterval, size: CGSize, tilt: Double) {
+        guard size.width > 0, size.height > 0 else { return }
+        guard let lastTime else {
+            // First frame: simulate ahead so slow scenes don't start empty.
+            let step = 1.0 / 20
+            var simulated = 0.0
+            while simulated < spec.prewarm {
+                self.step(dt: step, size: size, tilt: tilt, allowLightning: false)
+                simulated += step
+            }
+            self.lastTime = now
+            return
+        }
+        // Clamp so a long pause (app in the background) doesn't fast-forward.
+        let dt = min(max(now - lastTime, 0), 1.0 / 15)
+        self.lastTime = now
+        step(dt: dt, size: size, tilt: tilt, allowLightning: true)
+    }
+
+    private func step(dt: Double, size: CGSize, tilt: Double, allowLightning: Bool) {
+        elapsed += dt
+        let rateScale = reduceMotion ? 0.25 : 1
+        let speedScale = reduceMotion ? 0.35 : 1
+
+        // Emit new particles.
+        for (index, emitter) in spec.emitters.enumerated() {
+            let intensityScale = emitter.followsIntensity ? intensity : 1
+            emitCredit[index] += emitter.rate * intensityScale * rateScale * dt
+            while emitCredit[index] >= 1 {
+                emitCredit[index] -= 1
+                if particles.count < spec.maxParticles {
+                    particles.append(spawn(emitter, index: index, size: size, tilt: tilt, speedScale: speedScale))
+                }
+            }
+        }
+
+        // Move particles and handle landings.
+        var splashes: [Particle] = []
+        let floor = size.height
+        for index in particles.indices {
+            particles[index].age += dt
+            if particles[index].landedAge != nil { continue }
+
+            particles[index].velocity.dy += particles[index].gravity * dt
+            particles[index].position.x += particles[index].velocity.dx * dt
+            particles[index].position.y += particles[index].velocity.dy * dt
+            particles[index].rotation += particles[index].spin * dt
+
+            let particle = particles[index]
+            guard !particle.isSplash, particle.velocity.dy > 0,
+                  particle.position.y >= floor - particle.size * 0.3 else { continue }
+
+            switch spec.emitters[particle.emitter].landing {
+            case .none:
+                break
+            case .splash:
+                splashes.append(contentsOf: makeSplash(from: particle, floor: floor))
+                particles[index].age = particle.lifetime
+            case .settle:
+                particles[index].landedAge = particle.age
+                particles[index].position.y = floor - particle.size * 0.35
+                particles[index].velocity = .zero
+                particles[index].spin = 0
+            }
+        }
+
+        let width = size.width
+        particles.removeAll { particle in
+            if particle.age >= particle.lifetime { return true }
+            if let landed = particle.landedAge, particle.age - landed > 4 { return true }
+            let margin = particle.size * 2 + 40
+            return particle.position.x < -margin - 200
+                || particle.position.x > width + margin + 200
+                || particle.position.y > floor + margin
+                || particle.position.y < -margin - 300
+        }
+        if particles.count + splashes.count <= spec.maxParticles + 60 {
+            particles.append(contentsOf: splashes)
+        }
+
+        updateLightning(dt: dt, size: size, allowLightning: allowLightning)
+    }
+
+    private func spawn(_ emitter: EmitterSpec, index: Int, size: CGSize, tilt: Double, speedScale: Double) -> Particle {
+        let fontSize = Double.random(in: emitter.size)
+        let jitter = emitter.angleJitter > 0 ? Double.random(in: -emitter.angleJitter...emitter.angleJitter) : 0
+        // Tilting the phone right pulls the stream toward the right (a smaller angle).
+        let degrees = emitter.angle + jitter - tilt * emitter.tiltResponse
+        let radians = degrees * .pi / 180
+        let speed = Double.random(in: emitter.speed) * speedScale
+
+        let width = size.width
+        let height = size.height
+        let bandY = Double.random(in: emitter.band) * height
+        let position: CGPoint
+        switch emitter.origin {
+        case .top:
+            position = CGPoint(x: Double.random(in: -0.3...1.3) * width, y: -fontSize)
+        case .left:
+            position = CGPoint(x: -fontSize * 1.5, y: bandY)
+        case .scattered:
+            position = CGPoint(x: Double.random(in: 0.03...0.97) * width, y: bandY)
+        case .bottom:
+            position = CGPoint(x: Double.random(in: 0...1) * width, y: height + fontSize)
+        }
+
+        return Particle(
+            emitter: index,
+            emoji: emitter.emoji.randomElement() ?? "❓",
+            position: position,
+            velocity: CGVector(dx: cos(radians) * speed, dy: sin(radians) * speed),
+            size: fontSize,
+            lifetime: Double.random(in: emitter.lifetime),
+            rotation: emitter.spin == 0...0 ? 0 : Double.random(in: -30...30),
+            spin: Double.random(in: emitter.spin),
+            wobble: emitter.wobble,
+            wobblePhase: Double.random(in: 0...(2 * .pi)),
+            opacity: Double.random(in: emitter.opacity),
+            fades: emitter.fades,
+            gravity: emitter.gravity
+        )
+    }
+
+    private func makeSplash(from particle: Particle, floor: Double) -> [Particle] {
+        guard !reduceMotion else { return [] }
+        return (0..<Int.random(in: 2...3)).map { _ in
+            let angle = Double.random(in: -150 ... -30) * .pi / 180
+            let speed = Double.random(in: 60...140)
+            return Particle(
+                emitter: particle.emitter,
+                emoji: particle.emoji,
+                position: CGPoint(x: particle.position.x, y: floor - 4),
+                velocity: CGVector(dx: cos(angle) * speed, dy: sin(angle) * speed),
+                size: particle.size * 0.4,
+                lifetime: 0.45,
+                opacity: particle.opacity,
+                fades: true,
+                gravity: 700,
+                isSplash: true
+            )
+        }
+    }
+
+    private func updateLightning(dt: Double, size: CGSize, allowLightning: Bool) {
+        flash = max(0, flash - dt * 4)
+        if var current = bolt {
+            current.age += dt
+            bolt = current.age < Self.boltDuration ? current : nil
+        }
+
+        guard allowLightning, let interval = spec.lightningInterval, elapsed >= nextStrike else { return }
+        nextStrike = elapsed + Double.random(in: interval)
+
+        // A zig-zag chain of ⚡️ from under the storm clouds down toward the middle of the screen.
+        var x = Double.random(in: 0.2...0.8) * size.width
+        var y = size.height * 0.12
+        var points = [CGPoint(x: x, y: y)]
+        let segments = Int.random(in: 7...10)
+        for _ in 0..<segments {
+            y += size.height * 0.045
+            x += Double.random(in: -28...28)
+            points.append(CGPoint(x: x, y: y))
+        }
+        bolt = Bolt(points: points)
+        if !reduceMotion {
+            flash = 1
+        }
+        onStrike?()
+    }
+
+    // MARK: - Drawing
+
+    func draw(in context: inout GraphicsContext, size: CGSize) {
+        let bounds = CGRect(origin: .zero, size: size)
+        context.fill(
+            Path(bounds),
+            with: .linearGradient(
+                Gradient(colors: spec.background),
+                startPoint: .zero,
+                endPoint: CGPoint(x: 0, y: size.height)
+            )
+        )
+
+        let base = context
+        var resolved: [String: GraphicsContext.ResolvedText] = [:]
+        func text(_ emoji: String) -> GraphicsContext.ResolvedText {
+            if let cached = resolved[emoji] { return cached }
+            let new = base.resolve(Text(emoji).font(.system(size: Self.baseSize)))
+            resolved[emoji] = new
+            return new
+        }
+
+        for particle in particles {
+            var opacity = particle.opacity
+            if particle.fades {
+                opacity *= min(1, particle.age / 0.4) * min(1, (particle.lifetime - particle.age) / 0.6)
+            }
+            if let landed = particle.landedAge {
+                opacity *= max(0, 1 - (particle.age - landed) / 4)
+            }
+            guard opacity > 0.01 else { continue }
+
+            var x = particle.position.x
+            if particle.wobble > 0 {
+                x += sin(particle.age * 1.6 + particle.wobblePhase) * particle.wobble
+            }
+            draw(text(particle.emoji), in: base, at: CGPoint(x: x, y: particle.position.y),
+                 size: particle.size, rotation: particle.rotation, opacity: opacity)
+        }
+
+        for hero in spec.heroes {
+            let scale = 1 + sin(elapsed * 1.8) * hero.pulse
+            let point = CGPoint(x: hero.position.x * size.width, y: hero.position.y * size.height + 40)
+            draw(text(hero.emoji), in: base, at: point,
+                 size: hero.size * scale, rotation: elapsed * hero.spin, opacity: 1)
+        }
+
+        if let bolt {
+            let opacity = 1 - bolt.age / Self.boltDuration
+            for point in bolt.points {
+                draw(text("⚡️"), in: base, at: point, size: 30, rotation: 0, opacity: opacity)
+            }
+        }
+
+        if flash > 0 {
+            context.fill(Path(bounds), with: .color(.white.opacity(flash * 0.55)))
+        }
+    }
+
+    private func draw(_ text: GraphicsContext.ResolvedText, in context: GraphicsContext,
+                      at point: CGPoint, size: Double, rotation: Double, opacity: Double) {
+        var layer = context
+        layer.opacity = opacity
+        layer.translateBy(x: point.x, y: point.y)
+        if rotation != 0 {
+            layer.rotate(by: .degrees(rotation))
+        }
+        let scale = size / Self.baseSize
+        layer.scaleBy(x: scale, y: scale)
+        layer.draw(text, at: .zero, anchor: .center)
+    }
+}
