@@ -15,6 +15,8 @@ struct HomeView: View {
     @State private var showingGallery = false
     /// The sky of the visible page, so the buttons and status bar can match it.
     @State private var activeSky: SkyMode = .day
+    /// iPad: keep the places list and the city side by side.
+    @State private var columnVisibility: NavigationSplitViewVisibility = .all
 
     private var places: [Place] {
         [.currentLocation] + cityStore.cities.map { Place.city($0) }
@@ -105,7 +107,7 @@ struct HomeView: View {
     // MARK: - iPad
 
     private var splitLayout: some View {
-        NavigationSplitView {
+        NavigationSplitView(columnVisibility: $columnVisibility) {
             PlacesView(selectedPlaceID: $selectedPlaceID, isSidebar: true)
                 #if DEBUG
                 .toolbar {
@@ -121,7 +123,8 @@ struct HomeView: View {
                 onSkyChange: { activeSky = $0 }
             )
             .id(currentID)
-            .ignoresSafeArea()
+            // Extend under the status bar and home indicator, but not under the sidebar.
+            .ignoresSafeArea(edges: .vertical)
             .toolbar(.hidden, for: .navigationBar)
         }
         .navigationSplitViewStyle(.balanced)
