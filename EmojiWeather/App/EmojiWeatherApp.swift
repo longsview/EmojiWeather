@@ -19,7 +19,7 @@ struct EmojiWeatherApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            RootView()
                 .environment(location)
                 .environment(cityStore)
                 .environment(weather)

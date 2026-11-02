@@ -18,6 +18,8 @@ struct CityPageView: View {
     /// False when the container draws one shared scene behind all pages (the iPhone pager),
     /// so the scene stays still and cross-fades while only the text slides.
     var showsScene = true
+    /// Space the container's tab bar and home indicator take; nil uses this view's safe area.
+    var bottomInset: CGFloat?
     /// Tells the container which scene and sky the visible page has.
     var onSceneChange: (SceneConditions) -> Void = { _ in }
 
@@ -88,7 +90,7 @@ struct CityPageView: View {
                             .padding(.bottom, 14)
                     }
                     swipeHint
-                        .padding(.bottom, proxy.safeAreaInsets.bottom + 64)
+                        .padding(.bottom, bottomInset.map { $0 + 40 } ?? proxy.safeAreaInsets.bottom + 64)
                 }
                 .padding(.horizontal, 24)
             }

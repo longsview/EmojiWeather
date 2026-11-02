@@ -1,21 +1,22 @@
-import CoreLocation
 import SwiftUI
 
 /// iPhone: full-screen pages, one per place; swipe left and right between them.
 /// iPad (regular width): a split view with the places list on the left and the city on the right.
 struct HomeView: View {
+    /// False while the Map tab is showing, so the scene can pause.
+    var isVisible = true
+
     @Environment(CityStore.self) private var cityStore
     @Environment(PurchaseManager.self) private var purchases
     @Environment(AdsManager.self) private var ads
-    @Environment(LocationService.self) private var location
     @Environment(\.horizontalSizeClass) private var sizeClass
 
     /// Per device on purpose: each device remembers which place it was last showing.
     @AppStorage("selectedPlaceID") private var selectedPlaceID = Place.currentLocationID
 
     @State private var showingPlaces = false
-    @State private var showingMap = false
-    @State private var showingPaywall = false
+    /// Height covered by the tab bar and home indicator, so the bottom controls sit above it.
+    @State private var bottomInset: CGFloat = 0
     @State private var previewScene: WeatherScene?
     @State private var showingGallery = false
     /// The visible page's scene. On iPhone it's drawn once behind all pages, so swiping
@@ -51,12 +52,7 @@ struct HomeView: View {
         .sheet(isPresented: $showingPlaces) {
             PlacesView(selectedPlaceID: $selectedPlaceID)
         }
-        .fullScreenCover(isPresented: $showingMap) {
-            WeatherMapView(center: mapCenter)
-        }
-        .sheet(isPresented: $showingPaywall) {
-            PaywallView(reason: "The emoji weather map is part of EmojiWeather+.")
-        }
+
         #if DEBUG
         .fullScreenCover(isPresented: $showingGallery) {
             SceneGalleryView()
@@ -73,9 +69,10 @@ struct HomeView: View {
                     CityPageView(
                         place: place,
                         isActive: place.id == currentID,
-                        isCovered: showingPlaces || showingGallery || ads.isShowingFullScreenAd,
+                        isCovered: isSceneCovered,
                         previewScene: previewScene,
                         showsScene: false,
+                        bottomInset: bottomInset,
                         onSceneChange: { activeScene = $0 }
                     )
                     .containerRelativeFrame([.horizontal, .vertical])
@@ -97,6 +94,7 @@ struct HomeView: View {
                 }
             }
         ))
+        .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.bottom } action: { bottomInset = $0 }
         .background { sharedScene }
         .ignoresSafeArea()
         .ignoresSafeArea(.keyboard)
@@ -112,7 +110,7 @@ struct HomeView: View {
         ZStack {
             EmojiSceneView(
                 conditions: activeScene,
-                paused: showingPlaces || showingGallery || ads.isShowingFullScreenAd
+                paused: isSceneCovered
             )
             .id(sceneKey)
             .transition(.opacity)
@@ -134,7 +132,6 @@ struct HomeView: View {
             debugMenu
             #endif
             Spacer()
-            mapButton(circled: true)
             Button {
                 showingPlaces = true
             } label: {
@@ -156,14 +153,11 @@ struct HomeView: View {
                     ToolbarItem(placement: .topBarTrailing) { debugMenu }
                 }
                 #endif
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) { mapButton(circled: false) }
-                }
         } detail: {
             CityPageView(
                 place: currentPlace,
                 isActive: true,
-                isCovered: showingGallery,
+                isCovered: showingGallery || !isVisible,
                 previewScene: previewScene,
                 onSceneChange: { activeScene = $0 }
             )
@@ -177,29 +171,9 @@ struct HomeView: View {
 
     // MARK: - Shared
 
-    /// Plus only in Release; open to everyone in Debug for testing.
-    private var mapUnlocked: Bool {
-        #if DEBUG
-        true
-        #else
-        purchases.hasPlus
-        #endif
-    }
-
-    private var mapCenter: CLLocationCoordinate2D? {
-        switch currentPlace {
-        case .currentLocation: location.location?.coordinate
-        case .city(let city): city.location.coordinate
-        }
-    }
-
-    private func mapButton(circled: Bool) -> some View {
-        Button {
-            if mapUnlocked { showingMap = true } else { showingPaywall = true }
-        } label: {
-            if circled { circleIcon("map") } else { Image(systemName: "map") }
-        }
-        .accessibilityLabel("Weather map")
+    /// Pause the scene while something covers it or another tab is showing.
+    private var isSceneCovered: Bool {
+        showingPlaces || showingGallery || ads.isShowingFullScreenAd || !isVisible
     }
 
     private func circleIcon(_ systemName: String) -> some View {

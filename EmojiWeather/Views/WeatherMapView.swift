@@ -7,7 +7,6 @@ struct WeatherMapView: View {
     /// Where the map starts.
     let center: CLLocationCoordinate2D?
 
-    @Environment(\.dismiss) private var dismiss
     @State private var model = MapWeatherModel()
     @State private var position: MapCameraPosition
 
@@ -47,7 +46,7 @@ struct WeatherMapView: View {
         .overlay(alignment: .bottom) {
             WeatherAttributionView()
                 .padding(8)
-                .background(.regularMaterial, in: .rect(cornerRadius: 12))
+                .glassEffect(.regular, in: .rect(cornerRadius: 12))
                 .padding(.bottom, 8)
         }
     }
@@ -59,22 +58,10 @@ struct WeatherMapView: View {
             if model.isLoading {
                 ProgressView().controlSize(.small)
             }
-            Spacer()
-            Button {
-                dismiss()
-            } label: {
-                Image(systemName: "xmark")
-                    .font(.body.weight(.semibold))
-                    .frame(width: 36, height: 36)
-                    .background(.regularMaterial, in: Circle())
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Close")
         }
-        .padding(.horizontal)
+        .padding(.horizontal, 18)
         .padding(.vertical, 10)
-        .background(.regularMaterial, in: Capsule())
-        .padding(.horizontal)
+        .glassEffect(.regular, in: Capsule())
     }
 }
 
