@@ -109,6 +109,12 @@ private let cloudLine = UnitPoint(x: 0.5, y: 0.17)
 
 extension SceneSpec {
     static func make(for conditions: SceneConditions) -> SceneSpec {
+        var spec = makeScene(for: conditions)
+        spec.background = conditions.sky.background
+        return spec
+    }
+
+    private static func makeScene(for conditions: SceneConditions) -> SceneSpec {
         let wind = conditions.windDrift
         // Rain leans up to 30° with the wind. Angles below 90° travel toward the right.
         let rainAngle = 90 - wind * 30

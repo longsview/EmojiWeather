@@ -15,6 +15,7 @@ struct SceneGalleryView: View {
     @State private var showsText = true
     @State private var showsControls = true
     @State private var restartCount = 0
+    @State private var sky: SkyMode = .day
 
     var body: some View {
         TabView(selection: $selection) {
@@ -24,21 +25,21 @@ struct SceneGalleryView: View {
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
-        .background(Color.white)
+        .environment(\.skyMode, sky)
+        .background(sky.background.first ?? .white)
         .ignoresSafeArea()
         .overlay(alignment: .top) { header }
         .overlay(alignment: .bottom) {
             if showsControls { controls }
         }
-        .preferredColorScheme(.light)
+        .preferredColorScheme(sky.isDark ? .dark : .light)
     }
 
     private func page(for scene: WeatherScene) -> some View {
         GeometryReader { proxy in
             ZStack(alignment: .top) {
-                Color.white
                 EmojiSceneView(
-                    conditions: SceneConditions(scene: scene, intensity: appliedIntensity, windDrift: appliedWind),
+                    conditions: SceneConditions(scene: scene, intensity: appliedIntensity, windDrift: appliedWind, sky: sky),
                     paused: scene != selection
                 )
                 .id("\(scene.rawValue)-\(restartCount)")
@@ -68,7 +69,7 @@ struct SceneGalleryView: View {
                 Image(systemName: "xmark")
                     .font(.body.weight(.semibold))
                     .frame(width: 44, height: 44)
-                    .background(Color.black.opacity(0.06), in: Circle())
+                    .background(sky.textColor.opacity(0.1), in: Circle())
             }
             Spacer()
             Text("\(selection.emoji) \(selection.title)  \(index + 1)/\(WeatherScene.allCases.count)")
@@ -80,10 +81,10 @@ struct SceneGalleryView: View {
                 Image(systemName: showsControls ? "slider.horizontal.below.rectangle" : "slider.horizontal.3")
                     .font(.body.weight(.semibold))
                     .frame(width: 44, height: 44)
-                    .background(Color.black.opacity(0.06), in: Circle())
+                    .background(sky.textColor.opacity(0.1), in: Circle())
             }
         }
-        .foregroundStyle(.black)
+        .foregroundStyle(sky.textColor)
         .padding(.horizontal)
     }
 
@@ -92,6 +93,13 @@ struct SceneGalleryView: View {
             Text("Shown for: \(selection.weatherKitConditions)")
                 .font(.caption)
                 .foregroundStyle(.secondary)
+
+            Picker("Sky", selection: $sky) {
+                ForEach(SkyMode.allCases) { mode in
+                    Text(mode.title).tag(mode)
+                }
+            }
+            .pickerStyle(.segmented)
 
             sliderRow("Intensity", value: $intensity, range: 0.2...1) { appliedIntensity = intensity }
             sliderRow("Wind", value: $wind, range: -1...1) { appliedWind = wind }
@@ -104,7 +112,6 @@ struct SceneGalleryView: View {
                     restartCount += 1
                 }
                 .buttonStyle(.bordered)
-                .tint(.black)
             }
             .font(.subheadline)
         }
@@ -123,7 +130,6 @@ struct SceneGalleryView: View {
             Slider(value: value, in: range) { editing in
                 if !editing { commit() }
             }
-            .tint(.black)
             Text(value.wrappedValue.formatted(.number.precision(.fractionLength(1))))
                 .font(.caption.monospacedDigit())
                 .frame(width: 34, alignment: .trailing)

@@ -1,8 +1,11 @@
 import SwiftUI
 
 /// The list of places to pick from: the current location plus saved cities synced through iCloud.
+/// Shown as a sheet on iPhone and as the sidebar of the split layout on iPad.
 struct PlacesView: View {
     @Binding var selectedPlaceID: String
+    /// In the iPad sidebar: no Done button, and picking a place doesn't dismiss anything.
+    var isSidebar = false
 
     @Environment(CityStore.self) private var cityStore
     @Environment(LocationService.self) private var location
@@ -13,7 +16,21 @@ struct PlacesView: View {
     @State private var showingPaywall = false
 
     var body: some View {
-        NavigationStack {
+        if isSidebar {
+            list
+        } else {
+            NavigationStack {
+                list
+                    .toolbar {
+                        ToolbarItem(placement: .confirmationAction) {
+                            Button("Done") { dismiss() }
+                        }
+                    }
+            }
+        }
+    }
+
+    private var list: some View {
             List {
                 Section {
                     placeRow(
@@ -48,9 +65,6 @@ struct PlacesView: View {
                 ToolbarItem(placement: .topBarLeading) {
                     EditButton()
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
-                }
             }
             .sheet(isPresented: $showingAddCity) {
                 AddCityView()
@@ -58,7 +72,6 @@ struct PlacesView: View {
             .sheet(isPresented: $showingPaywall) {
                 PaywallView(reason: "Free includes \(PurchaseManager.freeCityLimit) cities. EmojiWeather+ removes the limit.")
             }
-        }
     }
 
     private var footerText: String {
@@ -80,7 +93,7 @@ struct PlacesView: View {
     private func placeRow(id: String, emoji: String, title: String, subtitle: String) -> some View {
         Button {
             selectedPlaceID = id
-            dismiss()
+            if !isSidebar { dismiss() }
         } label: {
             HStack(spacing: 12) {
                 Text(emoji).font(.title2)
@@ -99,5 +112,6 @@ struct PlacesView: View {
                 }
             }
         }
+        .listRowBackground(isSidebar && selectedPlaceID == id ? Color.accentColor.opacity(0.15) : nil)
     }
 }

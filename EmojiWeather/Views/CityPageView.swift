@@ -14,6 +14,8 @@ struct CityPageView: View {
     /// True while something covers the whole page (the Places sheet), so the scene can pause.
     var isCovered = false
     var previewScene: WeatherScene?
+    /// Tells the container which sky the visible page has, so its buttons can match.
+    var onSkyChange: (SkyMode) -> Void = { _ in }
 
     @Environment(LocationService.self) private var location
     @Environment(WeatherProvider.self) private var weather
@@ -46,8 +48,12 @@ struct CityPageView: View {
     }
 
     private var sceneConditions: SceneConditions {
-        if let previewScene { return SceneConditions(scene: previewScene, intensity: 0.8, windDrift: 0.3) }
-        if let current = snapshot?.current { return SceneConditions(current: current) }
+        if let previewScene {
+            let liveSky = snapshot.map { SkyMode(current: $0.current, today: $0.daily.first) }
+            let sky = liveSky ?? (previewScene == .clearNight ? .night : .day)
+            return SceneConditions(scene: previewScene, intensity: 0.8, windDrift: 0.3, sky: sky)
+        }
+        if let snapshot { return SceneConditions(current: snapshot.current, today: snapshot.daily.first) }
         return SceneConditions(scene: .cloudy)
     }
 
@@ -60,8 +66,6 @@ struct CityPageView: View {
     var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .top) {
-                Color.white
-
                 EmojiSceneView(conditions: sceneConditions, paused: !isActive || isCovered)
 
                 VStack(spacing: 0) {
@@ -75,7 +79,14 @@ struct CityPageView: View {
                 .padding(.horizontal, 24)
             }
         }
+        .environment(\.skyMode, sceneConditions.sky)
         .contentShape(Rectangle())
+        .onChange(of: sceneConditions.sky, initial: true) { _, sky in
+            if isActive { onSkyChange(sky) }
+        }
+        .onChange(of: isActive) { _, active in
+            if active { onSkyChange(sceneConditions.sky) }
+        }
         .simultaneousGesture(
             DragGesture(minimumDistance: 24).onEnded { value in
                 let isUpward = value.translation.height < -60
@@ -96,6 +107,7 @@ struct CityPageView: View {
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
                 .presentationBackground(.white)
+                .environment(\.colorScheme, .light)
                 .presentationCornerRadius(36)
             }
         }
@@ -125,7 +137,6 @@ struct CityPageView: View {
                 PlaceNameRow(placeName: placeName, showsLocationIcon: isCurrentLocation)
                 status
             }
-            .foregroundStyle(.black)
             .frame(maxWidth: .infinity)
             .readableOverEmoji()
         }
@@ -159,7 +170,7 @@ struct CityPageView: View {
                 .multilineTextAlignment(.center)
             Button("Try Again", action: action)
                 .buttonStyle(.bordered)
-                .tint(.black)
+                .tint(sceneConditions.sky.textColor)
         }
     }
 
@@ -173,7 +184,7 @@ struct CityPageView: View {
                 Text("Forecast")
                     .font(.system(.footnote, design: .rounded, weight: .semibold))
             }
-            .foregroundStyle(.black.opacity(0.45))
+            .foregroundStyle(sceneConditions.sky.textColor.opacity(0.55))
         }
         .opacity(snapshot == nil ? 0 : 1)
         .disabled(snapshot == nil)

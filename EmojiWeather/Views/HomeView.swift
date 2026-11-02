@@ -1,10 +1,11 @@
 import SwiftUI
 
-/// Full-screen pages, one per place. Swipe left and right to move between the current location
-/// and saved cities.
+/// iPhone: full-screen pages, one per place; swipe left and right between them.
+/// iPad (regular width): a split view with the places list on the left and the city on the right.
 struct HomeView: View {
     @Environment(CityStore.self) private var cityStore
     @Environment(PurchaseManager.self) private var purchases
+    @Environment(\.horizontalSizeClass) private var sizeClass
 
     /// Per device on purpose: each device remembers which place it was last showing.
     @AppStorage("selectedPlaceID") private var selectedPlaceID = Place.currentLocationID
@@ -12,17 +13,42 @@ struct HomeView: View {
     @State private var showingPlaces = false
     @State private var previewScene: WeatherScene?
     @State private var showingGallery = false
+    /// The sky of the visible page, so the buttons and status bar can match it.
+    @State private var activeSky: SkyMode = .day
 
     private var places: [Place] {
         [.currentLocation] + cityStore.cities.map { Place.city($0) }
     }
 
-    /// The selected page, falling back to the current location if that city was deleted.
-    private var currentID: String {
-        Place.resolve(id: selectedPlaceID, cities: cityStore.cities).id
+    /// The selected place, falling back to the current location if that city was deleted.
+    private var currentPlace: Place {
+        Place.resolve(id: selectedPlaceID, cities: cityStore.cities)
     }
 
+    private var currentID: String { currentPlace.id }
+
     var body: some View {
+        Group {
+            if sizeClass == .regular {
+                splitLayout
+            } else {
+                pager
+            }
+        }
+        .preferredColorScheme(activeSky.isDark ? .dark : .light)
+        .sheet(isPresented: $showingPlaces) {
+            PlacesView(selectedPlaceID: $selectedPlaceID)
+        }
+        #if DEBUG
+        .fullScreenCover(isPresented: $showingGallery) {
+            SceneGalleryView()
+        }
+        #endif
+    }
+
+    // MARK: - iPhone
+
+    private var pager: some View {
         ScrollView(.horizontal) {
             LazyHStack(spacing: 0) {
                 ForEach(places, id: \.id) { place in
@@ -30,10 +56,11 @@ struct HomeView: View {
                         place: place,
                         isActive: place.id == currentID,
                         isCovered: showingPlaces || showingGallery,
-                        previewScene: previewScene
+                        previewScene: previewScene,
+                        onSkyChange: { activeSky = $0 }
                     )
-                        .containerRelativeFrame([.horizontal, .vertical])
-                        .id(place.id)
+                    .containerRelativeFrame([.horizontal, .vertical])
+                    .id(place.id)
                 }
             }
             .scrollTargetLayout()
@@ -48,23 +75,14 @@ struct HomeView: View {
                 if let newValue, newValue != selectedPlaceID { selectedPlaceID = newValue }
             }
         ))
-        .background(Color.white)
+        .background(activeSky.background.first ?? .white)
         .ignoresSafeArea()
         .ignoresSafeArea(.keyboard)
         .overlay(alignment: .top) { topBar }
         .overlay(alignment: .bottom) {
-            PageDots(places: places, currentID: currentID)
+            PageDots(places: places, currentID: currentID, color: activeSky.textColor)
                 .padding(.bottom, 6)
         }
-        .preferredColorScheme(.light)
-        .sheet(isPresented: $showingPlaces) {
-            PlacesView(selectedPlaceID: $selectedPlaceID)
-        }
-        #if DEBUG
-        .fullScreenCover(isPresented: $showingGallery) {
-            SceneGalleryView()
-        }
-        #endif
     }
 
     private var topBar: some View {
@@ -76,15 +94,46 @@ struct HomeView: View {
             Button {
                 showingPlaces = true
             } label: {
-                Image(systemName: "list.bullet")
-                    .font(.body.weight(.semibold))
-                    .frame(width: 44, height: 44)
-                    .background(Color.black.opacity(0.06), in: Circle())
+                circleIcon("list.bullet")
             }
             .accessibilityLabel("Places")
         }
-        .foregroundStyle(.black)
+        .foregroundStyle(activeSky.textColor)
         .padding(.horizontal)
+    }
+
+    // MARK: - iPad
+
+    private var splitLayout: some View {
+        NavigationSplitView {
+            PlacesView(selectedPlaceID: $selectedPlaceID, isSidebar: true)
+                #if DEBUG
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) { debugMenu }
+                }
+                #endif
+        } detail: {
+            CityPageView(
+                place: currentPlace,
+                isActive: true,
+                isCovered: showingGallery,
+                previewScene: previewScene,
+                onSkyChange: { activeSky = $0 }
+            )
+            .id(currentID)
+            .ignoresSafeArea()
+            .toolbar(.hidden, for: .navigationBar)
+        }
+        .navigationSplitViewStyle(.balanced)
+    }
+
+    // MARK: - Shared
+
+    private func circleIcon(_ systemName: String) -> some View {
+        Image(systemName: systemName)
+            .font(.body.weight(.semibold))
+            .frame(width: 44, height: 44)
+            .background(activeSky.textColor.opacity(0.1), in: Circle())
     }
 
     #if DEBUG
@@ -103,10 +152,7 @@ struct HomeView: View {
             }
             Toggle("EmojiWeather+ unlocked", isOn: Bindable(purchases).hasPlus)
         } label: {
-            Image(systemName: "ladybug")
-                .font(.body.weight(.semibold))
-                .frame(width: 44, height: 44)
-                .background(Color.black.opacity(0.06), in: Circle())
+            circleIcon("ladybug")
         }
     }
     #endif
@@ -116,6 +162,7 @@ struct HomeView: View {
 private struct PageDots: View {
     let places: [Place]
     let currentID: String
+    var color: Color = .black
 
     var body: some View {
         HStack(spacing: 8) {
@@ -129,7 +176,7 @@ private struct PageDots: View {
                         Circle().frame(width: 7, height: 7)
                     }
                 }
-                .foregroundStyle(isCurrent ? Color.black : Color.black.opacity(0.2))
+                .foregroundStyle(isCurrent ? color : color.opacity(0.25))
             }
         }
         .padding(.horizontal, 12)

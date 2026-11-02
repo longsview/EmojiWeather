@@ -1,4 +1,4 @@
-import Foundation
+import SwiftUI
 import WeatherKit
 
 /// The animated emoji scenes. Each WeatherKit condition maps to one of these.
@@ -114,14 +114,19 @@ struct SceneConditions: Equatable, Sendable {
     /// -1...1. Positive means the wind blows toward the right of the screen.
     var windDrift: Double = 0
 
-    init(scene: WeatherScene, intensity: Double = 0.5, windDrift: Double = 0) {
+    /// Day (white), sunrise/sunset (gradient) or night (dark).
+    var sky: SkyMode = .day
+
+    init(scene: WeatherScene, intensity: Double = 0.5, windDrift: Double = 0, sky: SkyMode = .day) {
         self.scene = scene
         self.intensity = intensity
         self.windDrift = windDrift
+        self.sky = sky
     }
 
-    init(current: CurrentWeather) {
+    init(current: CurrentWeather, today: DayWeather? = nil) {
         scene = WeatherScene(condition: current.condition, isDaylight: current.isDaylight)
+        sky = SkyMode(current: current, today: today)
 
         // WeatherKit reports precipitation as a speed; convert to millimeters per hour.
         let millimetersPerHour = current.precipitationIntensity.converted(to: .metersPerSecond).value * 3_600_000
@@ -135,4 +140,64 @@ struct SceneConditions: Equatable, Sendable {
         let sign: Double = (fromDegrees > 180 && fromDegrees < 360) ? 1 : -1
         windDrift = (sign * min(windKmh, 50) / 50 * 100).rounded() / 100
     }
+}
+
+/// The look of the page for the time of day.
+enum SkyMode: String, CaseIterable, Identifiable, Sendable {
+    case day
+    /// Within about 40 minutes of sunrise or sunset.
+    case golden
+    case night
+
+    var id: String { rawValue }
+
+    /// How close to sunrise or sunset counts as golden hour.
+    static let goldenWindow: TimeInterval = 40 * 60
+
+    init(current: CurrentWeather, today: DayWeather?) {
+        let now = current.date
+        if let sun = today?.sun {
+            let events = [sun.sunrise, sun.sunset].compactMap { $0 }
+            if events.contains(where: { abs(now.timeIntervalSince($0)) < Self.goldenWindow }) {
+                self = .golden
+                return
+            }
+        }
+        self = current.isDaylight ? .day : .night
+    }
+
+    var title: String {
+        switch self {
+        case .day: "Day"
+        case .golden: "Sunrise / Sunset"
+        case .night: "Night"
+        }
+    }
+
+    /// Top-to-bottom background.
+    var background: [Color] {
+        switch self {
+        case .day: [.white, .white]
+        case .golden: [Color(hex: 0x2E3A78), Color(hex: 0xA9558F), Color(hex: 0xFF8A5C), Color(hex: 0xFFC46B)]
+        case .night: [Color(hex: 0x0A0F24), Color(hex: 0x1C2650)]
+        }
+    }
+
+    var isDark: Bool { self != .day }
+
+    var textColor: Color { isDark ? .white : .black }
+
+    /// Halo behind text so it stays readable over moving emoji.
+    var haloColor: Color {
+        switch self {
+        case .day: .white
+        case .golden: .black.opacity(0.3)
+        case .night: .black.opacity(0.5)
+        }
+    }
+}
+
+extension EnvironmentValues {
+    /// The current page's sky, so text and controls can match it.
+    @Entry var skyMode: SkyMode = .day
 }

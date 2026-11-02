@@ -56,17 +56,27 @@ struct WeatherSummaryView: View {
                 .multilineTextAlignment(.center)
                 .padding(.top, 6)
         }
-        .foregroundStyle(.black)
         .frame(maxWidth: .infinity)
         .readableOverEmoji()
     }
 }
 
 extension View {
-    /// A soft white halo keeps text readable where it overlaps falling emoji.
+    /// Text color for the current sky, plus a soft halo that keeps text readable where it
+    /// overlaps falling emoji.
     func readableOverEmoji() -> some View {
-        shadow(color: .white, radius: 8)
-            .shadow(color: .white, radius: 8)
+        modifier(ReadableOverEmoji())
+    }
+}
+
+private struct ReadableOverEmoji: ViewModifier {
+    @Environment(\.skyMode) private var sky
+
+    func body(content: Content) -> some View {
+        content
+            .foregroundStyle(sky.textColor)
+            .shadow(color: sky.haloColor, radius: 8)
+            .shadow(color: sky.haloColor, radius: 8)
     }
 }
 
