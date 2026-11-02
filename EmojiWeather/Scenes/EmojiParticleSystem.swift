@@ -167,7 +167,13 @@ final class EmojiParticleSystem {
         let position: CGPoint
         switch emitter.origin {
         case .top:
-            position = CGPoint(x: Double.random(in: -0.3...1.3) * width, y: -fontSize)
+            let startY = emitter.band.lowerBound * height
+            position = CGPoint(x: Double.random(in: emitter.xRange) * width, y: startY - fontSize)
+        case .point(let point):
+            position = CGPoint(
+                x: point.x * width + cos(radians) * emitter.spawnRadius,
+                y: point.y * height + sin(radians) * emitter.spawnRadius
+            )
         case .left:
             position = CGPoint(x: -fontSize * 1.5, y: bandY)
         case .scattered:
@@ -224,13 +230,13 @@ final class EmojiParticleSystem {
         nextStrike = elapsed + Double.random(in: interval)
 
         // A zig-zag chain of ⚡️ from under the storm clouds down toward the middle of the screen.
-        var x = Double.random(in: 0.2...0.8) * size.width
-        var y = size.height * 0.12
+        var x = Double.random(in: 0.25...0.75) * size.width
+        var y = size.height * spec.lightningStart
         var points = [CGPoint(x: x, y: y)]
         let segments = Int.random(in: 7...10)
         for _ in 0..<segments {
-            y += size.height * 0.045
-            x += Double.random(in: -28...28)
+            y += size.height * 0.04
+            x += Double.random(in: -30...30)
             points.append(CGPoint(x: x, y: y))
         }
         bolt = Bolt(points: points)
@@ -253,7 +259,12 @@ final class EmojiParticleSystem {
             )
         )
 
-        let base = context
+        // A quick shake while the lightning flash is bright.
+        var shaken = context
+        if flash > 0.3 {
+            shaken.translateBy(x: Double.random(in: -5...5) * flash, y: Double.random(in: -5...5) * flash)
+        }
+        let base = shaken
         var resolved: [String: GraphicsContext.ResolvedText] = [:]
         func text(_ emoji: String) -> GraphicsContext.ResolvedText {
             if let cached = resolved[emoji] { return cached }
@@ -281,21 +292,28 @@ final class EmojiParticleSystem {
         }
 
         for hero in spec.heroes {
-            let scale = 1 + sin(elapsed * 1.8) * hero.pulse
-            let point = CGPoint(x: hero.position.x * size.width, y: hero.position.y * size.height + 40)
+            let phase = hero.phase * .pi / 180
+            let orbitAngle = (hero.phase + hero.orbitSpeed * elapsed) * .pi / 180
+            let scale = 1 + sin(elapsed * 1.8 + phase) * hero.pulse
+            let point = CGPoint(
+                x: hero.position.x * size.width + hero.offset.width + cos(orbitAngle) * hero.orbitRadius,
+                y: hero.position.y * size.height + hero.offset.height + sin(orbitAngle) * hero.orbitRadius
+                    + sin(elapsed * 1.3 + phase) * hero.bob
+            )
             draw(text(hero.emoji), in: base, at: point,
-                 size: hero.size * scale, rotation: elapsed * hero.spin, opacity: 1)
+                 size: hero.size * scale, rotation: elapsed * hero.spin, opacity: hero.opacity)
         }
 
         if let bolt {
             let opacity = 1 - bolt.age / Self.boltDuration
             for point in bolt.points {
-                draw(text("⚡️"), in: base, at: point, size: 30, rotation: 0, opacity: opacity)
+                draw(text("⚡️"), in: base, at: point, size: 40, rotation: 0, opacity: opacity)
             }
         }
 
         if flash > 0 {
-            context.fill(Path(bounds), with: .color(.white.opacity(flash * 0.55)))
+            // On a white background a white flash is invisible, so flash a pale lightning yellow.
+            context.fill(Path(bounds), with: .color(Color(hex: 0xFFE45C).opacity(flash * 0.45)))
         }
     }
 

@@ -1,169 +1,76 @@
-import CoreLocation
-import os
 import SwiftUI
-import WeatherKit
 
-private let logger = Logger(subsystem: "EmojiWeather", category: "Weather")
-
+/// Full-screen pages, one per place. Swipe left and right to move between the current location
+/// and saved cities.
 struct HomeView: View {
-    @Environment(LocationService.self) private var location
     @Environment(CityStore.self) private var cityStore
-    @Environment(WeatherProvider.self) private var weather
     @Environment(PurchaseManager.self) private var purchases
 
     /// Per device on purpose: each device remembers which place it was last showing.
     @AppStorage("selectedPlaceID") private var selectedPlaceID = Place.currentLocationID
 
-    @State private var snapshot: WeatherSnapshot?
-    @State private var errorMessage: String?
-    @State private var isLoading = false
     @State private var showingPlaces = false
     @State private var previewScene: WeatherScene?
 
-    private var place: Place {
-        Place.resolve(id: selectedPlaceID, cities: cityStore.cities)
+    private var places: [Place] {
+        [.currentLocation] + cityStore.cities.map { Place.city($0) }
     }
 
-    private var targetLocation: CLLocation? {
-        switch place {
-        case .currentLocation: location.location
-        case .city(let city): city.location
-        }
-    }
-
-    private var timeZone: TimeZone {
-        switch place {
-        case .currentLocation: .current
-        case .city(let city): city.timeZone
-        }
-    }
-
-    private var placeName: String {
-        switch place {
-        case .currentLocation: location.placeName ?? "My Location"
-        case .city(let city): city.name
-        }
-    }
-
-    private var sceneConditions: SceneConditions {
-        if let previewScene { return SceneConditions(scene: previewScene, intensity: 0.8, windDrift: 0.3) }
-        if let current = snapshot?.current { return SceneConditions(current: current) }
-        return SceneConditions(scene: .cloudy)
-    }
-
-    /// Changes whenever the weather should be reloaded.
-    private var loadKey: String {
-        guard let target = targetLocation else { return "\(place.id)-none" }
-        return String(format: "%@-%.2f,%.2f", place.id, target.coordinate.latitude, target.coordinate.longitude)
+    /// The selected page, falling back to the current location if that city was deleted.
+    private var currentID: String {
+        Place.resolve(id: selectedPlaceID, cities: cityStore.cities).id
     }
 
     var body: some View {
-        NavigationStack {
-            ZStack {
-                EmojiSceneView(conditions: sceneConditions)
-                    .ignoresSafeArea()
-
-                ScrollView {
-                    VStack(spacing: 16) {
-                        header
-                            .padding(.top, 140)
-
-                        if case .currentLocation = place, !location.isAuthorized {
-                            LocationPermissionCard()
-                        } else if case .currentLocation = place, location.location == nil {
-                            locationStatus
-                        }
-
-                        if let snapshot {
-                            HourlyForecastView(hours: snapshot.hourly, timeZone: timeZone)
-                            DailyForecastView(days: snapshot.daily, timeZone: timeZone)
-                        } else if let errorMessage {
-                            Text(errorMessage)
-                                .frame(maxWidth: .infinity)
-                                .padding()
-                                .background(.ultraThinMaterial, in: .rect(cornerRadius: 20))
-                        } else if isLoading {
-                            ProgressView()
-                                .padding()
-                        }
-
-                        WeatherAttributionView()
-                            .padding(.top, 8)
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom, 32)
-                }
-                .scrollIndicators(.hidden)
-                .refreshable {
-                    if case .currentLocation = place, location.location == nil {
-                        location.refresh()
-                    }
-                    await load(forceRefresh: true)
+        ScrollView(.horizontal) {
+            LazyHStack(spacing: 0) {
+                ForEach(places, id: \.id) { place in
+                    CityPageView(place: place, isActive: place.id == currentID, previewScene: previewScene)
+                        .containerRelativeFrame([.horizontal, .vertical])
+                        .id(place.id)
                 }
             }
-            .environment(\.colorScheme, .dark)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        showingPlaces = true
-                    } label: {
-                        Label("Places", systemImage: "list.bullet")
-                    }
-                }
-                #if DEBUG
-                ToolbarItem(placement: .topBarLeading) {
-                    debugMenu
-                }
-                #endif
-            }
+            .scrollTargetLayout()
         }
-        .task(id: loadKey) { await load() }
+        .scrollTargetBehavior(.paging)
+        .scrollIndicators(.hidden)
+        .scrollPosition(id: Binding(
+            get: { Optional(currentID) },
+            set: { newValue in
+                if let newValue { selectedPlaceID = newValue }
+            }
+        ))
+        .background(Color.white)
+        .ignoresSafeArea()
+        .overlay(alignment: .top) { topBar }
+        .overlay(alignment: .bottom) {
+            PageDots(places: places, currentID: currentID)
+                .padding(.bottom, 6)
+        }
+        .preferredColorScheme(.light)
         .sheet(isPresented: $showingPlaces) {
             PlacesView(selectedPlaceID: $selectedPlaceID)
         }
     }
 
-    private var header: some View {
-        VStack(spacing: 4) {
-            HStack(spacing: 6) {
-                if case .currentLocation = place {
-                    Image(systemName: "location.fill").font(.footnote)
-                }
-                Text(placeName)
+    private var topBar: some View {
+        HStack {
+            #if DEBUG
+            debugMenu
+            #endif
+            Spacer()
+            Button {
+                showingPlaces = true
+            } label: {
+                Image(systemName: "list.bullet")
+                    .font(.body.weight(.semibold))
+                    .frame(width: 44, height: 44)
+                    .background(Color.black.opacity(0.06), in: Circle())
             }
-            .font(.title2.weight(.semibold))
-
-            if let current = snapshot?.current {
-                Text(current.temperature.shortTemperature)
-                    .font(.system(size: 96, weight: .thin))
-                Text(current.condition.description)
-                    .font(.title3)
-                if let today = snapshot?.daily.first {
-                    Text("H: \(today.highTemperature.shortTemperature)  L: \(today.lowTemperature.shortTemperature)")
-                        .font(.headline)
-                }
-            } else {
-                Text("--")
-                    .font(.system(size: 96, weight: .thin))
-            }
+            .accessibilityLabel("Places")
         }
-        .foregroundStyle(.white)
-        .shadow(color: .black.opacity(0.35), radius: 6, y: 2)
-    }
-
-    private var locationStatus: some View {
-        HStack(spacing: 10) {
-            if location.isLocating {
-                ProgressView()
-                Text("Finding your location…")
-            } else {
-                Text(location.failureMessage ?? "Waiting for your location…")
-            }
-        }
-        .font(.subheadline)
-        .frame(maxWidth: .infinity)
-        .padding()
-        .background(.ultraThinMaterial, in: .rect(cornerRadius: 20))
+        .foregroundStyle(.black)
+        .padding(.horizontal)
     }
 
     #if DEBUG
@@ -177,36 +84,39 @@ struct HomeView: View {
             }
             Toggle("EmojiWeather+ unlocked", isOn: Bindable(purchases).hasPlus)
         } label: {
-            Label("Debug", systemImage: "ladybug")
+            Image(systemName: "ladybug")
+                .font(.body.weight(.semibold))
+                .frame(width: 44, height: 44)
+                .background(Color.black.opacity(0.06), in: Circle())
         }
     }
     #endif
+}
 
-    private func load(forceRefresh: Bool = false) async {
-        guard let target = targetLocation else {
-            snapshot = nil
-            return
-        }
-        // Show cached weather right away when switching places, then refresh if it's stale.
-        snapshot = weather.cachedWeather(for: target) ?? (forceRefresh ? snapshot : nil)
-        if snapshot != nil, !forceRefresh { return }
+/// Page indicator: a location arrow for the current location and a dot per city.
+private struct PageDots: View {
+    let places: [Place]
+    let currentID: String
 
-        isLoading = true
-        defer { isLoading = false }
-        do {
-            snapshot = try await weather.weather(for: target, forceRefresh: forceRefresh)
-            errorMessage = nil
-        } catch is CancellationError {
-            // The user switched places; the next load takes over.
-        } catch {
-            logger.error("WeatherKit failed: \(String(describing: error), privacy: .public)")
-            #if DEBUG
-            // Usually WeatherKit isn't enabled for the App ID yet, or signing has no team.
-            errorMessage = "Couldn't load the weather.\n\(error.localizedDescription)\nCheck that WeatherKit is enabled for this App ID (Capabilities and App Services)."
-            #else
-            errorMessage = "Couldn't load the weather. Pull down to try again."
-            #endif
+    var body: some View {
+        HStack(spacing: 8) {
+            ForEach(places, id: \.id) { place in
+                let isCurrent = place.id == currentID
+                Group {
+                    if case .currentLocation = place {
+                        Image(systemName: "location.fill")
+                            .font(.system(size: 9, weight: .bold))
+                    } else {
+                        Circle().frame(width: 7, height: 7)
+                    }
+                }
+                .foregroundStyle(isCurrent ? Color.black : Color.black.opacity(0.2))
+            }
         }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .animation(.snappy, value: currentID)
+        .opacity(places.count > 1 ? 1 : 0)
     }
 }
 

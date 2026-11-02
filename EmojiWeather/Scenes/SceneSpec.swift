@@ -1,16 +1,18 @@
 import SwiftUI
 
-/// One stream of emoji particles, like falling rain or drifting clouds.
+/// One stream of emoji particles, like falling rain or sparkles shooting out of the sun.
 struct EmitterSpec {
     enum Origin {
-        /// Spawns above the screen (rain, snow).
+        /// Spawns along a horizontal line (above the screen by default) and falls (rain, snow).
         case top
         /// Spawns off the left edge (clouds, wind).
         case left
-        /// Spawns anywhere on screen and fades in and out (stars, sparkles).
+        /// Spawns anywhere in `band` and fades in and out (stars, sparkles).
         case scattered
         /// Spawns below the screen and rises (heat).
         case bottom
+        /// Spawns at a point and flies outward (sun rays).
+        case point(UnitPoint)
     }
 
     enum Landing {
@@ -34,8 +36,12 @@ struct EmitterSpec {
     /// Seconds.
     var lifetime: ClosedRange<Double> = 4...8
     var origin: Origin = .top
-    /// Vertical band (0 is the top, 1 the bottom) for `.left` and `.scattered` origins.
+    /// Vertical band (0 is the top, 1 the bottom). For `.top` the lower bound is the start line.
     var band: ClosedRange<Double> = 0...1
+    /// Horizontal spawn range for `.top`, as a fraction of the width.
+    var xRange: ClosedRange<Double> = -0.3...1.3
+    /// For `.point`: how far from the point particles appear, in points.
+    var spawnRadius: Double = 0
     var landing: Landing = .none
     /// Side-to-side sway in points.
     var wobble: Double = 0
@@ -52,28 +58,47 @@ struct EmitterSpec {
     var followsIntensity = false
 }
 
-/// A large emoji that stays in place, like the sun or moon.
+/// A big emoji that stays roughly in place. Groups of these build shapes: a sun made of a ring of
+/// emoji, a bank of storm clouds, a moon with orbiting stars.
 struct HeroSpec {
     var emoji: String
+    /// Anchor point as a fraction of the screen.
     var position: UnitPoint
+    /// Offset from the anchor in points.
+    var offset: CGSize = .zero
     var size: Double
     /// Degrees per second.
     var spin: Double = 0
     /// How much it breathes in and out, as a fraction of its size.
     var pulse: Double = 0
+    /// Circles the anchor at this radius in points.
+    var orbitRadius: Double = 0
+    /// Degrees per second around the anchor.
+    var orbitSpeed: Double = 0
+    /// Starting angle on the orbit, also used to desync bob and pulse. Degrees.
+    var phase: Double = 0
+    /// Gentle up-and-down float in points.
+    var bob: Double = 0
+    var opacity: Double = 1
 }
 
-/// A full scene: background, particle streams, fixed emoji and optional lightning.
+/// A full scene: background, particle streams, emoji shapes and optional lightning.
 struct SceneSpec {
-    var background: [Color]
+    var background: [Color] = [.white, .white]
     var emitters: [EmitterSpec]
     var heroes: [HeroSpec] = []
     /// Seconds between lightning strikes, or nil for none.
     var lightningInterval: ClosedRange<Double>? = nil
+    /// Where bolts start, as a fraction of the screen height (just under the clouds).
+    var lightningStart: Double = 0.24
     /// Seconds to simulate before the first frame so slow scenes (clouds, fog) start full.
     var prewarm: Double = 3
     var maxParticles = 300
 }
+
+/// Where the main emoji shape sits. The text sits below it.
+private let artCenter = UnitPoint(x: 0.5, y: 0.27)
+private let cloudLine = UnitPoint(x: 0.5, y: 0.17)
 
 extension SceneSpec {
     static func make(for conditions: SceneConditions) -> SceneSpec {
@@ -82,153 +107,189 @@ extension SceneSpec {
         let rainAngle = 90 - wind * 30
 
         switch conditions.scene {
-        case .thunderstorm:
+        case .sunny:
             return SceneSpec(
-                background: [Color(hex: 0x141A2A), Color(hex: 0x37405A)],
                 emitters: [
+                    // Sparkles shooting out of the sun like rays.
                     EmitterSpec(
-                        emoji: ["⛈️"], rate: 70, size: 14...24, speed: 520...720,
-                        angle: rainAngle, angleJitter: 3, lifetime: 3...3, landing: .splash,
-                        tiltResponse: 25, followsIntensity: true
+                        emoji: ["✨"], rate: 7, size: 12...22, speed: 50...110, angle: 0,
+                        angleJitter: 180, lifetime: 1.6...2.6, origin: .point(artCenter),
+                        spawnRadius: 95, fades: true
+                    ),
+                    EmitterSpec(
+                        emoji: ["☁️"], rate: 0.05, size: 44...64, speed: 12...20, angle: 0,
+                        lifetime: 60...80, origin: .left, band: 0.5...0.62, opacity: 0.9...1
                     ),
                 ],
-                heroes: [
-                    HeroSpec(emoji: "⛈️", position: UnitPoint(x: 0.22, y: 0.07), size: 110, pulse: 0.03),
-                    HeroSpec(emoji: "⛈️", position: UnitPoint(x: 0.78, y: 0.1), size: 90, pulse: 0.04),
+                heroes: sun(core: "☀️", ring: "🟡", outer: "✨"),
+                prewarm: 30
+            )
+
+        case .hot:
+            return SceneSpec(
+                emitters: [
+                    EmitterSpec(
+                        emoji: ["🔥"], rate: 5, size: 14...26, speed: 30...70, angle: -90,
+                        angleJitter: 8, lifetime: 4...7, origin: .bottom, wobble: 10, fades: true
+                    ),
+                    EmitterSpec(
+                        emoji: ["✨"], rate: 5, size: 12...20, speed: 50...100, angle: 0,
+                        angleJitter: 180, lifetime: 1.4...2.2, origin: .point(artCenter),
+                        spawnRadius: 100, fades: true
+                    ),
                 ],
-                lightningInterval: 4...10,
+                heroes: sun(core: "🥵", ring: "🔥", outer: "☀️"),
+                prewarm: 5
+            )
+
+        case .clearNight:
+            return SceneSpec(
+                emitters: [
+                    EmitterSpec(
+                        emoji: ["⭐️", "✨"], rate: 3, size: 8...16, lifetime: 2...5,
+                        origin: .scattered, band: 0.02...0.55, fades: true
+                    ),
+                    EmitterSpec(
+                        emoji: ["🌠"], rate: 0.1, size: 22...30, speed: 380...480, angle: 20,
+                        lifetime: 3...3, origin: .left, band: 0.02...0.3
+                    ),
+                ],
+                heroes: [HeroSpec(emoji: "🌙", position: artCenter, size: 150, pulse: 0.03, bob: 4)]
+                    + ring("⭐️", count: 9, radius: 125, size: 20, orbitSpeed: 5, pulse: 0.25),
+                prewarm: 4
+            )
+
+        case .thunderstorm:
+            return SceneSpec(
+                emitters: [
+                    EmitterSpec(
+                        emoji: ["💧", "💧", "⛈️"], rate: 70, size: 12...22, speed: 520...720,
+                        angle: rainAngle, angleJitter: 3, lifetime: 3...3, band: 0.2...0.2,
+                        xRange: -0.2...1.2, landing: .splash, tiltResponse: 25, followsIntensity: true
+                    ),
+                ],
+                heroes: cloudBank(front: "⛈️", frontCount: 4),
+                lightningInterval: 3...8,
                 prewarm: 1
             )
 
         case .rain:
             return SceneSpec(
-                background: [Color(hex: 0x34465C), Color(hex: 0x6E8094)],
                 emitters: [
                     EmitterSpec(
-                        emoji: ["💧"], rate: 110, size: 9...18, speed: 450...650,
-                        angle: rainAngle, angleJitter: 2, lifetime: 3...3, landing: .splash,
-                        tiltResponse: 25, followsIntensity: true
+                        emoji: ["💧"], rate: 110, size: 10...18, speed: 450...650,
+                        angle: rainAngle, angleJitter: 2, lifetime: 3...3, band: 0.2...0.2,
+                        xRange: -0.2...1.2, landing: .splash, tiltResponse: 25, followsIntensity: true
                     ),
                 ],
-                heroes: [
-                    HeroSpec(emoji: "🌧️", position: UnitPoint(x: 0.25, y: 0.07), size: 100, pulse: 0.02),
-                    HeroSpec(emoji: "🌧️", position: UnitPoint(x: 0.75, y: 0.09), size: 85, pulse: 0.03),
-                ],
+                heroes: cloudBank(front: "🌧️", frontCount: 3),
                 prewarm: 1
             )
 
         case .snow:
             return SceneSpec(
-                background: [Color(hex: 0x7D90AA), Color(hex: 0xC8D5E3)],
                 emitters: [
                     EmitterSpec(
-                        emoji: ["❄️"], rate: 26, size: 10...28, speed: 40...90,
-                        angle: 90 - wind * 20, angleJitter: 12, lifetime: 14...20, landing: .settle,
-                        wobble: 18, spin: -40...40, tiltResponse: 35, followsIntensity: true
+                        emoji: ["❄️"], rate: 28, size: 10...28, speed: 40...90,
+                        angle: 90 - wind * 20, angleJitter: 12, lifetime: 14...20, band: 0.18...0.18,
+                        landing: .settle, wobble: 18, spin: -40...40, tiltResponse: 35, followsIntensity: true
                     ),
                 ],
+                heroes: cloudBank(front: "🌨️", frontCount: 3),
                 prewarm: 12
-            )
-
-        case .sunny:
-            return SceneSpec(
-                background: [Color(hex: 0x3D9BF2), Color(hex: 0xA8E0FF)],
-                emitters: [
-                    EmitterSpec(
-                        emoji: ["✨"], rate: 1.5, size: 10...20, lifetime: 1.5...3,
-                        origin: .scattered, band: 0.05...0.6, fades: true
-                    ),
-                    EmitterSpec(
-                        emoji: ["☁️"], rate: 0.07, size: 40...70, speed: 10...18, angle: 0,
-                        lifetime: 70...90, origin: .left, band: 0.15...0.45, opacity: 0.85...1
-                    ),
-                ],
-                heroes: [
-                    HeroSpec(emoji: "☀️", position: UnitPoint(x: 0.74, y: 0.11), size: 150, spin: 6, pulse: 0.05),
-                ],
-                prewarm: 40
-            )
-
-        case .clearNight:
-            return SceneSpec(
-                background: [Color(hex: 0x080D22), Color(hex: 0x23305E)],
-                emitters: [
-                    EmitterSpec(
-                        emoji: ["⭐️"], rate: 3, size: 6...14, lifetime: 2...5,
-                        origin: .scattered, band: 0...0.7, fades: true
-                    ),
-                    EmitterSpec(
-                        emoji: ["🌠"], rate: 0.08, size: 20...28, speed: 380...480, angle: 20,
-                        lifetime: 3...3, origin: .left, band: 0.02...0.3
-                    ),
-                ],
-                heroes: [
-                    HeroSpec(emoji: "🌙", position: UnitPoint(x: 0.8, y: 0.1), size: 100, pulse: 0.02),
-                ],
-                prewarm: 4
             )
 
         case .cloudy:
             let drift = 1 + abs(wind) * 2
             return SceneSpec(
-                background: [Color(hex: 0x8A9AA8), Color(hex: 0xC6D0D8)],
                 emitters: [
                     EmitterSpec(
-                        emoji: ["☁️"], rate: 0.3, size: 30...50, speed: (25 * drift)...(40 * drift), angle: 0,
-                        lifetime: 60...80, origin: .left, band: 0.0...0.6, opacity: 0.55...0.75
-                    ),
-                    EmitterSpec(
-                        emoji: ["☁️"], rate: 0.25, size: 70...120, speed: (12 * drift)...(24 * drift), angle: 0,
-                        lifetime: 80...110, origin: .left, band: 0.0...0.5, opacity: 0.9...1
+                        emoji: ["☁️"], rate: 0.25, size: 36...60, speed: (18 * drift)...(30 * drift), angle: 0,
+                        lifetime: 50...70, origin: .left, band: 0.38...0.6, opacity: 0.8...1
                     ),
                 ],
-                prewarm: 45
+                heroes: cloudBank(front: "☁️", frontCount: 4, anchor: UnitPoint(x: 0.5, y: 0.24)),
+                prewarm: 40
             )
 
         case .windy:
             return SceneSpec(
-                background: [Color(hex: 0x66AECA), Color(hex: 0xB7E0EA)],
                 emitters: [
                     EmitterSpec(
                         emoji: ["💨"], rate: 3.5, size: 24...46, speed: 260...420, angle: 0,
-                        angleJitter: 6, lifetime: 3...3, origin: .left, band: 0.05...0.95
+                        angleJitter: 6, lifetime: 3...3, origin: .left, band: 0.1...0.9
                     ),
                     EmitterSpec(
-                        emoji: ["🍃", "🍂"], rate: 1.8, size: 16...26, speed: 150...260, angle: 4,
+                        emoji: ["🍃", "🍂"], rate: 2, size: 16...26, speed: 150...260, angle: 4,
                         angleJitter: 10, lifetime: 4...4, origin: .left, band: 0.1...0.9,
                         wobble: 22, spin: -220...220
                     ),
+                ],
+                heroes: [
+                    HeroSpec(emoji: "🌬️", position: UnitPoint(x: 0.3, y: 0.27), size: 150, pulse: 0.06, bob: 5),
                 ],
                 prewarm: 3
             )
 
         case .foggy:
             return SceneSpec(
-                background: [Color(hex: 0x939DA6), Color(hex: 0xD2D7DB)],
                 emitters: [
                     EmitterSpec(
-                        emoji: ["🌫️"], rate: 0.45, size: 90...170, speed: 8...16, angle: 0,
-                        lifetime: 70...100, origin: .left, band: 0...1, opacity: 0.3...0.55
-                    ),
-                ],
-                prewarm: 60
-            )
-
-        case .hot:
-            return SceneSpec(
-                background: [Color(hex: 0xFF8A3D), Color(hex: 0xFFD36E)],
-                emitters: [
-                    EmitterSpec(
-                        emoji: ["🔥"], rate: 4, size: 14...26, speed: 30...70, angle: -90,
-                        angleJitter: 8, lifetime: 4...7, origin: .bottom, wobble: 10, fades: true
+                        emoji: ["🌫️"], rate: 0.5, size: 90...170, speed: 8...16, angle: 0,
+                        lifetime: 70...100, origin: .left, band: 0...0.7, opacity: 0.35...0.6
                     ),
                 ],
                 heroes: [
-                    HeroSpec(emoji: "☀️", position: UnitPoint(x: 0.5, y: 0.12), size: 170, spin: 4, pulse: 0.08),
+                    HeroSpec(emoji: "🌫️", position: artCenter, offset: CGSize(width: -60, height: 0), size: 130, phase: 0, bob: 6, opacity: 0.9),
+                    HeroSpec(emoji: "🌫️", position: artCenter, offset: CGSize(width: 60, height: 20), size: 110, phase: 120, bob: 6, opacity: 0.8),
                 ],
-                prewarm: 5
+                prewarm: 60
             )
         }
+    }
+
+    // MARK: - Emoji shapes
+
+    /// A sun made of emoji: a big core, a ring of smaller emoji turning around it and a twinkling
+    /// outer ring.
+    private static func sun(core: String, ring inner: String, outer: String) -> [HeroSpec] {
+        [HeroSpec(emoji: core, position: artCenter, size: 140, spin: 6, pulse: 0.05)]
+            + ring(inner, count: 12, radius: 96, size: 26, orbitSpeed: 12)
+            + ring(outer, count: 16, radius: 138, size: 20, orbitSpeed: -7, pulse: 0.3)
+    }
+
+    private static func ring(_ emoji: String, count: Int, radius: Double, size: Double,
+                             orbitSpeed: Double, pulse: Double = 0, anchor: UnitPoint = artCenter) -> [HeroSpec] {
+        (0..<count).map { index in
+            HeroSpec(
+                emoji: emoji, position: anchor, size: size, pulse: pulse, orbitRadius: radius,
+                orbitSpeed: orbitSpeed, phase: Double(index) / Double(count) * 360
+            )
+        }
+    }
+
+    /// A puffy bank of ☁️ with a front row of weather clouds (⛈️, 🌧️, 🌨️) that float gently.
+    private static func cloudBank(front: String, frontCount: Int, anchor: UnitPoint = cloudLine) -> [HeroSpec] {
+        let width = 300.0
+        let backCount = 7
+        let back: [HeroSpec] = (0..<backCount).map { index in
+            let t = Double(index) / Double(backCount - 1)
+            let hump = sin(t * .pi)
+            return HeroSpec(
+                emoji: "☁️", position: anchor,
+                offset: CGSize(width: (t - 0.5) * width, height: -hump * 36),
+                size: 62 + hump * 40, phase: Double(index) * 47, bob: 3
+            )
+        }
+        let frontRow: [HeroSpec] = (0..<frontCount).map { index in
+            let t = frontCount == 1 ? 0.5 : Double(index) / Double(frontCount - 1)
+            return HeroSpec(
+                emoji: front, position: anchor,
+                offset: CGSize(width: (t - 0.5) * width * 0.7, height: 24),
+                size: 74, phase: Double(index) * 83 + 20, bob: 5
+            )
+        }
+        return back + frontRow
     }
 }
 

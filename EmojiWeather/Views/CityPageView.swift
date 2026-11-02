@@ -1,0 +1,238 @@
+import CoreLocation
+import os
+import SwiftUI
+import WeatherKit
+
+private let logger = Logger(subsystem: "EmojiWeather", category: "Weather")
+
+/// One full-screen page: the emoji scene with the city, temperature and a few key details.
+/// Swiping up opens the full forecast.
+struct CityPageView: View {
+    let place: Place
+    /// Only the visible page animates.
+    let isActive: Bool
+    var previewScene: WeatherScene?
+
+    @Environment(LocationService.self) private var location
+    @Environment(WeatherProvider.self) private var weather
+    @Environment(\.scenePhase) private var scenePhase
+
+    @State private var snapshot: WeatherSnapshot?
+    @State private var errorMessage: String?
+    @State private var isLoading = false
+    @State private var showingDetails = false
+
+    private var targetLocation: CLLocation? {
+        switch place {
+        case .currentLocation: location.location
+        case .city(let city): city.location
+        }
+    }
+
+    private var timeZone: TimeZone {
+        switch place {
+        case .currentLocation: .current
+        case .city(let city): city.timeZone
+        }
+    }
+
+    private var placeName: String {
+        switch place {
+        case .currentLocation: location.placeName ?? "My Location"
+        case .city(let city): city.name
+        }
+    }
+
+    private var sceneConditions: SceneConditions {
+        if let previewScene { return SceneConditions(scene: previewScene, intensity: 0.8, windDrift: 0.3) }
+        if let current = snapshot?.current { return SceneConditions(current: current) }
+        return SceneConditions(scene: .cloudy)
+    }
+
+    /// Changes whenever the weather should be reloaded.
+    private var loadKey: String {
+        guard let target = targetLocation else { return "\(place.id)-none" }
+        return String(format: "%@-%.2f,%.2f", place.id, target.coordinate.latitude, target.coordinate.longitude)
+    }
+
+    var body: some View {
+        GeometryReader { proxy in
+            ZStack(alignment: .top) {
+                Color.white
+
+                EmojiSceneView(conditions: sceneConditions, paused: !isActive)
+
+                VStack(spacing: 0) {
+                    Spacer()
+                        .frame(height: proxy.size.height * 0.47)
+                    summary
+                    Spacer(minLength: 12)
+                    swipeHint
+                        .padding(.bottom, proxy.safeAreaInsets.bottom + 34)
+                }
+                .padding(.horizontal, 24)
+            }
+        }
+        .contentShape(Rectangle())
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 24).onEnded { value in
+                let isUpward = value.translation.height < -60
+                    && abs(value.translation.height) > abs(value.translation.width) * 1.5
+                if isUpward, snapshot != nil { showingDetails = true }
+            }
+        )
+        .task(id: loadKey) { await load() }
+        .onChange(of: scenePhase) { _, phase in
+            // Refresh when coming back to the app; the cache keeps this to one call per 30 minutes.
+            if phase == .active, isActive { Task { await load() } }
+        }
+        .sheet(isPresented: $showingDetails) {
+            if let snapshot {
+                DetailsView(placeName: placeName, snapshot: snapshot, timeZone: timeZone) {
+                    await load(forceRefresh: true)
+                }
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(.white)
+                .presentationCornerRadius(36)
+            }
+        }
+    }
+
+    // MARK: - First page
+
+    private var summary: some View {
+        VStack(spacing: 4) {
+            HStack(spacing: 6) {
+                if case .currentLocation = place {
+                    Image(systemName: "location.fill").font(.subheadline)
+                }
+                Text(placeName)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
+            }
+            .font(.system(.title2, design: .rounded, weight: .bold))
+
+            if let current = snapshot?.current {
+                Text(current.temperature.shortTemperature)
+                    .font(.system(size: 112, weight: .heavy, design: .rounded))
+                    .contentTransition(.numericText())
+                    .padding(.vertical, -10)
+
+                Text(current.condition.description)
+                    .font(.system(.title3, design: .rounded, weight: .semibold))
+
+                if let today = snapshot?.daily.first {
+                    HStack(spacing: 14) {
+                        Label(today.highTemperature.shortTemperature, systemImage: "arrow.up")
+                        Label(today.lowTemperature.shortTemperature, systemImage: "arrow.down")
+                    }
+                    .font(.system(.headline, design: .rounded))
+                    .labelStyle(TightLabelStyle())
+                }
+
+                Text(sceneConditions.scene.tagline)
+                    .font(.system(.body, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.top, 6)
+            } else {
+                status
+                    .padding(.top, 16)
+            }
+        }
+        .foregroundStyle(.black)
+        .frame(maxWidth: .infinity)
+        // A soft white halo keeps text readable where it overlaps falling emoji.
+        .shadow(color: .white, radius: 8)
+        .shadow(color: .white, radius: 8)
+    }
+
+    @ViewBuilder
+    private var status: some View {
+        if case .currentLocation = place, !location.isAuthorized {
+            LocationPermissionCard()
+        } else if case .currentLocation = place, location.location == nil {
+            if location.isLocating {
+                ProgressView("Finding your location…")
+            } else {
+                retryMessage(location.failureMessage ?? "Waiting for your location…") {
+                    location.refresh()
+                }
+            }
+        } else if let errorMessage {
+            retryMessage(errorMessage) {
+                Task { await load(forceRefresh: true) }
+            }
+        } else if isLoading {
+            ProgressView()
+        }
+    }
+
+    private func retryMessage(_ message: String, action: @escaping () -> Void) -> some View {
+        VStack(spacing: 10) {
+            Text(message)
+                .font(.subheadline)
+                .multilineTextAlignment(.center)
+            Button("Try Again", action: action)
+                .buttonStyle(.bordered)
+                .tint(.black)
+        }
+    }
+
+    private var swipeHint: some View {
+        Button {
+            showingDetails = true
+        } label: {
+            VStack(spacing: 2) {
+                Image(systemName: "chevron.compact.up")
+                    .font(.title2)
+                Text("Forecast")
+                    .font(.system(.footnote, design: .rounded, weight: .semibold))
+            }
+            .foregroundStyle(.black.opacity(0.45))
+        }
+        .opacity(snapshot == nil ? 0 : 1)
+        .disabled(snapshot == nil)
+    }
+
+    // MARK: - Loading
+
+    private func load(forceRefresh: Bool = false) async {
+        guard let target = targetLocation else {
+            snapshot = nil
+            return
+        }
+        // Show cached weather right away, then fetch only if it's stale.
+        if let cached = weather.cachedWeather(for: target) {
+            snapshot = cached
+            if !forceRefresh { return }
+        }
+
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            snapshot = try await weather.weather(for: target, forceRefresh: forceRefresh)
+            errorMessage = nil
+        } catch is CancellationError {
+            // The page went away or the place changed; the next load takes over.
+        } catch {
+            logger.error("WeatherKit failed: \(String(describing: error), privacy: .public)")
+            #if DEBUG
+            // Usually WeatherKit isn't enabled for the App ID yet, or signing has no team.
+            errorMessage = "Couldn't load the weather.\n\(error.localizedDescription)\nCheck that WeatherKit is enabled for this App ID (Capabilities and App Services)."
+            #else
+            errorMessage = "Couldn't load the weather."
+            #endif
+        }
+    }
+}
+
+private struct TightLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 2) {
+            configuration.icon.font(.caption.weight(.heavy))
+            configuration.title
+        }
+    }
+}

@@ -5,21 +5,24 @@ import UIKit
 /// The full-screen animated emoji scene that sits behind the weather.
 struct EmojiSceneView: View {
     var conditions: SceneConditions
+    /// Pauses the animation, e.g. for city pages that are off screen.
+    var paused = false
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
     @State private var system: EmojiParticleSystem
     @State private var tilt = MotionTilt()
 
-    init(conditions: SceneConditions) {
+    init(conditions: SceneConditions, paused: Bool = false) {
         self.conditions = conditions
+        self.paused = paused
         _system = State(initialValue: EmojiParticleSystem(conditions: conditions))
     }
 
     var body: some View {
         // 60 fps normally, 30 fps in Low Power Mode, paused in the background.
         let lowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
-        TimelineView(.animation(minimumInterval: lowPower ? 1.0 / 30 : nil, paused: scenePhase != .active)) { timeline in
+        TimelineView(.animation(minimumInterval: lowPower ? 1.0 / 30 : nil, paused: paused || scenePhase != .active)) { timeline in
             Canvas { context, size in
                 system.update(
                     now: timeline.date.timeIntervalSinceReferenceDate,
@@ -80,8 +83,7 @@ final class MotionTilt {
                 .overlay(alignment: .bottom) {
                     Text(scene.title)
                         .font(.title2.bold())
-                        .foregroundStyle(.white)
-                        .shadow(radius: 4)
+                        .foregroundStyle(.black)
                         .padding(.bottom, 60)
                 }
         }

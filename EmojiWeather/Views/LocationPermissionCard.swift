@@ -32,6 +32,6 @@ struct LocationPermissionCard: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .background(.ultraThinMaterial, in: .rect(cornerRadius: 20))
+        .background(Color.black.opacity(0.045), in: .rect(cornerRadius: 24))
     }
 }

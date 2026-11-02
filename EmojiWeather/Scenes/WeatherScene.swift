@@ -68,6 +68,21 @@ enum WeatherScene: String, CaseIterable, Identifiable, Sendable {
         }
     }
 
+    /// A short, playful line under the temperature. (Foundation Models can personalize this later.)
+    var tagline: String {
+        switch self {
+        case .thunderstorm: "Stay in. The sky's putting on a show. ⚡️"
+        case .rain: "Umbrella weather. ☂️"
+        case .snow: "Bundle up, it's snowing. 🧣"
+        case .sunny: "Sunglasses on. 😎"
+        case .clearNight: "Clear skies. Go find a star. 🔭"
+        case .cloudy: "A soft, gray kind of day."
+        case .windy: "Hold on to your hat. 🎩"
+        case .foggy: "Low visibility. Take it slow."
+        case .hot: "Stay cool and drink some water. 🥤"
+        }
+    }
+
     /// A single emoji for the hourly and daily rows. Finer-grained than the scenes.
     static func emoji(for condition: WeatherCondition, isDaylight: Bool = true) -> String {
         switch condition {
