@@ -37,8 +37,8 @@ struct BannerAdView: UIViewRepresentable {
     }
 }
 
-/// The small ad at the top of the current-location page, with a way out to EmojiWeather+.
-struct TopBannerAd: View {
+/// The small ad near the bottom of the current-location page, with a way out to EmojiWeather+.
+struct BannerAdWithUpsell: View {
     var onRemoveAds: () -> Void
 
     @Environment(AdsManager.self) private var ads

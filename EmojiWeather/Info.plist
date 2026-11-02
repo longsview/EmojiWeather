@@ -5,6 +5,9 @@
 	<!-- EmojiWeather AdMob App ID. Ad unit IDs live in AdsManager.AdUnit. -->
 	<key>GADApplicationIdentifier</key>
 	<string>ca-app-pub-3535864006125488~2379718841</string>
+	<!-- Skip Google Analytics measurement setup at launch; it isn't used. -->
+	<key>GADDelayAppMeasurementInit</key>
+	<true/>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>

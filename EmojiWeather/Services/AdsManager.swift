@@ -49,6 +49,9 @@ final class AdsManager: NSObject, FullScreenContentDelegate {
         launchCount = UserDefaults.standard.integer(forKey: Self.launchCountKey) + 1
         UserDefaults.standard.set(launchCount, forKey: Self.launchCountKey)
 
+        // Let the first screen and its weather load before the ad SDKs spin up WebKit.
+        try? await Task.sleep(for: .seconds(2))
+
         do {
             try await ConsentInformation.shared.requestConsentInfoUpdate(with: RequestParameters())
             try await ConsentForm.loadAndPresentIfRequired(from: nil)
@@ -57,7 +60,10 @@ final class AdsManager: NSObject, FullScreenContentDelegate {
         }
         guard ConsentInformation.shared.canRequestAds else { return }
 
-        _ = await MobileAds.shared.start()
+        // Starting the SDK does a lot of synchronous setup, so keep it off the main thread.
+        await Task.detached(priority: .utility) {
+            _ = await MobileAds.shared.start()
+        }.value
         isReady = true
         await loadInterstitial()
     }

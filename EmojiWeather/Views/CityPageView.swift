@@ -69,24 +69,18 @@ struct CityPageView: View {
     var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .top) {
-                // The banner gets its own strip, so the scene starts below it instead of
-                // being cut up by it.
-                sceneConditions.sky.background.first ?? .white
-
                 EmojiSceneView(conditions: sceneConditions, paused: !isActive || isCovered)
-                    .padding(.top, showsBanner ? Self.bannerStrip : 0)
-
-                if showsBanner {
-                    // Free tier: a small banner under the top buttons on the first page.
-                    TopBannerAd { showingPaywall = true }
-                        .padding(.top, max(proxy.safeAreaInsets.top, 59) + 52)
-                }
 
                 VStack(spacing: 0) {
                     Spacer()
                         .frame(height: proxy.size.height * 0.47)
                     summary
                     Spacer(minLength: 12)
+                    if showsBanner {
+                        // Free tier: a small banner just above the Forecast hint on the first page.
+                        BannerAdWithUpsell { showingPaywall = true }
+                            .padding(.bottom, 14)
+                    }
                     swipeHint
                         .padding(.bottom, proxy.safeAreaInsets.bottom + 64)
                 }
@@ -131,8 +125,6 @@ struct CityPageView: View {
     }
 
     // MARK: - First page
-
-    private static let bannerStrip: CGFloat = 76
 
     private var showsBanner: Bool {
         isCurrentLocation && ads.isReady && !purchases.hasPlus
