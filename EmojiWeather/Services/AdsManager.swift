@@ -35,6 +35,7 @@ final class AdsManager: NSObject, FullScreenContentDelegate {
     @ObservationIgnored private var swipesSinceAd = 0
     @ObservationIgnored private var lastFullScreenAd: Date?
     @ObservationIgnored private var launchCount = 0
+    @ObservationIgnored private var loadAttempts = 0
     @ObservationIgnored private let logger = Logger(subsystem: "EmojiWeather", category: "Ads")
 
     private static let launchCountKey = "ads.launchCount"
@@ -77,12 +78,23 @@ final class AdsManager: NSObject, FullScreenContentDelegate {
         ad.present(from: nil)
     }
 
+    /// Loads the next full-screen ad, retrying with a growing delay when there's no fill or
+    /// the SDK isn't fully ready yet (it can report "Invalid request" right after startup).
     private func loadInterstitial() async {
-        do {
-            interstitial = try await InterstitialAd.load(with: AdUnit.citySwipe, request: Request())
-        } catch {
-            logger.error("Interstitial failed to load: \(error.localizedDescription, privacy: .public)")
+        guard interstitial == nil else { return }
+        while loadAttempts < 5 {
+            loadAttempts += 1
+            do {
+                interstitial = try await InterstitialAd.load(with: AdUnit.citySwipe, request: Request())
+                logger.info("Interstitial loaded")
+                loadAttempts = 0
+                return
+            } catch {
+                logger.error("Interstitial failed to load (try \(self.loadAttempts)): \(error.localizedDescription, privacy: .public)")
+                try? await Task.sleep(for: .seconds(10 * loadAttempts))
+            }
         }
+        loadAttempts = 0
     }
 
     // MARK: - FullScreenContentDelegate

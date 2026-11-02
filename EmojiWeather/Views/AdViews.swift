@@ -1,4 +1,5 @@
 import GoogleMobileAds
+import os
 import SwiftUI
 import UIKit
 
@@ -10,6 +11,7 @@ struct BannerAdView: UIViewRepresentable {
     func makeUIView(context: Context) -> BannerView {
         let banner = BannerView(adSize: size)
         banner.adUnitID = adUnitID
+        banner.delegate = context.coordinator
         banner.rootViewController = UIApplication.shared.connectedScenes
             .compactMap { ($0 as? UIWindowScene)?.keyWindow }
             .first?.rootViewController
@@ -18,6 +20,21 @@ struct BannerAdView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: BannerView, context: Context) {}
+
+    func makeCoordinator() -> Coordinator { Coordinator() }
+
+    /// Logs fills and failures so a slow fill can be told apart from an error.
+    final class Coordinator: NSObject, BannerViewDelegate {
+        private let logger = Logger(subsystem: "EmojiWeather", category: "Ads")
+
+        func bannerViewDidReceiveAd(_ bannerView: BannerView) {
+            logger.info("Banner loaded: \(bannerView.adUnitID ?? "", privacy: .public)")
+        }
+
+        func bannerView(_ bannerView: BannerView, didFailToReceiveAdWithError error: Error) {
+            logger.error("Banner failed: \(error.localizedDescription, privacy: .public)")
+        }
+    }
 }
 
 /// The small ad at the top of the current-location page, with a way out to EmojiWeather+.

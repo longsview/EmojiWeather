@@ -19,6 +19,8 @@ struct CityPageView: View {
 
     @Environment(LocationService.self) private var location
     @Environment(WeatherProvider.self) private var weather
+    @Environment(AdsManager.self) private var ads
+    @Environment(PurchaseManager.self) private var purchases
     @Environment(\.scenePhase) private var scenePhase
 
     @State private var snapshot: WeatherSnapshot?
@@ -67,9 +69,14 @@ struct CityPageView: View {
     var body: some View {
         GeometryReader { proxy in
             ZStack(alignment: .top) {
-                EmojiSceneView(conditions: sceneConditions, paused: !isActive || isCovered)
+                // The banner gets its own strip, so the scene starts below it instead of
+                // being cut up by it.
+                sceneConditions.sky.background.first ?? .white
 
-                if isCurrentLocation {
+                EmojiSceneView(conditions: sceneConditions, paused: !isActive || isCovered)
+                    .padding(.top, showsBanner ? Self.bannerStrip : 0)
+
+                if showsBanner {
                     // Free tier: a small banner under the top buttons on the first page.
                     TopBannerAd { showingPaywall = true }
                         .padding(.top, max(proxy.safeAreaInsets.top, 59) + 52)
@@ -124,6 +131,12 @@ struct CityPageView: View {
     }
 
     // MARK: - First page
+
+    private static let bannerStrip: CGFloat = 76
+
+    private var showsBanner: Bool {
+        isCurrentLocation && ads.isReady && !purchases.hasPlus
+    }
 
     private var isCurrentLocation: Bool {
         if case .currentLocation = place { return true }
