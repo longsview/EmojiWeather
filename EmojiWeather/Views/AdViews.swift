@@ -98,7 +98,7 @@ struct ForecastAdCard: View {
                     .frame(maxWidth: .infinity)
             }
             .padding()
-            .background(Color.black.opacity(0.045), in: .rect(cornerRadius: 24))
+            .background(Color.primary.opacity(0.06), in: .rect(cornerRadius: 24))
         }
     }
 }

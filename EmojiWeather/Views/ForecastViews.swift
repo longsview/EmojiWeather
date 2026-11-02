@@ -73,6 +73,6 @@ struct ForecastCard<Content: View>: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding()
-        .background(Color.black.opacity(0.045), in: .rect(cornerRadius: 24))
+        .background(Color.primary.opacity(0.06), in: .rect(cornerRadius: 24))
     }
 }

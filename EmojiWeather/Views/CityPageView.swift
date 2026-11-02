@@ -1,6 +1,7 @@
 import CoreLocation
 import os
 import SwiftUI
+import UIKit
 import WeatherKit
 
 private let logger = Logger(subsystem: "EmojiWeather", category: "Weather")
@@ -122,8 +123,9 @@ struct CityPageView: View {
                 }
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
-                .presentationBackground(.white)
-                .environment(\.colorScheme, .light)
+                // The app forces light or dark to match the sky, so read the system setting
+                // from the screen and give the forecast sheet that instead.
+                .preferredColorScheme(SystemAppearance.colorScheme)
                 .presentationCornerRadius(36)
             }
         }
@@ -245,5 +247,15 @@ struct CityPageView: View {
             errorMessage = "Couldn't load the weather."
             #endif
         }
+    }
+}
+
+/// The user's Light/Dark setting from Settings, which the app's own sky-based override hides.
+enum SystemAppearance {
+    @MainActor static var colorScheme: ColorScheme {
+        let screen = UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.screen }
+            .first
+        return screen?.traitCollection.userInterfaceStyle == .dark ? .dark : .light
     }
 }
