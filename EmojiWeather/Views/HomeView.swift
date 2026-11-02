@@ -5,6 +5,7 @@ import SwiftUI
 struct HomeView: View {
     @Environment(CityStore.self) private var cityStore
     @Environment(PurchaseManager.self) private var purchases
+    @Environment(AdsManager.self) private var ads
     @Environment(\.horizontalSizeClass) private var sizeClass
 
     /// Per device on purpose: each device remembers which place it was last showing.
@@ -57,7 +58,7 @@ struct HomeView: View {
                     CityPageView(
                         place: place,
                         isActive: place.id == currentID,
-                        isCovered: showingPlaces || showingGallery,
+                        isCovered: showingPlaces || showingGallery || ads.isShowingFullScreenAd,
                         previewScene: previewScene,
                         onSkyChange: { activeSky = $0 }
                     )
@@ -74,7 +75,10 @@ struct HomeView: View {
             set: { newValue in
                 // Only write real page changes; layout passes (e.g. the keyboard appearing in a
                 // sheet) can report the same page again, and every write re-renders the pager.
-                if let newValue, newValue != selectedPlaceID { selectedPlaceID = newValue }
+                if let newValue, newValue != selectedPlaceID {
+                    selectedPlaceID = newValue
+                    ads.cityPageChanged(hasPlus: purchases.hasPlus)
+                }
             }
         ))
         .background(activeSky.background.first ?? .white)
@@ -153,7 +157,7 @@ struct HomeView: View {
                     Text("\(scene.emoji) \(scene.title)").tag(Optional(scene))
                 }
             }
-            Toggle("EmojiWeather+ unlocked", isOn: Bindable(purchases).hasPlus)
+            Toggle("EmojiWeather+ unlocked", isOn: Bindable(purchases).debugUnlock)
         } label: {
             circleIcon("ladybug")
         }

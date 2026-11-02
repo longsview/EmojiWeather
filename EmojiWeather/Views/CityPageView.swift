@@ -25,6 +25,7 @@ struct CityPageView: View {
     @State private var errorMessage: String?
     @State private var isLoading = false
     @State private var showingDetails = false
+    @State private var showingPaywall = false
 
     private var targetLocation: CLLocation? {
         switch place {
@@ -68,6 +69,12 @@ struct CityPageView: View {
             ZStack(alignment: .top) {
                 EmojiSceneView(conditions: sceneConditions, paused: !isActive || isCovered)
 
+                if isCurrentLocation {
+                    // Free tier: a small banner under the top buttons on the first page.
+                    TopBannerAd { showingPaywall = true }
+                        .padding(.top, max(proxy.safeAreaInsets.top, 59) + 52)
+                }
+
                 VStack(spacing: 0) {
                     Spacer()
                         .frame(height: proxy.size.height * 0.47)
@@ -99,6 +106,9 @@ struct CityPageView: View {
             // Refresh when coming back to the app; the cache keeps this to one call per 30 minutes.
             if phase == .active, isActive { Task { await load() } }
         }
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
+        }
         .sheet(isPresented: $showingDetails) {
             if let snapshot {
                 DetailsView(placeName: placeName, snapshot: snapshot, timeZone: timeZone) {
@@ -126,6 +136,7 @@ struct CityPageView: View {
             WeatherSummaryView(
                 placeName: placeName,
                 showsLocationIcon: isCurrentLocation,
+                timeZone: timeZone,
                 temperature: current.temperature.shortTemperature,
                 condition: current.condition.description,
                 high: snapshot?.daily.first?.highTemperature.shortTemperature,

@@ -6,6 +6,7 @@ struct EmojiWeatherApp: App {
     @State private var cityStore = CityStore()
     @State private var weather = WeatherProvider()
     @State private var purchases = PurchaseManager()
+    @State private var ads = AdsManager()
 
     var body: some Scene {
         WindowGroup {
@@ -14,6 +15,8 @@ struct EmojiWeatherApp: App {
                 .environment(cityStore)
                 .environment(weather)
                 .environment(purchases)
+                .environment(ads)
+                .task { await ads.start() }
         }
     }
 }

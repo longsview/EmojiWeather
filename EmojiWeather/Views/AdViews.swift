@@ -1,0 +1,68 @@
+import GoogleMobileAds
+import SwiftUI
+import UIKit
+
+/// A fixed-size AdMob banner.
+struct BannerAdView: UIViewRepresentable {
+    let adUnitID: String
+    let size: AdSize
+
+    func makeUIView(context: Context) -> BannerView {
+        let banner = BannerView(adSize: size)
+        banner.adUnitID = adUnitID
+        banner.rootViewController = UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+            .first?.rootViewController
+        banner.load(Request())
+        return banner
+    }
+
+    func updateUIView(_ uiView: BannerView, context: Context) {}
+}
+
+/// The small ad at the top of the current-location page, with a way out to EmojiWeather+.
+struct TopBannerAd: View {
+    var onRemoveAds: () -> Void
+
+    @Environment(AdsManager.self) private var ads
+    @Environment(PurchaseManager.self) private var purchases
+    @Environment(\.skyMode) private var sky
+
+    var body: some View {
+        if ads.isReady, !purchases.hasPlus {
+            VStack(spacing: 4) {
+                BannerAdView(adUnitID: AdsManager.AdUnit.homeBanner, size: AdSizeBanner)
+                    .frame(width: 320, height: 50)
+                    .clipShape(.rect(cornerRadius: 10))
+                Button(action: onRemoveAds) {
+                    Text("Remove ads with EmojiWeather+")
+                        .font(.system(.caption2, design: .rounded, weight: .semibold))
+                        .foregroundStyle(sky.textColor.opacity(0.6))
+                }
+            }
+        }
+    }
+}
+
+/// An ad styled like the other forecast cards, for the swipe-up sheet.
+struct ForecastAdCard: View {
+    @Environment(AdsManager.self) private var ads
+    @Environment(PurchaseManager.self) private var purchases
+
+    var body: some View {
+        if ads.isReady, !purchases.hasPlus {
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Ad")
+                    .font(.caption.weight(.semibold))
+                    .textCase(.uppercase)
+                    .foregroundStyle(.secondary)
+                BannerAdView(adUnitID: AdsManager.AdUnit.forecastCard, size: AdSizeMediumRectangle)
+                    .frame(width: 300, height: 250)
+                    .clipShape(.rect(cornerRadius: 12))
+                    .frame(maxWidth: .infinity)
+            }
+            .padding()
+            .background(Color.black.opacity(0.045), in: .rect(cornerRadius: 24))
+        }
+    }
+}

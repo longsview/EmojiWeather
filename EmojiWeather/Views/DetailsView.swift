@@ -16,6 +16,7 @@ struct DetailsView: View {
                     .padding(.top, 8)
 
                 HourlyForecastView(hours: snapshot.hourly, timeZone: timeZone)
+                ForecastAdCard()
                 ConditionsGrid(current: snapshot.current, today: snapshot.daily.first, timeZone: timeZone)
                 DailyForecastView(days: snapshot.daily, timeZone: timeZone)
 
