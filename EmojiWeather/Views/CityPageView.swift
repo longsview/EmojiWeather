@@ -70,6 +70,13 @@ struct CityPageView: View {
         GeometryReader { proxy in
             ZStack(alignment: .top) {
                 EmojiSceneView(conditions: sceneConditions, paused: !isActive || isCovered)
+                    // While paging, hold the scene in place and cross-fade it with the
+                    // neighbor's instead of sliding it; only the text slides.
+                    .scrollTransition(.interactive, axis: .horizontal) { content, phase in
+                        content
+                            .opacity(1 - abs(phase.value))
+                            .offset(x: -phase.value * proxy.size.width)
+                    }
 
                 VStack(spacing: 0) {
                     Spacer()
