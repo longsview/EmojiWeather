@@ -42,8 +42,10 @@ struct WeatherMapView: View {
         .onMapCameraChange(frequency: .onEnd) { context in
             model.update(region: context.region)
         }
-        .overlay(alignment: .top) { header }
-        .overlay(alignment: .bottom) {
+        // Insets (not overlays) so the header and attribution clear the status bar and the tab
+        // bar, and the map keeps its markers out from under them.
+        .safeAreaInset(edge: .top) { header }
+        .safeAreaInset(edge: .bottom) {
             WeatherAttributionView()
                 .padding(8)
                 .glassEffect(.regular, in: .rect(cornerRadius: 12))
@@ -73,10 +75,10 @@ private struct EmojiMapMarker: View {
     var body: some View {
         VStack(spacing: -6) {
             Text(emoji)
-                .font(.system(size: 40))
+                .font(.system(size: 48))
                 .shadow(color: .black.opacity(0.25), radius: 3, y: 2)
             Text(temperature)
-                .font(.system(size: 22, weight: .black, design: .rounded))
+                .font(.system(size: 26, weight: .black, design: .rounded))
                 .foregroundStyle(.white)
                 // Four hard shadows make a cheap outline.
                 .shadow(color: .black, radius: 0, x: 1.5, y: 1.5)

@@ -36,7 +36,7 @@ final class MapWeatherModel {
     /// Square sizes in degrees, smallest first.
     private static let cellSizes: [Double] = [0.1, 0.25, 0.5, 1, 2, 4, 8, 16]
     /// Aim for about this many squares across the shorter side of the screen.
-    private static let cellsAcross = 4.0
+    private static let cellsAcross = 3.0
     private static let maxCellsPerUpdate = 30
     private static let maxAge: TimeInterval = 30 * 60
     private static let maxConcurrentRequests = 6

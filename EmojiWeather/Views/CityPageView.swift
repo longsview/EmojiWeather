@@ -81,18 +81,22 @@ struct CityPageView: View {
 
                 VStack(spacing: 0) {
                     Spacer()
-                        .frame(height: proxy.size.height * 0.47)
+                        .frame(height: proxy.size.height * (bottomInset == nil ? 0.47 : 0.42))
                     summary
-                    Spacer(minLength: 12)
+                    Spacer(minLength: 0)
+                }
+                .padding(.horizontal, 24)
+            }
+            // Pinned to the bottom on its own, so a tall summary can never push it off screen.
+            .overlay(alignment: .bottom) {
+                VStack(spacing: 14) {
                     if showsBanner {
                         // Free tier: a small banner just above the Forecast hint on the first page.
                         BannerAdWithUpsell { showingPaywall = true }
-                            .padding(.bottom, 14)
                     }
                     swipeHint
-                        .padding(.bottom, bottomInset.map { $0 + 40 } ?? proxy.safeAreaInsets.bottom + 64)
                 }
-                .padding(.horizontal, 24)
+                .padding(.bottom, bottomInset.map { $0 + 36 } ?? proxy.safeAreaInsets.bottom + 64)
             }
         }
         .environment(\.skyMode, sceneConditions.sky)
@@ -127,7 +131,7 @@ struct CityPageView: View {
                 .presentationDragIndicator(.visible)
                 // The app forces light or dark to match the sky, so read the system setting
                 // from the screen and give the forecast sheet that instead.
-                .preferredColorScheme(SystemAppearance.colorScheme)
+                .preferredColorScheme(SystemAppearance.shared.colorScheme)
                 .presentationCornerRadius(36)
             }
         }
@@ -253,11 +257,28 @@ struct CityPageView: View {
 }
 
 /// The user's Light/Dark setting from Settings, which the app's own sky-based override hides.
-enum SystemAppearance {
-    @MainActor static var colorScheme: ColorScheme {
-        let screen = UIApplication.shared.connectedScenes
-            .compactMap { ($0 as? UIWindowScene)?.screen }
-            .first
-        return screen?.traitCollection.userInterfaceStyle == .dark ? .dark : .light
+/// Updates live when the setting changes.
+@MainActor
+@Observable
+final class SystemAppearance {
+    static let shared = SystemAppearance()
+
+    private(set) var colorScheme: ColorScheme = .light
+    @ObservationIgnored private var registration: (any UITraitChangeRegistration)?
+
+    private init() {
+        refresh()
+    }
+
+    private func refresh() {
+        guard let scene = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first else { return }
+        let style = scene.screen.traitCollection.userInterfaceStyle
+        let scheme: ColorScheme = style == .dark ? .dark : .light
+        if scheme != colorScheme { colorScheme = scheme }
+        if registration == nil {
+            registration = scene.registerForTraitChanges([UITraitUserInterfaceStyle.self]) { [weak self] (_: UIWindowScene, _: UITraitCollection) in
+                self?.refresh()
+            }
+        }
     }
 }
