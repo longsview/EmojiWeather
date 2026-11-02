@@ -2,9 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<!-- Google's test AdMob App ID. Replace with the real one from AdMob before release. -->
+	<!-- EmojiWeather AdMob App ID. Ad unit IDs live in AdsManager.AdUnit. -->
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<string>ca-app-pub-3535864006125488~2379718841</string>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>
