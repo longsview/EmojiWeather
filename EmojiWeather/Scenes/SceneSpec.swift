@@ -102,8 +102,11 @@ struct SceneSpec {
 
 /// Where the main emoji shape sits. The text sits below it.
 private let artCenter = UnitPoint(x: 0.5, y: 0.27)
-/// The sun and moon sit up in a corner, not in the middle.
-private let sunCorner = UnitPoint(x: 0.2, y: 0.17)
+/// The sun follows the time of day: left at sunrise, top middle at noon, right at sunset,
+/// on a gentle arc. The moon sits up in the right corner.
+private func sunPosition(_ progress: Double) -> UnitPoint {
+    UnitPoint(x: 0.15 + 0.7 * progress, y: 0.19 - 0.05 * sin(.pi * progress))
+}
 private let moonCorner = UnitPoint(x: 0.78, y: 0.17)
 private let cloudLine = UnitPoint(x: 0.5, y: 0.17)
 
@@ -124,26 +127,26 @@ extension SceneSpec {
             return SceneSpec(
                 emitters: [
                     // Rays of sparkles streaming out of the sun in the corner.
-                    sunRays(emoji: ["✨"]),
+                    sunRays(emoji: ["✨"], at: sunPosition(conditions.sunProgress)),
                     EmitterSpec(
                         emoji: ["☁️"], rate: 0.05, size: 44...64, speed: 12...20, angle: 0,
                         lifetime: 60...80, origin: .left, band: 0.5...0.62, opacity: 0.9...1
                     ),
                 ],
-                heroes: [HeroSpec(emoji: "☀️", position: sunCorner, size: 160, spin: 4, pulse: 0.04)],
+                heroes: [HeroSpec(emoji: "☀️", position: sunPosition(conditions.sunProgress), size: 160, spin: 4, pulse: 0.04)],
                 prewarm: 30
             )
 
         case .hot:
             return SceneSpec(
                 emitters: [
-                    sunRays(emoji: ["✨", "🔥"]),
+                    sunRays(emoji: ["✨", "🔥"], at: sunPosition(conditions.sunProgress)),
                     EmitterSpec(
                         emoji: ["🔥"], rate: 3, size: 14...24, speed: 30...70, angle: -90,
                         angleJitter: 8, lifetime: 4...7, origin: .bottom, wobble: 10, fades: true
                     ),
                 ],
-                heroes: [HeroSpec(emoji: "☀️", position: sunCorner, size: 175, spin: 5, pulse: 0.07)],
+                heroes: [HeroSpec(emoji: "☀️", position: sunPosition(conditions.sunProgress), size: 175, spin: 5, pulse: 0.07)],
                 prewarm: 5
             )
 
@@ -255,11 +258,11 @@ extension SceneSpec {
 
     // MARK: - Emoji shapes
 
-    /// Twelve straight rays of small emoji flowing out of the corner sun and slowly turning.
-    private static func sunRays(emoji: [String]) -> EmitterSpec {
+    /// Twelve straight rays of small emoji flowing out of the sun and slowly turning.
+    private static func sunRays(emoji: [String], at sun: UnitPoint) -> EmitterSpec {
         EmitterSpec(
             emoji: emoji, rate: 34, size: 10...17, speed: 75...90, angle: 0, angleJitter: 1.5,
-            lifetime: 2.6...3.2, origin: .point(sunCorner), spawnRadius: 100, fades: true,
+            lifetime: 2.6...3.2, origin: .point(sun), spawnRadius: 100, fades: true,
             rays: stride(from: 0.0, to: 360.0, by: 30.0).map { $0 }, rayRotation: 4
         )
     }

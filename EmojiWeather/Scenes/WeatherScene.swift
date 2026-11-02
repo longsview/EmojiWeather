@@ -117,16 +117,26 @@ struct SceneConditions: Equatable, Sendable {
     /// Day (white), sunrise/sunset (gradient) or night (dark).
     var sky: SkyMode = .day
 
-    init(scene: WeatherScene, intensity: Double = 0.5, windDrift: Double = 0, sky: SkyMode = .day) {
+    /// 0 at sunrise, 0.5 at solar noon, 1 at sunset. Moves the sun across the top of the screen.
+    var sunProgress: Double = 0.1
+
+    init(scene: WeatherScene, intensity: Double = 0.5, windDrift: Double = 0, sky: SkyMode = .day, sunProgress: Double = 0.1) {
         self.scene = scene
         self.intensity = intensity
         self.windDrift = windDrift
         self.sky = sky
+        self.sunProgress = sunProgress
     }
 
     init(current: CurrentWeather, today: DayWeather? = nil) {
         scene = WeatherScene(condition: current.condition, isDaylight: current.isDaylight)
         sky = SkyMode(current: current, today: today)
+
+        if let sunrise = today?.sun.sunrise, let sunset = today?.sun.sunset, sunset > sunrise {
+            let progress = current.date.timeIntervalSince(sunrise) / sunset.timeIntervalSince(sunrise)
+            // Rounded so the scene isn't rebuilt every refresh for a tiny change.
+            sunProgress = (min(max(progress, 0), 1) * 50).rounded() / 50
+        }
 
         // WeatherKit reports precipitation as a speed; convert to millimeters per hour.
         let millimetersPerHour = current.precipitationIntensity.converted(to: .metersPerSecond).value * 3_600_000

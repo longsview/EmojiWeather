@@ -12,6 +12,8 @@ struct SceneGalleryView: View {
     /// Applied when a slider is released, because each change restarts the scene.
     @State private var appliedIntensity = 0.8
     @State private var appliedWind = 0.3
+    @State private var sunProgress = 0.1
+    @State private var appliedSun = 0.1
     @State private var showsText = true
     @State private var showsControls = true
     @State private var restartCount = 0
@@ -39,7 +41,7 @@ struct SceneGalleryView: View {
         GeometryReader { proxy in
             ZStack(alignment: .top) {
                 EmojiSceneView(
-                    conditions: SceneConditions(scene: scene, intensity: appliedIntensity, windDrift: appliedWind, sky: sky),
+                    conditions: SceneConditions(scene: scene, intensity: appliedIntensity, windDrift: appliedWind, sky: sky, sunProgress: appliedSun),
                     paused: scene != selection
                 )
                 .id("\(scene.rawValue)-\(restartCount)")
@@ -103,6 +105,7 @@ struct SceneGalleryView: View {
 
             sliderRow("Intensity", value: $intensity, range: 0.2...1) { appliedIntensity = intensity }
             sliderRow("Wind", value: $wind, range: -1...1) { appliedWind = wind }
+            sliderRow("Sun", value: $sunProgress, range: 0...1) { appliedSun = sunProgress }
 
             HStack {
                 Toggle("Text", isOn: $showsText)
