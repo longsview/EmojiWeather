@@ -216,14 +216,17 @@ struct CityPageView: View {
         // Show cached weather right away, then fetch only if it's stale.
         if let cached = weather.cachedWeather(for: target) {
             snapshot = cached
+            WidgetSync.save(cached, for: place)
             if !forceRefresh { return }
         }
 
         isLoading = true
         defer { isLoading = false }
         do {
-            snapshot = try await weather.weather(for: target, forceRefresh: forceRefresh)
+            let fresh = try await weather.weather(for: target, forceRefresh: forceRefresh)
+            snapshot = fresh
             errorMessage = nil
+            WidgetSync.save(fresh, for: place)
         } catch is CancellationError {
             // The page went away or the place changed; the next load takes over.
         } catch {

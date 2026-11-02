@@ -7,14 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		027E4D5C27615DA29450FB34 /* WidgetShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2579C65596E26021AA9BD12C /* WidgetShared.swift */; };
+		05D228E84496D15DC6E5B417 /* WeatherScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10BD723000F78E06C156EAB1 /* WeatherScene.swift */; };
+		0641EE1CF31DDFB449D44272 /* EmojiWeatherWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = D65C2ECC2E8BE2C2B58565FE /* EmojiWeatherWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		07FF45E47549E99DE4563077 /* AddCityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70AA960EB6C9C6D00F9A0628 /* AddCityView.swift */; };
 		0BB83AB84DE24D120C6DC06B /* WeatherSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDB51DF87E3EE3E36999F15 /* WeatherSummaryView.swift */; };
 		164352F81E4DA3FD53808EE5 /* LocationPermissionCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA1D35D3BC0024804F5C61C5 /* LocationPermissionCard.swift */; };
 		1EB2AB173A978C7E1EB9782C /* WeatherScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10BD723000F78E06C156EAB1 /* WeatherScene.swift */; };
+		2315B047177C7D098B35BD84 /* WidgetShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2579C65596E26021AA9BD12C /* WidgetShared.swift */; };
 		260C1C03B5EB5ABD2CED953B /* CityPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFECB4524657BE1D8F9C1A5E /* CityPageView.swift */; };
+		2719557028B9138804DAA9D8 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40C9B91B7D0FC642A3660D2 /* Color+Hex.swift */; };
 		2CBFC273A22834558409A126 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0A2145E1FB41F53A80192F /* LocationService.swift */; };
 		337A2679505A00E3178FBE53 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD648976AA401F9F9EF6DFFE /* HomeView.swift */; };
 		3A74C9CDCBA9C6CC8D4ABF15 /* EmojiParticleSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534C33757F6286A4B367D015 /* EmojiParticleSystem.swift */; };
+		48EE75BD803146ED59F2C995 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40C9B91B7D0FC642A3660D2 /* Color+Hex.swift */; };
 		5198F3D957BE6452F21187FA /* PlacesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518073510C421840BE30F8EC /* PlacesView.swift */; };
 		51E9F08990813346B3815895 /* WeatherProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E4B9650AEB046F7CCE5F2D4 /* WeatherProvider.swift */; };
 		5554D75E69C3128489D653F1 /* SceneSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339DC36E5BCD059D864B17B /* SceneSpec.swift */; };
@@ -22,19 +28,48 @@
 		61048C3100AEB0FFEFF2CF61 /* AdsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E51D6BB2E073C64E813C4B /* AdsManager.swift */; };
 		6DB12FF5C8BCE6122298C7A3 /* EmojiWeatherApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DEC4B8E5522B96E112F048 /* EmojiWeatherApp.swift */; };
 		8491DD397B4ED68D1CF3304A /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89944B124C8BC566B9DB4E00 /* PaywallView.swift */; };
+		8A7CE53BAE3F881234891F8B /* EmojiWeatherWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEBA9E4FE4BB855083F2D7 /* EmojiWeatherWidgetsBundle.swift */; };
 		8B394A166A3F7959CB9943C5 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCAEE22CCF295CA3AB0EBB5E /* City.swift */; };
 		9242E6A52B5A9C9AD56BE022 /* SceneGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5B567B59B09993FFD3A79F /* SceneGalleryView.swift */; };
 		92BEDF52F667B73A39CC1F6F /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125B792FC16ED71D28407284 /* PurchaseManager.swift */; };
+		94A1F2931DA433BE18EDDF06 /* WeatherWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4617BAEB298C8C25EFD1B8 /* WeatherWidgetView.swift */; };
 		95D25B09E4D1E52109BBC590 /* EmojiSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000E644B0103D5034C02B2EF /* EmojiSceneView.swift */; };
 		A9AEFCC4104337F285C0DA0A /* WeatherAttributionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19AD54FA797C2D57397162E4 /* WeatherAttributionView.swift */; };
 		B585D7ABCF90C4400E9039FB /* GoogleUserMessagingPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = FF289B64D2FBF516D3C544F1 /* GoogleUserMessagingPlatform */; };
+		B62D3F64735DD0A6D6196604 /* WidgetSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = C02B3A1B85C2E530D635ABFB /* WidgetSync.swift */; };
+		BF137CAA4EEDE86F7BD82ACB /* WidgetIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AC04FA945047A584A0F9C4 /* WidgetIntents.swift */; };
 		D13CA3A7498315F36A051793 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 7878E0B6FA6F139FB3BE657B /* GoogleMobileAds */; };
 		D2E37C300D6BD1107328827B /* CitySearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DBA20AF882DFBA4C1A3184 /* CitySearchModel.swift */; };
 		D4FEEEDBF60326E4E721712C /* ForecastViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F11B758C7D5ABF0F4D967 /* ForecastViews.swift */; };
 		DE80C4E1A254AF591058AAC8 /* AdViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1C8905A4E23B615054AAC7 /* AdViews.swift */; };
 		E685D7DD230BB55883624759 /* DetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 360F13C610EAB233D22887AC /* DetailsView.swift */; };
+		E92A68E3AC5EF524D464D514 /* WeatherTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CAF47AD1AFD4446FB8B534B /* WeatherTimelineProvider.swift */; };
 		ECF4F8998F9CD99341552948 /* CityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4139EE61E3977BBF03D05FF9 /* CityStore.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EF06B406ABD4E26F1C21D5A6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63813BFAEF31DDD28234A88D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 92FD443E77678AE9AAD81894;
+			remoteInfo = EmojiWeatherWidgets;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D358E69199535B8B5150D8A2 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				0641EE1CF31DDFB449D44272 /* EmojiWeatherWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		000E644B0103D5034C02B2EF /* EmojiSceneView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EmojiSceneView.swift; sourceTree = "<group>"; };
@@ -42,24 +77,34 @@
 		10BD723000F78E06C156EAB1 /* WeatherScene.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeatherScene.swift; sourceTree = "<group>"; };
 		11DBA20AF882DFBA4C1A3184 /* CitySearchModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CitySearchModel.swift; sourceTree = "<group>"; };
 		125B792FC16ED71D28407284 /* PurchaseManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
+		14AC04FA945047A584A0F9C4 /* WidgetIntents.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetIntents.swift; sourceTree = "<group>"; };
 		19AD54FA797C2D57397162E4 /* WeatherAttributionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeatherAttributionView.swift; sourceTree = "<group>"; };
+		2579C65596E26021AA9BD12C /* WidgetShared.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetShared.swift; sourceTree = "<group>"; };
 		360F13C610EAB233D22887AC /* DetailsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DetailsView.swift; sourceTree = "<group>"; };
+		36AFBD802926650F0D44B6F1 /* EmojiWeatherWidgets.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = EmojiWeatherWidgets.entitlements; sourceTree = "<group>"; };
 		4139EE61E3977BBF03D05FF9 /* CityStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CityStore.swift; sourceTree = "<group>"; };
 		4A5B567B59B09993FFD3A79F /* SceneGalleryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SceneGalleryView.swift; sourceTree = "<group>"; };
 		518073510C421840BE30F8EC /* PlacesView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlacesView.swift; sourceTree = "<group>"; };
 		534C33757F6286A4B367D015 /* EmojiParticleSystem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EmojiParticleSystem.swift; sourceTree = "<group>"; };
+		6FDEBA9E4FE4BB855083F2D7 /* EmojiWeatherWidgetsBundle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EmojiWeatherWidgetsBundle.swift; sourceTree = "<group>"; };
 		70AA960EB6C9C6D00F9A0628 /* AddCityView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AddCityView.swift; sourceTree = "<group>"; };
 		74DEC4B8E5522B96E112F048 /* EmojiWeatherApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EmojiWeatherApp.swift; sourceTree = "<group>"; };
 		799C3B21B453A195BD073AAA /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		89944B124C8BC566B9DB4E00 /* PaywallView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		8CAF47AD1AFD4446FB8B534B /* WeatherTimelineProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeatherTimelineProvider.swift; sourceTree = "<group>"; };
 		8E4B9650AEB046F7CCE5F2D4 /* WeatherProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeatherProvider.swift; sourceTree = "<group>"; };
 		A1BBCD82E7C7112ECD8D599A /* EmojiWeather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmojiWeather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A339DC36E5BCD059D864B17B /* SceneSpec.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SceneSpec.swift; sourceTree = "<group>"; };
 		BD648976AA401F9F9EF6DFFE /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		C02B3A1B85C2E530D635ABFB /* WidgetSync.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSync.swift; sourceTree = "<group>"; };
+		C38E1BAAF710611E87F4C5CA /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CCAEE22CCF295CA3AB0EBB5E /* City.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
 		CEDB51DF87E3EE3E36999F15 /* WeatherSummaryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeatherSummaryView.swift; sourceTree = "<group>"; };
 		CF0A2145E1FB41F53A80192F /* LocationService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
+		CF4617BAEB298C8C25EFD1B8 /* WeatherWidgetView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeatherWidgetView.swift; sourceTree = "<group>"; };
 		D0077B608A1FFEE2F13DAE26 /* EmojiWeather.storekit */ = {isa = PBXFileReference; includeInIndex = 1; path = EmojiWeather.storekit; sourceTree = "<group>"; };
+		D40C9B91B7D0FC642A3660D2 /* Color+Hex.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
+		D65C2ECC2E8BE2C2B58565FE /* EmojiWeatherWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = EmojiWeatherWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		D91E8DFA4C1BD8E801F2412F /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA1D35D3BC0024804F5C61C5 /* LocationPermissionCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocationPermissionCard.swift; sourceTree = "<group>"; };
 		E9E51D6BB2E073C64E813C4B /* AdsManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AdsManager.swift; sourceTree = "<group>"; };
@@ -75,6 +120,13 @@
 			files = (
 				D13CA3A7498315F36A051793 /* GoogleMobileAds in Frameworks */,
 				B585D7ABCF90C4400E9039FB /* GoogleUserMessagingPlatform in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		BE983141833270FE5EB94057 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,6 +159,30 @@
 			path = EmojiWeather;
 			sourceTree = "<group>";
 		};
+		35D232600DE874B2556449F0 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				2579C65596E26021AA9BD12C /* WidgetShared.swift */,
+				D40C9B91B7D0FC642A3660D2 /* Color+Hex.swift */,
+			);
+			name = Shared;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		5641630967434A5E26A6A4E9 /* EmojiWeatherWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				6FDEBA9E4FE4BB855083F2D7 /* EmojiWeatherWidgetsBundle.swift */,
+				14AC04FA945047A584A0F9C4 /* WidgetIntents.swift */,
+				8CAF47AD1AFD4446FB8B534B /* WeatherTimelineProvider.swift */,
+				CF4617BAEB298C8C25EFD1B8 /* WeatherWidgetView.swift */,
+				C38E1BAAF710611E87F4C5CA /* Info.plist */,
+				36AFBD802926650F0D44B6F1 /* EmojiWeatherWidgets.entitlements */,
+			);
+			name = EmojiWeatherWidgets;
+			path = EmojiWeatherWidgets;
+			sourceTree = "<group>";
+		};
 		67314543F0C901AD86D7643D /* iOS */ = {
 			isa = PBXGroup;
 			children = (
@@ -132,6 +208,8 @@
 				DC5D3D4723DE07D3D18876E4 /* Products */,
 				CE170AB1E073AB1FA65D8E1E /* Frameworks */,
 				338C5B2466D1E1801DF7184D /* EmojiWeather */,
+				35D232600DE874B2556449F0 /* Shared */,
+				5641630967434A5E26A6A4E9 /* EmojiWeatherWidgets */,
 			);
 			sourceTree = "<group>";
 		};
@@ -144,6 +222,7 @@
 				125B792FC16ED71D28407284 /* PurchaseManager.swift */,
 				8E4B9650AEB046F7CCE5F2D4 /* WeatherProvider.swift */,
 				E9E51D6BB2E073C64E813C4B /* AdsManager.swift */,
+				C02B3A1B85C2E530D635ABFB /* WidgetSync.swift */,
 			);
 			name = Services;
 			path = Services;
@@ -190,6 +269,7 @@
 			isa = PBXGroup;
 			children = (
 				A1BBCD82E7C7112ECD8D599A /* EmojiWeather.app */,
+				D65C2ECC2E8BE2C2B58565FE /* EmojiWeatherWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -197,6 +277,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		92FD443E77678AE9AAD81894 /* EmojiWeatherWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AD5D25ADFD2F5A97DB2E6751 /* Build configuration list for PBXNativeTarget "EmojiWeatherWidgets" */;
+			buildPhases = (
+				7FEB16FB48848C782D1BB4B8 /* Sources */,
+				BE983141833270FE5EB94057 /* Frameworks */,
+				C46692634007E96D840523C9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = EmojiWeatherWidgets;
+			productName = EmojiWeatherWidgets;
+			productReference = D65C2ECC2E8BE2C2B58565FE /* EmojiWeatherWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		EE20696918E0EC8FD947FA3B /* EmojiWeather */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 12238D314C99B6E0FBEF755B /* Build configuration list for PBXNativeTarget "EmojiWeather" */;
@@ -204,10 +301,12 @@
 				43824285E4F675E789987858 /* Sources */,
 				04A81EAB4A4F05E855E3E1FC /* Frameworks */,
 				77F81DF9CE5251C54C5FA0B5 /* Resources */,
+				D358E69199535B8B5150D8A2 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				92DC0B765D0BEF903B32A111 /* PBXTargetDependency */,
 			);
 			name = EmojiWeather;
 			packageProductDependencies = (
@@ -247,6 +346,7 @@
 			projectRoot = "";
 			targets = (
 				EE20696918E0EC8FD947FA3B /* EmojiWeather */,
+				92FD443E77678AE9AAD81894 /* EmojiWeatherWidgets */,
 			);
 		};
 /* End PBXProject section */
@@ -257,6 +357,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				5DE6E5EB732D11D9D6758630 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C46692634007E96D840523C9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -291,10 +398,36 @@
 				9242E6A52B5A9C9AD56BE022 /* SceneGalleryView.swift in Sources */,
 				61048C3100AEB0FFEFF2CF61 /* AdsManager.swift in Sources */,
 				DE80C4E1A254AF591058AAC8 /* AdViews.swift in Sources */,
+				027E4D5C27615DA29450FB34 /* WidgetShared.swift in Sources */,
+				2719557028B9138804DAA9D8 /* Color+Hex.swift in Sources */,
+				B62D3F64735DD0A6D6196604 /* WidgetSync.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7FEB16FB48848C782D1BB4B8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2315B047177C7D098B35BD84 /* WidgetShared.swift in Sources */,
+				48EE75BD803146ED59F2C995 /* Color+Hex.swift in Sources */,
+				05D228E84496D15DC6E5B417 /* WeatherScene.swift in Sources */,
+				8A7CE53BAE3F881234891F8B /* EmojiWeatherWidgetsBundle.swift in Sources */,
+				BF137CAA4EEDE86F7BD82ACB /* WidgetIntents.swift in Sources */,
+				E92A68E3AC5EF524D464D514 /* WeatherTimelineProvider.swift in Sources */,
+				94A1F2931DA433BE18EDDF06 /* WeatherWidgetView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		92DC0B765D0BEF903B32A111 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = EmojiWeatherWidgets;
+			target = 92FD443E77678AE9AAD81894 /* EmojiWeatherWidgets */;
+			targetProxy = EF06B406ABD4E26F1C21D5A6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2E51BED2B81D8A3BBBE3F8D3 /* Release */ = {
@@ -334,6 +467,30 @@
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
+		};
+		5C27ED666FF1EA9F80098185 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = EmojiWeatherWidgets/EmojiWeatherWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SCH5964PEN;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EmojiWeatherWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = EmojiWeather;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.longsview.EmojiWeather.Widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
 		};
 		9E46B275E7C2FCEF2C69F4F7 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -396,6 +553,31 @@
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
+		};
+		A5F278C96030C394AF4E5B3F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = EmojiWeatherWidgets/EmojiWeatherWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = SCH5964PEN;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = EmojiWeatherWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = EmojiWeather;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.longsview.EmojiWeather.Widgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
 		};
 		D409E5B57F4EDD3DDF901F7C /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -506,6 +688,15 @@
 			buildConfigurations = (
 				9E46B275E7C2FCEF2C69F4F7 /* Debug */,
 				D409E5B57F4EDD3DDF901F7C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AD5D25ADFD2F5A97DB2E6751 /* Build configuration list for PBXNativeTarget "EmojiWeatherWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A5F278C96030C394AF4E5B3F /* Release */,
+				5C27ED666FF1EA9F80098185 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

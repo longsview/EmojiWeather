@@ -192,10 +192,3 @@ private struct PageDots: View {
         .opacity(places.count > 1 ? 1 : 0)
     }
 }
-
-extension Measurement where UnitType == UnitTemperature {
-    /// "72°" in the user's preferred unit.
-    var shortTemperature: String {
-        formatted(.measurement(width: .narrow, usage: .weather, numberFormatStyle: .number.precision(.fractionLength(0))))
-    }
-}
