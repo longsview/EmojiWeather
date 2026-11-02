@@ -3,6 +3,25 @@ import os
 import SwiftUI
 import UIKit
 
+/// Shows a banner the AdsManager already created and loaded.
+struct ExistingBannerView: UIViewRepresentable {
+    let banner: BannerView
+
+    func makeUIView(context: Context) -> UIView {
+        let container = UIView()
+        banner.removeFromSuperview()
+        banner.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(banner)
+        NSLayoutConstraint.activate([
+            banner.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            banner.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+        ])
+        return container
+    }
+
+    func updateUIView(_ uiView: UIView, context: Context) {}
+}
+
 /// A fixed-size AdMob banner.
 struct BannerAdView: UIViewRepresentable {
     let adUnitID: String
@@ -46,9 +65,9 @@ struct BannerAdWithUpsell: View {
     @Environment(\.skyMode) private var sky
 
     var body: some View {
-        if ads.isReady, !purchases.hasPlus {
+        if ads.isHomeBannerLoaded, !purchases.hasPlus, let banner = ads.homeBanner {
             VStack(spacing: 4) {
-                BannerAdView(adUnitID: AdsManager.AdUnit.homeBanner, size: AdSizeBanner)
+                ExistingBannerView(banner: banner)
                     .frame(width: 320, height: 50)
                     .clipShape(.rect(cornerRadius: 10))
                 Button(action: onRemoveAds) {

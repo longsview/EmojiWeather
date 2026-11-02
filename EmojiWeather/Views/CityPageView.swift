@@ -127,7 +127,7 @@ struct CityPageView: View {
     // MARK: - First page
 
     private var showsBanner: Bool {
-        isCurrentLocation && ads.isReady && !purchases.hasPlus
+        isCurrentLocation && ads.isHomeBannerLoaded && !purchases.hasPlus
     }
 
     private var isCurrentLocation: Bool {
@@ -226,6 +226,8 @@ struct CityPageView: View {
             let fresh = try await weather.weather(for: target, forceRefresh: forceRefresh)
             snapshot = fresh
             errorMessage = nil
+            // Weather is on screen, so the ad SDK can start (it waits a few more seconds itself).
+            Task { await ads.start() }
             WidgetSync.save(fresh, for: place)
         } catch is CancellationError {
             // The page went away or the place changed; the next load takes over.

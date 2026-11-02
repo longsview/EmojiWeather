@@ -18,6 +18,9 @@ struct HomeView: View {
     @State private var activeSky: SkyMode = .day
     /// iPad: keep the places list and the city side by side.
     @State private var columnVisibility: NavigationSplitViewVisibility = .all
+    #if DEBUG
+    @AppStorage(AdsManager.debugAdsEnabledKey) private var debugAdsEnabled = false
+    #endif
 
     private var places: [Place] {
         [.currentLocation] + cityStore.cities.map { Place.city($0) }
@@ -158,8 +161,12 @@ struct HomeView: View {
                 }
             }
             Toggle("EmojiWeather+ unlocked", isOn: Bindable(purchases).debugUnlock)
+            Toggle("Show ads", isOn: $debugAdsEnabled)
         } label: {
             circleIcon("ladybug")
+        }
+        .onChange(of: debugAdsEnabled) { _, enabled in
+            if enabled { Task { await ads.start(after: .zero) } }
         }
     }
     #endif

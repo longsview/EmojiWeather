@@ -25,7 +25,8 @@ struct EmojiWeatherApp: App {
                 .environment(weather)
                 .environment(purchases)
                 .environment(ads)
-                .task { await ads.start() }
+                // Normally the first weather starts ads; this covers no location and no cities.
+                .task { await ads.start(after: .seconds(15)) }
                 .task(id: widgetKey) {
                     WidgetSync.updatePlaces(
                         cities: cityStore.cities,
