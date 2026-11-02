@@ -103,8 +103,8 @@ struct SceneSpec {
 /// Where the main emoji shape sits. The text sits below it.
 private let artCenter = UnitPoint(x: 0.5, y: 0.27)
 /// The sun and moon sit up in a corner, not in the middle.
-private let sunCorner = UnitPoint(x: 0.16, y: 0.11)
-private let moonCorner = UnitPoint(x: 0.8, y: 0.12)
+private let sunCorner = UnitPoint(x: 0.2, y: 0.17)
+private let moonCorner = UnitPoint(x: 0.78, y: 0.17)
 private let cloudLine = UnitPoint(x: 0.5, y: 0.17)
 
 extension SceneSpec {
@@ -124,7 +124,7 @@ extension SceneSpec {
                         lifetime: 60...80, origin: .left, band: 0.5...0.62, opacity: 0.9...1
                     ),
                 ],
-                heroes: [HeroSpec(emoji: "☀️", position: sunCorner, size: 180, spin: 4, pulse: 0.04)],
+                heroes: [HeroSpec(emoji: "☀️", position: sunCorner, size: 160, spin: 4, pulse: 0.04)],
                 prewarm: 30
             )
 
@@ -137,7 +137,7 @@ extension SceneSpec {
                         angleJitter: 8, lifetime: 4...7, origin: .bottom, wobble: 10, fades: true
                     ),
                 ],
-                heroes: [HeroSpec(emoji: "☀️", position: sunCorner, size: 200, spin: 5, pulse: 0.07)],
+                heroes: [HeroSpec(emoji: "☀️", position: sunCorner, size: 175, spin: 5, pulse: 0.07)],
                 prewarm: 5
             )
 
@@ -154,7 +154,7 @@ extension SceneSpec {
                         lifetime: 3...3, origin: .left, band: 0.02...0.35
                     ),
                 ],
-                heroes: [HeroSpec(emoji: "🌙", position: moonCorner, size: 130, pulse: 0.03, bob: 4)],
+                heroes: [HeroSpec(emoji: "🌙", position: moonCorner, size: 115, pulse: 0.03, bob: 4)],
                 prewarm: 6
             )
 
@@ -225,7 +225,7 @@ extension SceneSpec {
                     ),
                 ],
                 heroes: [
-                    HeroSpec(emoji: "🌬️", position: UnitPoint(x: 0.3, y: 0.27), size: 150, pulse: 0.06, bob: 5),
+                    HeroSpec(emoji: "🌬️", position: UnitPoint(x: 0.38, y: 0.27), size: 150, pulse: 0.06, bob: 5),
                 ],
                 prewarm: 3
             )
