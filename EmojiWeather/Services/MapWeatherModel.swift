@@ -31,7 +31,7 @@ final class MapWeatherModel {
     /// At most this many places on screen.
     private static let maxPlaces = 14
     /// Places closer than this share of the screen's short side are skipped.
-    private static let minSpacing = 0.17
+    private static let minSpacing = 0.24
     private static let maxAge: TimeInterval = 30 * 60
     private static let maxConcurrentRequests = 6
 
