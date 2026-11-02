@@ -26,7 +26,7 @@ struct WeatherMapView: View {
         Map(position: $position) {
             ForEach(model.markers) { marker in
                 Annotation("", coordinate: marker.coordinate, anchor: .center) {
-                    EmojiMapMarker(emoji: marker.emoji, temperature: marker.temperature.shortTemperature)
+                    EmojiMapMarker(name: marker.name, emoji: marker.emoji, temperature: marker.temperature.shortTemperature)
                         .transition(.scale.combined(with: .opacity))
                 }
                 .annotationTitles(.hidden)
@@ -46,10 +46,15 @@ struct WeatherMapView: View {
         // bar, and the map keeps its markers out from under them.
         .safeAreaInset(edge: .top) { header }
         .safeAreaInset(edge: .bottom) {
-            WeatherAttributionView()
-                .padding(8)
-                .glassEffect(.regular, in: .rect(cornerRadius: 12))
-                .padding(.bottom, 8)
+            VStack(spacing: 2) {
+                WeatherAttributionView()
+                Text("Cities from GeoNames (CC BY 4.0)")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(8)
+            .glassEffect(.regular, in: .rect(cornerRadius: 12))
+            .padding(.bottom, 8)
         }
     }
 
@@ -69,6 +74,7 @@ struct WeatherMapView: View {
 
 /// A big emoji over a chunky white temperature with a dark outline, like the old TV maps.
 private struct EmojiMapMarker: View {
+    let name: String
     let emoji: String
     let temperature: String
 
@@ -85,6 +91,16 @@ private struct EmojiMapMarker: View {
                 .shadow(color: .black, radius: 0, x: -1.5, y: -1.5)
                 .shadow(color: .black, radius: 0, x: 1.5, y: -1.5)
                 .shadow(color: .black, radius: 0, x: -1.5, y: 1.5)
+            Text(name)
+                .font(.system(size: 11, weight: .bold, design: .rounded))
+                .textCase(.uppercase)
+                .lineLimit(1)
+                .fixedSize()
+                .foregroundStyle(.white)
+                .padding(.horizontal, 6)
+                .padding(.vertical, 2)
+                .background(.black.opacity(0.55), in: Capsule())
+                .padding(.top, 8)
         }
         .accessibilityElement(children: .combine)
     }

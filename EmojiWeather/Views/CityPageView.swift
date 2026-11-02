@@ -22,6 +22,14 @@ struct CityPageView: View {
     var bottomInset: CGFloat?
     /// Tells the container which scene and sky the visible page has.
     var onSceneChange: (SceneConditions) -> Void = { _ in }
+    /// Pager mode: the container draws the Forecast hint (fixed, above the page dots) and
+    /// bumps this to open the visible page's forecast.
+    var openDetailsToken = 0
+    /// Tells the container whether the visible page has weather, so its hint can show.
+    var onHasWeatherChange: (Bool) -> Void = { _ in }
+
+    /// The container draws the hint when it reserves the bottom space (the iPhone pager).
+    private var drawsOwnHint: Bool { bottomInset == nil }
 
     @Environment(LocationService.self) private var location
     @Environment(WeatherProvider.self) private var weather
@@ -94,9 +102,12 @@ struct CityPageView: View {
                         // Free tier: a small banner just above the Forecast hint on the first page.
                         BannerAdWithUpsell { showingPaywall = true }
                     }
-                    swipeHint
+                    if drawsOwnHint {
+                        swipeHint
+                    }
                 }
-                .padding(.bottom, bottomInset.map { $0 + 36 } ?? proxy.safeAreaInsets.bottom + 64)
+                // In the pager, leave room for the container's fixed hint and page dots.
+                .padding(.bottom, bottomInset.map { $0 + 100 } ?? proxy.safeAreaInsets.bottom + 64)
             }
         }
         .environment(\.skyMode, sceneConditions.sky)
@@ -105,7 +116,16 @@ struct CityPageView: View {
             if isActive { onSceneChange(conditions) }
         }
         .onChange(of: isActive) { _, active in
-            if active { onSceneChange(sceneConditions) }
+            if active {
+                onSceneChange(sceneConditions)
+                onHasWeatherChange(snapshot != nil)
+            }
+        }
+        .onChange(of: snapshot != nil, initial: true) { _, hasWeather in
+            if isActive { onHasWeatherChange(hasWeather) }
+        }
+        .onChange(of: openDetailsToken) { _, _ in
+            if isActive, snapshot != nil { showingDetails = true }
         }
         .simultaneousGesture(
             DragGesture(minimumDistance: 24).onEnded { value in
@@ -204,19 +224,9 @@ struct CityPageView: View {
     }
 
     private var swipeHint: some View {
-        Button {
+        ForecastHint(color: sceneConditions.sky.textColor, isEnabled: snapshot != nil) {
             showingDetails = true
-        } label: {
-            VStack(spacing: 2) {
-                Image(systemName: "chevron.compact.up")
-                    .font(.title2)
-                Text("Forecast")
-                    .font(.system(.footnote, design: .rounded, weight: .semibold))
-            }
-            .foregroundStyle(sceneConditions.sky.textColor.opacity(0.55))
         }
-        .opacity(snapshot == nil ? 0 : 1)
-        .disabled(snapshot == nil)
     }
 
     // MARK: - Loading
@@ -280,5 +290,27 @@ final class SystemAppearance {
                 self?.refresh()
             }
         }
+    }
+}
+
+/// "Forecast" with an up chevron: tap (or swipe up) for the full forecast.
+struct ForecastHint: View {
+    let color: Color
+    let isEnabled: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: 2) {
+                Image(systemName: "chevron.compact.up")
+                    .font(.title2)
+                Text("Forecast")
+                    .font(.system(.footnote, design: .rounded, weight: .semibold))
+            }
+            .foregroundStyle(color.opacity(0.55))
+        }
+        .opacity(isEnabled ? 1 : 0)
+        .disabled(!isEnabled)
+        .animation(.easeInOut(duration: 0.3), value: isEnabled)
     }
 }

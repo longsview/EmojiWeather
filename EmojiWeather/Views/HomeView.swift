@@ -17,6 +17,9 @@ struct HomeView: View {
     @State private var showingPlaces = false
     /// Height covered by the tab bar and home indicator, so the bottom controls sit above it.
     @State private var bottomInset: CGFloat = 0
+    /// Bumped by the fixed Forecast hint to open the visible page's forecast.
+    @State private var openDetailsToken = 0
+    @State private var activeHasWeather = false
     @State private var previewScene: WeatherScene?
     @State private var showingGallery = false
     /// The visible page's scene. On iPhone it's drawn once behind all pages, so swiping
@@ -73,7 +76,9 @@ struct HomeView: View {
                         previewScene: previewScene,
                         showsScene: false,
                         bottomInset: bottomInset,
-                        onSceneChange: { activeScene = $0 }
+                        onSceneChange: { activeScene = $0 },
+                        openDetailsToken: openDetailsToken,
+                        onHasWeatherChange: { activeHasWeather = $0 }
                     )
                     .containerRelativeFrame([.horizontal, .vertical])
                     .id(place.id)
@@ -99,8 +104,14 @@ struct HomeView: View {
         .ignoresSafeArea(.keyboard)
         .overlay(alignment: .top) { topBar }
         .overlay(alignment: .bottom) {
-            PageDots(places: places, currentID: currentID, color: activeSky.textColor)
-                .padding(.bottom, 6)
+            // Fixed while the cities swipe; only each page's text moves.
+            VStack(spacing: 8) {
+                ForecastHint(color: activeSky.textColor, isEnabled: activeHasWeather) {
+                    openDetailsToken += 1
+                }
+                PageDots(places: places, currentID: currentID, color: activeSky.textColor)
+            }
+            .padding(.bottom, 6)
         }
         .overlay {
             // The pager ignores the safe area, so measure the tab bar + home indicator here,
@@ -192,19 +203,22 @@ struct HomeView: View {
     #if DEBUG
     private var debugMenu: some View {
         Menu {
+            Toggle("Show ads", isOn: $debugAdsEnabled)
+            Toggle("EmojiWeather+ unlocked", isOn: Bindable(purchases).debugUnlock)
             Button {
                 showingGallery = true
             } label: {
                 Label("Scene Gallery", systemImage: "square.grid.2x2")
             }
-            Picker("Show scene on every page", selection: $previewScene) {
+            Picker(selection: $previewScene) {
                 Text("Live weather").tag(WeatherScene?.none)
                 ForEach(WeatherScene.allCases) { scene in
                     Text("\(scene.emoji) \(scene.title)").tag(Optional(scene))
                 }
+            } label: {
+                Label("Show scene on every page", systemImage: "photo.on.rectangle")
             }
-            Toggle("EmojiWeather+ unlocked", isOn: Bindable(purchases).debugUnlock)
-            Toggle("Show ads", isOn: $debugAdsEnabled)
+            .pickerStyle(.menu)
         } label: {
             circleIcon("ladybug")
         }

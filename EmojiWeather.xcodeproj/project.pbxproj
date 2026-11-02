@@ -29,6 +29,7 @@
 		5DE6E5EB732D11D9D6758630 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 799C3B21B453A195BD073AAA /* Assets.xcassets */; };
 		61048C3100AEB0FFEFF2CF61 /* AdsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E51D6BB2E073C64E813C4B /* AdsManager.swift */; };
 		6DB12FF5C8BCE6122298C7A3 /* EmojiWeatherApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DEC4B8E5522B96E112F048 /* EmojiWeatherApp.swift */; };
+		79501FCD568C3A15E2D337E1 /* cities.tsv in Resources */ = {isa = PBXBuildFile; fileRef = E5DCDFC7C47ADBF04612EB7B /* cities.tsv */; };
 		8491DD397B4ED68D1CF3304A /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89944B124C8BC566B9DB4E00 /* PaywallView.swift */; };
 		8A7CE53BAE3F881234891F8B /* EmojiWeatherWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEBA9E4FE4BB855083F2D7 /* EmojiWeatherWidgetsBundle.swift */; };
 		8B394A166A3F7959CB9943C5 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCAEE22CCF295CA3AB0EBB5E /* City.swift */; };
@@ -113,6 +114,7 @@
 		D65C2ECC2E8BE2C2B58565FE /* EmojiWeatherWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = EmojiWeatherWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		D91E8DFA4C1BD8E801F2412F /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA1D35D3BC0024804F5C61C5 /* LocationPermissionCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocationPermissionCard.swift; sourceTree = "<group>"; };
+		E5DCDFC7C47ADBF04612EB7B /* cities.tsv */ = {isa = PBXFileReference; includeInIndex = 1; path = cities.tsv; sourceTree = "<group>"; };
 		E9E51D6BB2E073C64E813C4B /* AdsManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AdsManager.swift; sourceTree = "<group>"; };
 		EE1C8905A4E23B615054AAC7 /* AdViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AdViews.swift; sourceTree = "<group>"; };
 		F7449344FB9BAF3529A63B95 /* EmojiWeather.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = EmojiWeather.entitlements; sourceTree = "<group>"; };
@@ -160,6 +162,7 @@
 				F7449344FB9BAF3529A63B95 /* EmojiWeather.entitlements */,
 				D91E8DFA4C1BD8E801F2412F /* Info.plist */,
 				D0077B608A1FFEE2F13DAE26 /* EmojiWeather.storekit */,
+				3C5D5BB050D9C3674D4EB610 /* Resources */,
 			);
 			name = EmojiWeather;
 			path = EmojiWeather;
@@ -173,6 +176,15 @@
 			);
 			name = Shared;
 			path = Shared;
+			sourceTree = "<group>";
+		};
+		3C5D5BB050D9C3674D4EB610 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				E5DCDFC7C47ADBF04612EB7B /* cities.tsv */,
+			);
+			name = Resources;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		5641630967434A5E26A6A4E9 /* EmojiWeatherWidgets */ = {
@@ -366,6 +378,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5DE6E5EB732D11D9D6758630 /* Assets.xcassets in Resources */,
+				79501FCD568C3A15E2D337E1 /* cities.tsv in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
