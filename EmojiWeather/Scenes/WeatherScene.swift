@@ -193,13 +193,17 @@ enum SkyMode: String, CaseIterable, Identifiable, Sendable {
         }
     }
 
-    /// The background for a scene: daytime clouds and fog get a soft grey instead of white.
+    /// The background for a scene. Only clear and hot days are white; every other daytime
+    /// scene gets a soft grey, a shade darker for storms.
     func background(for scene: WeatherScene) -> [Color] {
-        switch (self, scene) {
-        case (.day, .cloudy), (.day, .foggy):
-            [Color(hex: 0xEEF0F3), Color(hex: 0xE2E5EA)]
-        default:
-            background
+        guard self == .day else { return background }
+        switch scene {
+        case .sunny, .hot, .clearNight:
+            return background
+        case .thunderstorm:
+            return [Color(hex: 0xE4E7EB), Color(hex: 0xD5D9DF)]
+        case .cloudy, .foggy, .rain, .snow, .windy:
+            return [Color(hex: 0xEEF0F3), Color(hex: 0xE2E5EA)]
         }
     }
 
