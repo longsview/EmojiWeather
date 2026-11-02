@@ -34,9 +34,9 @@ final class MapWeatherModel {
     }
 
     /// Square sizes in degrees, smallest first.
-    private static let cellSizes: [Double] = [0.1, 0.25, 0.5, 1, 2, 4, 8, 16]
+    private static let cellSizes: [Double] = [0.1, 0.15, 0.25, 0.4, 0.6, 1, 1.5, 2.5, 4, 6, 10, 16]
     /// Aim for about this many squares across the shorter side of the screen.
-    private static let cellsAcross = 3.0
+    private static let cellsAcross = 3.5
     private static let maxCellsPerUpdate = 30
     private static let maxAge: TimeInterval = 30 * 60
     private static let maxConcurrentRequests = 6
@@ -134,9 +134,17 @@ final class MapWeatherModel {
         let rows = Int((minLat / size).rounded(.down))...Int((maxLat / size).rounded(.down))
         let columns = Int((minLon / size).rounded(.down))...Int((maxLon / size).rounded(.down))
 
+        // Only squares whose marker lands in the clear part of the screen: below the header,
+        // above the tab bar, and not cut off at the sides.
+        let visibleLat = (minLat + region.span.latitudeDelta * 0.12)...(maxLat - region.span.latitudeDelta * 0.16)
+        let visibleLon = (minLon + region.span.longitudeDelta * 0.08)...(maxLon - region.span.longitudeDelta * 0.08)
+
         var keys: [CellKey] = []
         for row in rows {
             for column in columns {
+                let lat = (Double(row) + 0.5) * size
+                let lon = (Double(column) + 0.5) * size
+                guard visibleLat.contains(lat), visibleLon.contains(lon) else { continue }
                 keys.append(CellKey(level: level, row: row, column: column))
             }
         }

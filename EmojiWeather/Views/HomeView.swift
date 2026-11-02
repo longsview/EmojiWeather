@@ -94,7 +94,6 @@ struct HomeView: View {
                 }
             }
         ))
-        .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.bottom } action: { bottomInset = $0 }
         .background { sharedScene }
         .ignoresSafeArea()
         .ignoresSafeArea(.keyboard)
@@ -102,6 +101,13 @@ struct HomeView: View {
         .overlay(alignment: .bottom) {
             PageDots(places: places, currentID: currentID, color: activeSky.textColor)
                 .padding(.bottom, 6)
+        }
+        .overlay {
+            // The pager ignores the safe area, so measure the tab bar + home indicator here,
+            // where the safe area still applies.
+            Color.clear
+                .allowsHitTesting(false)
+                .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.bottom } action: { bottomInset = $0 }
         }
     }
 
