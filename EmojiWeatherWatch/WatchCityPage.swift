@@ -86,6 +86,10 @@ struct WatchCityPage: View {
                 if isLuminanceReduced { Color.black.opacity(0.5) }
             }
         }
+        .onChange(of: isActive, initial: true) { _, active in
+            // Swiping back to My Location asks for a fresh fix, in case the watch has moved.
+            if active, place == .currentLocation { location.refresh() }
+        }
         .task(id: TaskKey(isActive: isActive, location: targetLocation)) {
             guard isActive else { return }
             await load()
