@@ -84,10 +84,11 @@ struct SettingsView: View {
                     Link(destination: URL(string: "https://longsview.github.io/emojiweather/privacy")!) {
                         Label("Privacy Policy", systemImage: "hand.raised")
                     }
-                    WeatherAttributionView()
-                    Text("Cities from GeoNames (CC BY 4.0)")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                    NavigationLink {
+                        DataSourcesView()
+                    } label: {
+                        Label("Data Sources", systemImage: "text.book.closed")
+                    }
                     LabeledContent("Version", value: Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")
                 } header: {
                     Text("About")

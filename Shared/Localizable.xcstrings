@@ -1002,46 +1002,6 @@
         }
       }
     },
-    "Cities from GeoNames (CC BY 4.0)": {
-      "localizations": {
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Villes : GeoNames (CC BY 4.0)"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ciudades de GeoNames (CC BY 4.0)"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cidades do GeoNames (CC BY 4.0)"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "城市数据来自 GeoNames（CC BY 4.0）"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "都市データ：GeoNames（CC BY 4.0）"
-          }
-        },
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "المدن من GeoNames (CC BY 4.0)"
-          }
-        }
-      }
-    },
     "City name": {
       "localizations": {
         "fr": {
@@ -1442,6 +1402,46 @@
         }
       }
     },
+    "Creative Commons Attribution 4.0": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Creative Commons Attribution 4.0"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Creative Commons Atribución 4.0"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Creative Commons Atribuição 4.0"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "知识共享署名 4.0"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "クリエイティブ・コモンズ 表示 4.0"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "المشاع الإبداعي نسب المصنَّف 4.0"
+          }
+        }
+      }
+    },
     "Current Location": {
       "localizations": {
         "fr": {
@@ -1518,6 +1518,46 @@
           "stringUnit": {
             "state": "translated",
             "value": "الموقع الحالي"
+          }
+        }
+      }
+    },
+    "Data Sources": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sources de données"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fuentes de datos"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fontes de dados"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "数据来源"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "データソース"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "مصادر البيانات"
           }
         }
       }
@@ -1885,6 +1925,46 @@
         }
       }
     },
+    "Forecasts, current conditions and the weather map come from Apple's WeatherKit.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les prévisions, les conditions actuelles et la carte météo proviennent de WeatherKit d’Apple."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los pronósticos, las condiciones actuales y el mapa del tiempo provienen de WeatherKit de Apple."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "As previsões, as condições atuais e o mapa do clima vêm do WeatherKit da Apple."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "预报、当前天气和天气地图数据来自 Apple 的 WeatherKit。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "予報、現在の天気、天気マップのデータはAppleのWeatherKitから提供されています。"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تأتي التوقعات والأحوال الحالية وخريطة الطقس من WeatherKit من Apple."
+          }
+        }
+      }
+    },
     "Free for 7 days, then %@ a year. Cancel anytime in Settings.": {
       "localizations": {
         "fr": {
@@ -2001,6 +2081,46 @@
           "stringUnit": {
             "state": "translated",
             "value": "تتضمن النسخة المجانية %lld مدن. يزيل EmojiWeather+ هذا الحد."
+          }
+        }
+      }
+    },
+    "GeoNames": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GeoNames"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GeoNames"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GeoNames"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GeoNames"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GeoNames"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GeoNames"
           }
         }
       }
@@ -2722,6 +2842,86 @@
           "stringUnit": {
             "state": "translated",
             "value": "الخريطة"
+          }
+        }
+      }
+    },
+    "Maps": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cartes"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mapas"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mapas"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "地图"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "マップ"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "الخرائط"
+          }
+        }
+      }
+    },
+    "Maps and place search are provided by Apple Maps. Map data credits are on the map itself.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les cartes et la recherche de lieux sont fournies par Plans d’Apple. Les crédits des données cartographiques figurent sur la carte."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Los mapas y la búsqueda de lugares los proporciona Apple Maps. Los créditos de los datos del mapa están en el propio mapa."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Os mapas e a busca de lugares são fornecidos pelo Apple Maps. Os créditos dos dados aparecem no próprio mapa."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "地图和地点搜索由 Apple 地图提供。地图数据致谢显示在地图上。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "マップと場所の検索はAppleマップが提供しています。地図データのクレジットはマップ上に表示されます。"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تُقدَّم الخرائط والبحث عن الأماكن من خرائط Apple. تظهر حقوق بيانات الخريطة على الخريطة نفسها."
           }
         }
       }
@@ -4530,6 +4730,46 @@
       }
     },
     "The simulator has no location set. In the Simulator menu, choose Features > Location > Apple, then pull down to refresh.": {},
+    "The towns and cities on the weather map come from GeoNames, used under CC BY 4.0. Only names, locations and populations are used.": {
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les villes de la carte météo proviennent de GeoNames, sous licence CC BY 4.0. Seuls les noms, positions et populations sont utilisés."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Las ciudades del mapa del tiempo provienen de GeoNames, con licencia CC BY 4.0. Solo se usan nombres, ubicaciones y poblaciones."
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "As cidades do mapa do clima vêm do GeoNames, sob a licença CC BY 4.0. Apenas nomes, localizações e populações são usados."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "天气地图上的城镇和城市来自 GeoNames，依据 CC BY 4.0 许可使用。仅使用名称、位置和人口数据。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "天気マップの市町村はGeoNamesのデータをCC BY 4.0で使用しています。使用するのは名称、位置、人口のみです。"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تأتي المدن والبلدات على خريطة الطقس من GeoNames وتُستخدم بموجب ترخيص CC BY 4.0. تُستخدم الأسماء والمواقع وعدد السكان فقط."
+          }
+        }
+      }
+    },
     "Thunderstorm": {
       "localizations": {
         "fr": {

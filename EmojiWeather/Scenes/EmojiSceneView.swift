@@ -31,7 +31,9 @@ struct EmojiSceneView: View {
                     size: size,
                     tilt: tilt.x
                 )
-                system.draw(in: &context, size: size, parallax: CGVector(dx: tilt.x, dy: tilt.y))
+                // No parallax with Reduce Motion.
+                let parallax = reduceMotion ? .zero : CGVector(dx: tilt.parallaxX, dy: tilt.y)
+                system.draw(in: &context, size: size, parallax: parallax)
             }
         }
         .accessibilityHidden(true)
@@ -59,6 +61,8 @@ struct EmojiSceneView: View {
 final class MotionTilt {
     private let manager = CMMotionManager()
     private(set) var x: Double = 0
+    /// Sideways tilt for parallax: more sensitive than `x`, so a small tilt is visible.
+    var parallaxX: Double { max(-1, min(1, x * 2.5)) }
     /// Forward/back tilt relative to how the phone is usually held, -1...1.
     private(set) var y: Double = 0
     /// The usual holding angle, which slowly follows the hand so only changes register.
@@ -75,7 +79,7 @@ final class MotionTilt {
 
             let resting = (self.restingY ?? gravity.y) * 0.995 + gravity.y * 0.005
             self.restingY = resting
-            let targetY = max(-1, min(1, (gravity.y - resting) * 2.5))
+            let targetY = max(-1, min(1, (gravity.y - resting) * 4))
             self.y = self.y * 0.85 + targetY * 0.15
         }
     }

@@ -256,7 +256,7 @@ final class EmojiParticleSystem {
     // MARK: - Drawing
 
     /// How far the nearest emoji slide when the phone is fully tilted, in points.
-    private static let parallaxDistance: Double = 26
+    private static let parallaxDistance: Double = 70
     /// Emoji that sit far back in the sky and barely move with tilt.
     private static let farHeroes: Set<String> = ["☀️", "🌙", "🌕", "🌝", "🌛"]
 
@@ -308,7 +308,7 @@ final class EmojiParticleSystem {
                 x += sin(particle.age * 1.6 + particle.wobblePhase) * particle.wobble
             }
             // Small particles read as far away, big ones as close.
-            let offset = shift(depth: min(max(particle.size / 60, 0.15), 1.2))
+            let offset = shift(depth: min(max(particle.size / 50, 0.2), 1.4))
             draw(text(particle.emoji), in: base, at: CGPoint(x: x + offset.dx, y: particle.position.y + offset.dy),
                  size: particle.size, rotation: particle.rotation, opacity: opacity)
         }
@@ -317,7 +317,7 @@ final class EmojiParticleSystem {
             let phase = hero.phase * .pi / 180
             let orbitAngle = (hero.phase + hero.orbitSpeed * elapsed) * .pi / 180
             let scale = 1 + sin(elapsed * 1.8 + phase) * hero.pulse
-            let offset = shift(depth: Self.farHeroes.contains(hero.emoji) ? 0.3 : 0.75)
+            let offset = shift(depth: Self.farHeroes.contains(hero.emoji) ? 0.25 : 0.9)
             let point = CGPoint(
                 x: hero.position.x * size.width + hero.offset.width + cos(orbitAngle) * hero.orbitRadius + offset.dx,
                 y: hero.position.y * size.height + hero.offset.height + sin(orbitAngle) * hero.orbitRadius

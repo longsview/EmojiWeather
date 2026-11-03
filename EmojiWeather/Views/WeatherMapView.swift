@@ -49,13 +49,10 @@ struct WeatherMapView: View {
         // bar, and the map keeps its markers out from under them.
         .safeAreaInset(edge: .top) { header }
         .safeAreaInset(edge: .bottom) {
-            VStack(spacing: 2) {
-                WeatherAttributionView()
-                Text("Cities from GeoNames (CC BY 4.0)")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-            }
-            .padding(8)
+            // Apple requires the Weather mark wherever WeatherKit data is shown; the rest of the
+            // credits are in Settings > Data Sources.
+            WeatherAttributionView()
+                .padding(8)
             .glassEffect(.regular, in: .rect(cornerRadius: 12))
             .padding(.bottom, 8)
         }
