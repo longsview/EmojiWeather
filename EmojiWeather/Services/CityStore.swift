@@ -48,20 +48,26 @@ final class CityStore {
         guard !cities.contains(where: { $0.isSamePlace(as: city) }) else { return false }
         cities.append(city)
         save()
+        #if os(iOS)
         AppAnalytics.log(.cityAdded, ["city_count": cities.count])
+        #endif
         return true
     }
 
     func remove(_ city: City) {
         cities.removeAll { $0.id == city.id }
         save()
+        #if os(iOS)
         AppAnalytics.log(.cityRemoved, ["city_count": cities.count])
+        #endif
     }
 
     func remove(atOffsets offsets: IndexSet) {
         cities.remove(atOffsets: offsets)
         save()
+        #if os(iOS)
         AppAnalytics.log(.cityRemoved, ["city_count": cities.count])
+        #endif
     }
 
     func move(fromOffsets source: IndexSet, toOffset destination: Int) {

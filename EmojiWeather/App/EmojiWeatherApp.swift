@@ -6,7 +6,7 @@ struct EmojiWeatherApp: App {
     @State private var cityStore = CityStore()
     @State private var weather = WeatherProvider()
     @State private var purchases = PurchaseManager()
-    @State private var ads = AdsManager()
+    @State private var ads: AdsManager
     @State private var quiz: QuizStore
 
     /// Changes whenever the widgets' list of places or the Plus status changes.
@@ -21,8 +21,11 @@ struct EmojiWeatherApp: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
+        // Crash reporting first, before anything touches the Google ads SDK, so Crashlytics
+        // gets the crash handlers.
         CrashReporting.start()
         AppAnalytics.start()
+        _ads = State(initialValue: AdsManager())
         let quiz = QuizStore()
         _quiz = State(initialValue: quiz)
         // Tapping a morning reminder opens the quiz.
