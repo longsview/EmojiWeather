@@ -567,6 +567,46 @@
         }
       }
     },
+    "A soft, gray kind of night." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ليلة رمادية هادئة."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Una noche suave y gris."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une nuit douce et grise."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "しっとり、灰色の夜。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uma noite suave e cinzenta."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一个柔和、灰蒙蒙的夜晚。"
+          }
+        }
+      }
+    },
     "A still image for anywhere." : {
       "localizations" : {
         "ar" : {

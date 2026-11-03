@@ -116,6 +116,8 @@ enum WeatherScene: String, CaseIterable, Identifiable, Sendable {
             sky == .night ? WeatherScene.clearNight.tagline : (self == .clearNight ? WeatherScene.sunny.tagline : tagline)
         case .partlyCloudy:
             sky == .night ? String(localized: "A few clouds keeping the moon company. 🌙") : tagline
+        case .cloudy:
+            sky == .night ? String(localized: "A soft, gray kind of night.") : tagline
         default:
             tagline
         }
