@@ -25,6 +25,8 @@ struct CityPageView: View {
     /// Pager mode: the container draws the Forecast hint (fixed, above the page dots) and
     /// bumps this to open the visible page's forecast.
     var openDetailsToken = 0
+    /// Pager mode: the container's Share button bumps this to share the visible page.
+    var shareToken = 0
     /// Tells the container whether the visible page has weather, so its hint can show.
     var onHasWeatherChange: (Bool) -> Void = { _ in }
 
@@ -42,6 +44,7 @@ struct CityPageView: View {
     @State private var isLoading = false
     @State private var showingDetails = false
     @State private var showingPaywall = false
+    @State private var showingShare = false
 
     private var targetLocation: CLLocation? {
         switch place {
@@ -132,6 +135,36 @@ struct CityPageView: View {
         }
         .onChange(of: openDetailsToken) { _, _ in
             if isActive, snapshot != nil { showingDetails = true }
+        }
+        .onChange(of: shareToken) { _, _ in
+            if isActive, snapshot != nil { showingShare = true }
+        }
+        .overlay(alignment: .topTrailing) {
+            // iPad: the page has no container top bar, so it shows its own Share button.
+            if drawsOwnHint, snapshot != nil {
+                Button {
+                    showingShare = true
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.body.weight(.semibold))
+                        .frame(width: 44, height: 44)
+                        .background(sceneConditions.sky.textColor.opacity(0.1), in: Circle())
+                }
+                .foregroundStyle(sceneConditions.sky.textColor)
+                .accessibilityLabel("Share")
+                .padding()
+            }
+        }
+        .sheet(isPresented: $showingShare) {
+            if let snapshot {
+                ShareCardSheet(content: ShareCardContent(
+                    placeName: placeName,
+                    timeZone: timeZone,
+                    conditions: sceneConditions,
+                    snapshot: snapshot,
+                    showsWatermark: !purchases.hasPlus
+                ))
+            }
         }
         .simultaneousGesture(
             DragGesture(minimumDistance: 24).onEnded { value in

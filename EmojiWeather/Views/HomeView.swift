@@ -19,6 +19,8 @@ struct HomeView: View {
     @State private var bottomInset: CGFloat = 0
     /// Bumped by the fixed Forecast hint to open the visible page's forecast.
     @State private var openDetailsToken = 0
+    /// Bumped by the Share button to share the visible page.
+    @State private var shareToken = 0
     @State private var activeHasWeather = false
     @State private var previewScene: WeatherScene?
     @State private var showingGallery = false
@@ -87,6 +89,7 @@ struct HomeView: View {
                         bottomInset: bottomInset,
                         onSceneChange: { activeScene = $0 },
                         openDetailsToken: openDetailsToken,
+                        shareToken: shareToken,
                         onHasWeatherChange: { activeHasWeather = $0 }
                     )
                     .containerRelativeFrame([.horizontal, .vertical])
@@ -172,6 +175,14 @@ struct HomeView: View {
             debugMenu
             #endif
             Spacer()
+            if activeHasWeather {
+                Button {
+                    shareToken += 1
+                } label: {
+                    circleIcon("square.and.arrow.up")
+                }
+                .accessibilityLabel("Share")
+            }
             Button {
                 showingPlaces = true
             } label: {
