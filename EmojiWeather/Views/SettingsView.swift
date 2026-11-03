@@ -112,7 +112,10 @@ struct SettingsView: View {
                 }
 
                 Section {
-                    Link(destination: URL(string: "https://longsview.github.io/skymoji/privacy")!) {
+                    Link(destination: URL(string: "https://longsview.github.io/skymoji/support/")!) {
+                        Label("Help & Support", systemImage: "questionmark.circle")
+                    }
+                    Link(destination: URL(string: "https://longsview.github.io/skymoji/privacy/")!) {
                         Label("Privacy Policy", systemImage: "hand.raised")
                     }
                     NavigationLink {
