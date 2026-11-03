@@ -20,7 +20,7 @@
       { "id": "01-hero",  "shot": "raw/ipad/split.png",  "theme": "sky",   "tilt": 0, "headline": "The weather, in emoji.",   "sub": "Big, beautiful animated skies on iPad.", "stickers": ["☀️", "⛅️", "🌈"] },
       { "id": "02-map",   "shot": "raw/ipad/map.png",    "theme": "retro", "tilt": 0, "headline": "The retro weather map.",   "sub": "Like the TV forecast, drawn in emoji.",  "stickers": ["📺", "🗺️", "⛈️"] },
       { "id": "03-daily", "shot": "raw/ipad/quiz.png",   "theme": "sun",   "tilt": 0, "headline": "A new geography game every day.", "sub": "Five questions about where you are.", "stickers": ["🧩", "🔥", "🌍"] },
-      { "id": "04-forecast", "shot": "raw/ipad/forecast.png", "theme": "sky2", "tilt": 0, "headline": "Every detail, one swipe up.", "sub": "Hourly, 10-day, wind, UV and more.", "stickers": ["🌡️", "💨", "🌅"] }
+      { "id": "04-storm", "shot": "raw/ipad/forecast.png", "theme": "storm", "tilt": 0, "headline": "Feel the storm.", "sub": "Rain, snow and lightning that move with the real weather.", "stickers": ["⚡️", "🌧️", "💧"] }
     ]
   }
 }
