@@ -25,6 +25,7 @@ struct EmojiWeatherApp: App {
         // gets the crash handlers.
         CrashReporting.start()
         AppAnalytics.start()
+        AdsManager.disableSDKCrashReporting()
         _ads = State(initialValue: AdsManager())
         let quiz = QuizStore()
         _quiz = State(initialValue: quiz)

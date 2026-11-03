@@ -61,6 +61,12 @@ final class AdsManager: NSObject, FullScreenContentDelegate, BannerViewDelegate 
 
     private static let launchCountKey = "ads.launchCount"
 
+    /// Stops the ads SDK from installing its own crash handlers, which would hide crashes from
+    /// Crashlytics. Call at launch, right after `CrashReporting.start()`.
+    static func disableSDKCrashReporting() {
+        MobileAds.shared.disableSDKCrashReporting()
+    }
+
     /// Call once the first weather is on screen. Waits a few seconds so launch stays smooth,
     /// shows Google's consent form where the law requires it (EU/UK), then starts the SDK.
     /// The SDK does heavy main-thread setup, so it must never run during launch.
