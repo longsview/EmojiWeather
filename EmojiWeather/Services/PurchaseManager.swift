@@ -57,9 +57,13 @@ final class PurchaseManager {
     }
 
     private(set) var products: [Product] = []
-    private(set) var purchasedProductIDs: Set<String> = []
+    private(set) var purchasedProductIDs: Set<String> = [] {
+        didSet { SceneStyle.plusActive = hasPlus }
+    }
     /// Flipped from the debug menu to test both tiers without buying anything.
-    var debugUnlock = false
+    var debugUnlock = false {
+        didSet { SceneStyle.plusActive = hasPlus }
+    }
 
     var hasPlus: Bool { debugUnlock || !purchasedProductIDs.isEmpty }
 

@@ -114,6 +114,8 @@ extension SceneSpec {
     static func make(for conditions: SceneConditions) -> SceneSpec {
         var spec = makeScene(for: conditions)
         spec.background = conditions.sky.background(for: conditions.scene)
+        // Skymoji+ scene packs and the person's own emoji.
+        SceneStyle.apply(to: &spec)
         return spec
     }
 

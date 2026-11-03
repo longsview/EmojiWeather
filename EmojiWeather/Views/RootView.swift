@@ -13,7 +13,17 @@ struct RootView: View {
     @AppStorage(DisplaySettings.clockKey, store: SharedStore.defaults)
     private var clock: ClockSetting = .automatic
 
-    private var displayKey: String { "\(temperature.rawValue)-\(clock.rawValue)" }
+    // Scene packs and custom emoji change how every scene looks.
+    @Environment(PurchaseManager.self) private var purchases
+    @AppStorage(SceneStyle.packKey, store: SharedStore.defaults)
+    private var scenePack: ScenePack = .classic
+    @AppStorage(SceneStyle.customEmojiKey, store: SharedStore.defaults)
+    private var customEmoji = ""
+
+    private var displayKey: String {
+        let style = SceneStyle.styleKey(pack: scenePack.rawValue, customJSON: customEmoji, plus: purchases.hasPlus)
+        return "\(temperature.rawValue)-\(clock.rawValue)-\(style)"
+    }
 
     var body: some View {
         TabView(selection: $tab) {

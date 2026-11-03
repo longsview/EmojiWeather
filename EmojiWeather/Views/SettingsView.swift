@@ -13,6 +13,11 @@ struct SettingsView: View {
     @AppStorage(DisplaySettings.animateScenesKey, store: SharedStore.defaults)
     private var animateScenes = true
 
+    @AppStorage(SceneStyle.packKey, store: SharedStore.defaults)
+    private var scenePack: ScenePack = .classic
+    @AppStorage(SceneStyle.customEmojiKey, store: SharedStore.defaults)
+    private var customEmoji = ""
+
     @State private var showingPaywall = false
     @State private var showingManageSubscription = false
 
@@ -63,6 +68,32 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    plusLink {
+                        ScenePackView()
+                    } label: {
+                        LabeledContent {
+                            Text(scenePack.title)
+                        } label: {
+                            Label("Scene pack", systemImage: "leaf")
+                        }
+                    }
+                    plusLink {
+                        CustomEmojiView()
+                    } label: {
+                        LabeledContent {
+                            let customCount = SceneStyle.decodeCustom(customEmoji).count
+                            if customCount > 0 { Text("\(customCount) custom") }
+                        } label: {
+                            Label("Your own emoji", systemImage: "face.smiling")
+                        }
+                    }
+                } header: {
+                    Text("Scenes")
+                } footer: {
+                    Text("Dress up every scene for the season, or swap the sun, moon, clouds and more for your own emoji or Genmoji.")
+                }
+
+                Section {
                     if purchases.hasPlus {
                         Label("Skymoji+ is active. Thank you!", systemImage: "checkmark.seal.fill")
                         Button("Manage Subscription") { showingManageSubscription = true }
@@ -101,6 +132,30 @@ struct SettingsView: View {
             .manageSubscriptionsSheet(isPresented: $showingManageSubscription)
             .onChange(of: temperature) { WidgetCenter.shared.reloadAllTimelines() }
             .onChange(of: clock) { WidgetCenter.shared.reloadAllTimelines() }
+        }
+    }
+
+    /// Opens the screen for Skymoji+ members, and the paywall for everyone else.
+    @ViewBuilder
+    private func plusLink<Destination: View, Content: View>(
+        @ViewBuilder destination: () -> Destination,
+        @ViewBuilder label: () -> Content
+    ) -> some View {
+        if purchases.hasPlus {
+            NavigationLink(destination: destination, label: label)
+        } else {
+            Button {
+                showingPaywall = true
+            } label: {
+                HStack {
+                    label()
+                    Image(systemName: "lock.fill")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .accessibilityLabel(Text("Skymoji+"))
+                }
+                .foregroundStyle(.primary)
+            }
         }
     }
 }

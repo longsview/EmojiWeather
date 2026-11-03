@@ -20,6 +20,7 @@
 		1EB2AB173A978C7E1EB9782C /* WeatherScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10BD723000F78E06C156EAB1 /* WeatherScene.swift */; };
 		2264D1660232503394EA94BD /* EmojiSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000E644B0103D5034C02B2EF /* EmojiSceneView.swift */; };
 		2315B047177C7D098B35BD84 /* WidgetShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2579C65596E26021AA9BD12C /* WidgetShared.swift */; };
+		25271E08039A500A456A5BB4 /* SceneStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA22BA0B0FA0618B7809374 /* SceneStyle.swift */; };
 		25C36FB4220F0FB42236E244 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4662654A96E407E13BFAC38E /* SettingsView.swift */; };
 		260C1C03B5EB5ABD2CED953B /* CityPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFECB4524657BE1D8F9C1A5E /* CityPageView.swift */; };
 		2719557028B9138804DAA9D8 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40C9B91B7D0FC642A3660D2 /* Color+Hex.swift */; };
@@ -76,6 +77,7 @@
 		BAFE306D21B714017910B0A8 /* DisplaySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007719C4B208E545100281A2 /* DisplaySettings.swift */; };
 		BC6B106026C025ECEF1D39BD /* DailyQuizWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 086B6E668E50FD4C809A79F4 /* DailyQuizWidget.swift */; };
 		BF137CAA4EEDE86F7BD82ACB /* WidgetIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14AC04FA945047A584A0F9C4 /* WidgetIntents.swift */; };
+		BFE6F7C9F189701477106A51 /* SceneStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA22BA0B0FA0618B7809374 /* SceneStyle.swift */; };
 		C5334F0844D6C073CDD0E358 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 80D9419E336A15CDBD763DA3 /* Localizable.xcstrings */; };
 		CB23BA320499F16E4227CEBB /* QuizStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FD55FCD2555E1BF0C62752 /* QuizStore.swift */; };
 		CD99E87C05E55C341FB8ADAF /* countries.tsv in Resources */ = {isa = PBXBuildFile; fileRef = B8C4E0F090FBC2D7AE20B207 /* countries.tsv */; };
@@ -85,6 +87,7 @@
 		D2E37C300D6BD1107328827B /* CitySearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DBA20AF882DFBA4C1A3184 /* CitySearchModel.swift */; };
 		D4FEEEDBF60326E4E721712C /* ForecastViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F11B758C7D5ABF0F4D967 /* ForecastViews.swift */; };
 		D8EA47EEC30403EF197B96C1 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = DC3ACDA7ECB5D1B2CEC49747 /* InfoPlist.xcstrings */; };
+		D92137B8F8168C8146098835 /* SceneStyleViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D05F6267C241D142CBDBCC6 /* SceneStyleViews.swift */; };
 		DC7CCE7DFF3D11ECC7174775 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0A2145E1FB41F53A80192F /* LocationService.swift */; };
 		DE80C4E1A254AF591058AAC8 /* AdViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1C8905A4E23B615054AAC7 /* AdViews.swift */; };
 		E685D7DD230BB55883624759 /* DetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 360F13C610EAB233D22887AC /* DetailsView.swift */; };
@@ -171,6 +174,7 @@
 		17B8B0474A8C8AC41DE4A852 /* QuizAtlas.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QuizAtlas.swift; sourceTree = "<group>"; };
 		19AD54FA797C2D57397162E4 /* WeatherAttributionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeatherAttributionView.swift; sourceTree = "<group>"; };
 		19B187FD55AD790A15B7D4CF /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1D05F6267C241D142CBDBCC6 /* SceneStyleViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SceneStyleViews.swift; sourceTree = "<group>"; };
 		2579C65596E26021AA9BD12C /* WidgetShared.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetShared.swift; sourceTree = "<group>"; };
 		29B8212869D131E40560600E /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		330C505BC2B4E68DA6EDE4CF /* QuizView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
@@ -200,6 +204,7 @@
 		94F8AFF568EEC5C108709D73 /* SceneText.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SceneText.swift; sourceTree = "<group>"; };
 		99210C012254A664EEF41853 /* EmojiWeatherWatchApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EmojiWeatherWatchApp.swift; sourceTree = "<group>"; };
 		9A1C10B0EB2C593F3D3A446E /* EmojiWeatherComplications.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = EmojiWeatherComplications.entitlements; sourceTree = "<group>"; };
+		9EA22BA0B0FA0618B7809374 /* SceneStyle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SceneStyle.swift; sourceTree = "<group>"; };
 		A1BBCD82E7C7112ECD8D599A /* EmojiWeather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmojiWeather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A339DC36E5BCD059D864B17B /* SceneSpec.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SceneSpec.swift; sourceTree = "<group>"; };
 		B8C4E0F090FBC2D7AE20B207 /* countries.tsv */ = {isa = PBXFileReference; includeInIndex = 1; path = countries.tsv; sourceTree = "<group>"; };
@@ -361,6 +366,7 @@
 				A339DC36E5BCD059D864B17B /* SceneSpec.swift */,
 				10BD723000F78E06C156EAB1 /* WeatherScene.swift */,
 				94F8AFF568EEC5C108709D73 /* SceneText.swift */,
+				9EA22BA0B0FA0618B7809374 /* SceneStyle.swift */,
 			);
 			name = Scenes;
 			path = Scenes;
@@ -436,6 +442,7 @@
 				4662654A96E407E13BFAC38E /* SettingsView.swift */,
 				1215FB8BDFBBDF60CDE24FBD /* DataSourcesView.swift */,
 				C559D65907D40C741091222A /* ShareCard.swift */,
+				1D05F6267C241D142CBDBCC6 /* SceneStyleViews.swift */,
 			);
 			name = Views;
 			path = Views;
@@ -681,6 +688,8 @@
 				CB23BA320499F16E4227CEBB /* QuizStore.swift in Sources */,
 				D1B712B1E9B3626E893EC111 /* QuizView.swift in Sources */,
 				8EC47D55E97E2B5CC258854A /* QuizStats.swift in Sources */,
+				BFE6F7C9F189701477106A51 /* SceneStyle.swift in Sources */,
+				D92137B8F8168C8146098835 /* SceneStyleViews.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -722,6 +731,7 @@
 				B7F17434C79F8375A596D9E9 /* WidgetShared.swift in Sources */,
 				535AF2BC2705AF60C261F27E /* SceneText.swift in Sources */,
 				841A172DEC534CA58FFD53B8 /* WidgetSync.swift in Sources */,
+				25271E08039A500A456A5BB4 /* SceneStyle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
