@@ -134,6 +134,7 @@ struct HomeView: View {
                     }
             }
             .padding(.bottom, 6)
+            .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         }
         .overlay {
             // The pager ignores the safe area, so measure the tab bar + home indicator here,

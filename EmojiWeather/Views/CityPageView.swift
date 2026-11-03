@@ -94,6 +94,7 @@ struct CityPageView: View {
                     Spacer(minLength: 0)
                 }
                 .padding(.horizontal, 24)
+                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             }
             // Pinned to the bottom on its own, so a tall summary can never push it off screen.
             .overlay(alignment: .bottom) {
@@ -108,6 +109,7 @@ struct CityPageView: View {
                 }
                 // In the pager, leave room for the container's fixed hint and page dots.
                 .padding(.bottom, bottomInset.map { $0 + 100 } ?? proxy.safeAreaInsets.bottom + 64)
+                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
             }
         }
         .environment(\.skyMode, sceneConditions.sky)

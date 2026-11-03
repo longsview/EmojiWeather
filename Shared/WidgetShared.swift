@@ -137,27 +137,16 @@ struct WidgetWeather: Codable, Hashable, Sendable {
 }
 
 extension Measurement where UnitType == UnitTemperature {
-    /// "72°" in the unit chosen in Settings, or the region's unit by default.
+    /// "72°" in the unit chosen in Settings (or the region's unit). Like Apple Weather, only the
+    /// degree sign is shown; the unit letter lives in Settings.
     var shortTemperature: String {
-        let number = FloatingPointFormatStyle<Double>.number.precision(.fractionLength(0))
-        switch DisplaySettings.temperature {
-        case .automatic:
-            return formatted(.measurement(width: .narrow, usage: .weather, numberFormatStyle: number))
-        case .celsius:
-            return converted(to: .celsius).formatted(.measurement(width: .narrow, usage: .asProvided, numberFormatStyle: number))
-        case .fahrenheit:
-            return converted(to: .fahrenheit).formatted(.measurement(width: .narrow, usage: .asProvided, numberFormatStyle: number))
-        }
+        let value = converted(to: DisplaySettings.temperatureUnit).value
+        return value.formatted(.number.precision(.fractionLength(0))) + "°"
     }
 
     /// "72 degrees" style text for VoiceOver.
     var spokenTemperature: String {
         let number = FloatingPointFormatStyle<Double>.number.precision(.fractionLength(0))
-        let unit: UnitTemperature = switch DisplaySettings.temperature {
-        case .automatic: DisplaySettings.regionTemperatureUnit
-        case .celsius: .celsius
-        case .fahrenheit: .fahrenheit
-        }
-        return converted(to: unit).formatted(.measurement(width: .wide, usage: .asProvided, numberFormatStyle: number))
+        return converted(to: DisplaySettings.temperatureUnit).formatted(.measurement(width: .wide, usage: .asProvided, numberFormatStyle: number))
     }
 }

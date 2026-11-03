@@ -30,6 +30,15 @@ enum DisplaySettings {
         UnitTemperature(forLocale: .current, usage: .weather)
     }
 
+    /// The unit temperatures are shown in.
+    static var temperatureUnit: UnitTemperature {
+        switch temperature {
+        case .automatic: regionTemperatureUnit
+        case .celsius: .celsius
+        case .fahrenheit: .fahrenheit
+        }
+    }
+
     /// True when the region uses a 12-hour clock.
     static var regionUses12HourClock: Bool {
         switch Locale.current.hourCycle {

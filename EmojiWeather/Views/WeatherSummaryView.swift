@@ -71,8 +71,9 @@ struct WeatherSummaryView: View {
         }
         .frame(maxWidth: .infinity)
         .readableOverEmoji()
-        // The page is one screen tall, so cap the very largest sizes to keep it all visible.
-        .dynamicTypeSize(...DynamicTypeSize.accessibility3)
+        // The page is one screen tall, so like Apple Weather it stops growing at the largest
+        // standard size. The forecast sheet scrolls and takes every size.
+        .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         // VoiceOver: one stop for the place name (a heading) and one for the weather, like
         // Apple Weather.
         .accessibilityElement(children: .ignore)
