@@ -32,13 +32,51 @@ struct QuizAtlas: Sendable {
     }
 
     let cities: [City]
+    /// Cities of a million or more, for the world questions. Small enough to scan anywhere.
+    let bigCities: [City]
     let countries: [Country]
     private let countriesByCode: [String: Country]
 
     init(cities: [City], countries: [Country]) {
         self.cities = cities
+        bigCities = cities.filter { $0.population >= 1_000_000 }
         self.countries = countries
         countriesByCode = Dictionary(countries.map { ($0.code, $0) }, uniquingKeysWith: { first, _ in first })
+    }
+
+    /// The places near a point that the local questions need. Scanning 60,000 cities takes a
+    /// noticeable moment (much longer in Debug builds), so it runs off the main thread.
+    struct Nearby: Sendable {
+        /// Towns of 10,000+ between 12 and 250 km away, with their distance in meters.
+        let towns: [(city: City, distance: Double)]
+        /// Cities of 200,000+ between 150 and 3,000 km away, with their distance in meters.
+        let regional: [(city: City, distance: Double)]
+    }
+
+    func nearby(latitude: Double, longitude: Double) async -> Nearby {
+        let cities = cities
+        return await Task.detached(priority: .userInitiated) {
+            var towns: [(city: City, distance: Double)] = []
+            var regional: [(city: City, distance: Double)] = []
+            for city in cities where city.population >= 10_000 {
+                let distance = Self.distance(latitude, longitude, city.latitude, city.longitude)
+                if distance > 12_000, distance < 250_000 { towns.append((city, distance)) }
+                if city.population >= 200_000, distance > 150_000, distance < 3_000_000 {
+                    regional.append((city, distance))
+                }
+            }
+            return Nearby(towns: towns, regional: regional)
+        }.value
+    }
+
+    /// Great-circle distance in meters.
+    static func distance(_ lat1: Double, _ lon1: Double, _ lat2: Double, _ lon2: Double) -> Double {
+        let radians = Double.pi / 180
+        let dLat = (lat2 - lat1) * radians
+        let dLon = (lon2 - lon1) * radians
+        let a = sin(dLat / 2) * sin(dLat / 2)
+            + cos(lat1 * radians) * cos(lat2 * radians) * sin(dLon / 2) * sin(dLon / 2)
+        return 6_371_000 * 2 * atan2(sqrt(a), sqrt(1 - a))
     }
 
     func country(_ code: String) -> Country? { countriesByCode[code] }

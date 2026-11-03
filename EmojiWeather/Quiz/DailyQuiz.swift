@@ -84,8 +84,9 @@ struct QuizBuilder {
         }
 
         if let origin {
-            add(closestTown(from: origin, rng: &rng) ?? capital(rng: &rng))
-            add(direction(from: origin, rng: &rng) ?? flag(rng: &rng))
+            let nearby = await atlas.nearby(latitude: origin.coordinate.latitude, longitude: origin.coordinate.longitude)
+            add(closestTown(nearby, rng: &rng) ?? capital(rng: &rng))
+            add(direction(from: origin, nearby: nearby, rng: &rng) ?? flag(rng: &rng))
             add(await hotterColder(from: origin, rng: &rng) ?? capital(rng: &rng))
         } else {
             add(capital(rng: &rng))
@@ -101,13 +102,9 @@ struct QuizBuilder {
     // MARK: - Near you
 
     /// "Which of these is closest to you?"
-    private func closestTown(from origin: CLLocation, rng: inout SeededGenerator) -> QuizQuestion? {
-        let nearby = atlas.cities
-            .filter { $0.population >= 10_000 }
-            .map { ($0, $0.location.distance(from: origin)) }
-            .filter { $0.1 > 12_000 && $0.1 < 250_000 }
+    private func closestTown(_ nearby: QuizAtlas.Nearby, rng: inout SeededGenerator) -> QuizQuestion? {
         var seen = Set<String>()
-        let unique = nearby.filter { seen.insert($0.0.name).inserted }
+        let unique = nearby.towns.map { ($0.city, $0.distance) }.filter { seen.insert($0.0.name).inserted }
         guard unique.count >= 4 else { return nil }
         // Four towns whose distances differ by at least 15%, so the answer is clear.
         var picks: [(QuizAtlas.City, Double)] = []
@@ -131,13 +128,8 @@ struct QuizBuilder {
     }
 
     /// "Which way is Denver from you?"
-    private func direction(from origin: CLLocation, rng: inout SeededGenerator) -> QuizQuestion? {
-        let candidates = atlas.cities.filter {
-            guard $0.population >= 200_000 else { return false }
-            let distance = $0.location.distance(from: origin)
-            return distance > 150_000 && distance < 3_000_000
-        }
-        guard let city = candidates.randomElement(using: &rng) else { return nil }
+    private func direction(from origin: CLLocation, nearby: QuizAtlas.Nearby, rng: inout SeededGenerator) -> QuizQuestion? {
+        guard let city = nearby.regional.randomElement(using: &rng)?.city else { return nil }
         let bearing = Self.bearing(from: origin.coordinate, to: city.location.coordinate)
         let correct = Int((bearing / 45).rounded()) % 8
         // The right direction plus three others, in compass order.
@@ -159,7 +151,7 @@ struct QuizBuilder {
     /// "Is it warmer in Lisbon or where you are right now?"
     private func hotterColder(from origin: CLLocation, rng: inout SeededGenerator) async -> QuizQuestion? {
         guard let here = try? await weather.weather(for: origin) else { return nil }
-        let bigCities = atlas.cities.filter { $0.population >= 1_000_000 && $0.location.distance(from: origin) > 1_000_000 }
+        let bigCities = atlas.bigCities.filter { $0.location.distance(from: origin) > 1_000_000 }
         for city in bigCities.shuffled(using: &rng).prefix(3) {
             guard let there = try? await weather.weather(for: city.location) else { continue }
             let hereValue = here.current.temperature.converted(to: .celsius).value
@@ -184,7 +176,7 @@ struct QuizBuilder {
 
     /// "Where is it ⛈️ right now?" when one city's sky stands out, otherwise "Where is it warmest?"
     private func whereWeather(rng: inout SeededGenerator) async -> QuizQuestion? {
-        let bigCities = atlas.cities.filter { $0.population >= 1_000_000 }.shuffled(using: &rng)
+        let bigCities = atlas.bigCities.shuffled(using: &rng)
         var picks: [QuizAtlas.City] = []
         var countries = Set<String>()
         for city in bigCities where countries.insert(city.countryCode).inserted {

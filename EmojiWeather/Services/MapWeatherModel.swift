@@ -53,7 +53,14 @@ final class MapWeatherModel {
             guard !Task.isCancelled else { return }
             if cities == nil { cities = await CityIndex.load() }
             guard let cities, !Task.isCancelled else { return }
-            await load(places: cities.places(in: region, max: Self.maxPlaces, spacing: Self.minSpacing))
+            // Picking from 60,000 cities is too slow for the main thread, especially in Debug.
+            let maxPlaces = Self.maxPlaces
+            let spacing = Self.minSpacing
+            let places = await Task.detached(priority: .userInitiated) {
+                cities.places(in: region, max: maxPlaces, spacing: spacing)
+            }.value
+            guard !Task.isCancelled else { return }
+            await load(places: places)
         }
     }
 
