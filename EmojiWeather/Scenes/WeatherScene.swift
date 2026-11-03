@@ -8,6 +8,8 @@ enum WeatherScene: String, CaseIterable, Identifiable, Sendable {
     case snow
     case sunny
     case clearNight
+    /// Sun or moon (by the time of day) with clouds drifting past.
+    case partlyCloudy
     case cloudy
     case windy
     case foggy
@@ -33,7 +35,9 @@ enum WeatherScene: String, CaseIterable, Identifiable, Sendable {
             self = isDaylight ? .hot : .clearNight
         case .cloudy, .mostlyCloudy:
             self = .cloudy
-        case .clear, .mostlyClear, .partlyCloudy:
+        case .partlyCloudy:
+            self = .partlyCloudy
+        case .clear, .mostlyClear:
             self = isDaylight ? .sunny : .clearNight
         @unknown default:
             self = isDaylight ? .sunny : .cloudy
@@ -47,6 +51,7 @@ enum WeatherScene: String, CaseIterable, Identifiable, Sendable {
         case .snow: String(localized: "Snow")
         case .sunny: String(localized: "Sunny")
         case .clearNight: String(localized: "Clear Night")
+        case .partlyCloudy: String(localized: "Partly Cloudy")
         case .cloudy: String(localized: "Cloudy")
         case .windy: String(localized: "Windy")
         case .foggy: String(localized: "Fog")
@@ -61,6 +66,7 @@ enum WeatherScene: String, CaseIterable, Identifiable, Sendable {
         case .snow: "❄️"
         case .sunny: "☀️"
         case .clearNight: "🌙"
+        case .partlyCloudy: "⛅️"
         case .cloudy: "☁️"
         case .windy: "💨"
         case .foggy: "🌫️"
@@ -76,10 +82,42 @@ enum WeatherScene: String, CaseIterable, Identifiable, Sendable {
         case .snow: String(localized: "Bundle up, it's snowing. 🧣")
         case .sunny: String(localized: "Sunglasses on. 😎")
         case .clearNight: String(localized: "Clear skies. Go find a star. 🔭")
+        case .partlyCloudy: String(localized: "A little sun, a little cloud. ⛅️")
         case .cloudy: String(localized: "A soft, gray kind of day.")
         case .windy: String(localized: "Hold on to your hat. 🎩")
         case .foggy: String(localized: "Low visibility. Take it slow.")
         case .hot: String(localized: "Stay cool and drink some water. 🥤")
+        }
+    }
+
+    /// True for scenes that show the sun or the moon. Which one depends on the time of day,
+    /// not the weather: the sun by day and at sunrise and sunset, the moon at night.
+    var showsSunOrMoon: Bool {
+        switch self {
+        case .sunny, .clearNight, .hot, .partlyCloudy: true
+        default: false
+        }
+    }
+
+    /// The scene's emoji at a time of day: the moon at night for clear and partly cloudy skies.
+    func emoji(in sky: SkyMode) -> String {
+        switch self {
+        case .sunny, .clearNight: sky == .night ? "🌙" : "☀️"
+        case .hot: sky == .night ? "🌙" : "🥵"
+        case .partlyCloudy: sky == .night ? "🌙" : "⛅️"
+        default: emoji
+        }
+    }
+
+    /// The tagline at a time of day, so a clear night doesn't say "Sunglasses on".
+    func tagline(in sky: SkyMode) -> String {
+        switch self {
+        case .sunny, .clearNight, .hot:
+            sky == .night ? WeatherScene.clearNight.tagline : (self == .clearNight ? WeatherScene.sunny.tagline : tagline)
+        case .partlyCloudy:
+            sky == .night ? String(localized: "A few clouds keeping the moon company. 🌙") : tagline
+        default:
+            tagline
         }
     }
 
@@ -129,8 +167,10 @@ struct SceneConditions: Equatable, Sendable {
     }
 
     init(current: CurrentWeather, today: DayWeather? = nil) {
-        scene = WeatherScene(condition: current.condition, isDaylight: current.isDaylight)
+        // The time of day decides the sky (background, sun or moon); the weather decides the rest.
+        // Sunrise and sunset count as day, so the low sun shows on the golden sky.
         sky = SkyMode(current: current, today: today)
+        scene = WeatherScene(condition: current.condition, isDaylight: sky != .night)
 
         if let sunrise = today?.sun.sunrise, let sunset = today?.sun.sunset, sunset > sunrise {
             let progress = current.date.timeIntervalSince(sunrise) / sunset.timeIntervalSince(sunrise)
@@ -198,7 +238,7 @@ enum SkyMode: String, CaseIterable, Identifiable, Sendable {
     func background(for scene: WeatherScene) -> [Color] {
         guard self == .day else { return background }
         switch scene {
-        case .sunny, .hot, .clearNight:
+        case .sunny, .hot, .clearNight, .partlyCloudy:
             return background
         case .thunderstorm:
             return [Color(hex: 0xE4E7EB), Color(hex: 0xD5D9DF)]

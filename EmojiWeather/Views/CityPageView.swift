@@ -194,7 +194,7 @@ struct CityPageView: View {
                 condition: current.condition.description,
                 high: snapshot?.daily.first?.highTemperature.shortTemperature,
                 low: snapshot?.daily.first?.lowTemperature.shortTemperature,
-                tagline: sceneConditions.scene.tagline,
+                tagline: sceneConditions.scene.tagline(in: sceneConditions.sky),
                 spokenWeather: spokenWeather
             )
         } else {

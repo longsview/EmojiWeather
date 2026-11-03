@@ -6,7 +6,7 @@ struct ComplicationView: View {
 
     @Environment(\.widgetFamily) private var family
 
-    private var emoji: String { entry.weather?.weatherScene.emoji ?? "🌤️" }
+    private var emoji: String { entry.weather.map { $0.weatherScene.emoji(in: $0.skyMode) } ?? "🌤️" }
     private var temperature: String { entry.weather?.temperature.shortTemperature ?? "--" }
     private var name: String { entry.place?.name ?? String(localized: "Open Skymoji to add a place") }
 

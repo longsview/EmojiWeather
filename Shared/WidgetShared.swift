@@ -101,8 +101,9 @@ struct WidgetWeather: Codable, Hashable, Sendable {
         high = daily.first?.highTemperature
         low = daily.first?.lowTemperature
         condition = current.condition.description
-        scene = WeatherScene(condition: current.condition, isDaylight: current.isDaylight).rawValue
-        sky = SkyMode(current: current, today: daily.first).rawValue
+        let skyMode = SkyMode(current: current, today: daily.first)
+        scene = WeatherScene(condition: current.condition, isDaylight: skyMode != .night).rawValue
+        sky = skyMode.rawValue
         hours = hourly
             .filter { $0.date > fetchedAt.addingTimeInterval(-30 * 60) }
             .prefix(6)

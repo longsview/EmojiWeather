@@ -122,7 +122,48 @@ extension SceneSpec {
         // Rain leans up to 30° with the wind. Angles below 90° travel toward the right.
         let rainAngle = 90 - wind * 30
 
-        switch conditions.scene {
+        // The time of day picks the sun or the moon, whatever the scene's name says.
+        let isNight = conditions.sky == .night
+        var scene = conditions.scene
+        switch scene {
+        case .sunny, .hot: if isNight { scene = .clearNight }
+        case .clearNight: if !isNight { scene = .sunny }
+        default: break
+        }
+
+        switch scene {
+        case .partlyCloudy:
+            let drift = 1 + abs(wind) * 2
+            let anchor = isNight ? moonCorner : sunPosition(conditions.sunProgress)
+            // Puffy clouds drawn in front of the lower half of the sun or moon, so it peeks out
+            // from behind them.
+            let clouds = [
+                HeroSpec(emoji: "☁️", position: anchor, offset: CGSize(width: -34, height: 38), size: 96, phase: 0, bob: 4),
+                HeroSpec(emoji: "☁️", position: anchor, offset: CGSize(width: 44, height: 46), size: 80, phase: 140, bob: 3),
+            ]
+            let driftingClouds = EmitterSpec(
+                emoji: ["☁️"], rate: 0.12, size: 40...62, speed: (14 * drift)...(24 * drift), angle: 0,
+                lifetime: 55...75, origin: .left, band: 0.34...0.58, opacity: 0.85...1
+            )
+            if isNight {
+                return SceneSpec(
+                    emitters: [
+                        EmitterSpec(
+                            emoji: ["⭐️", "✨"], rate: 3.5, size: 7...16, lifetime: 2.5...6,
+                            origin: .scattered, band: 0.02...0.98, fades: true
+                        ),
+                        driftingClouds,
+                    ],
+                    heroes: [HeroSpec(emoji: "🌙", position: moonCorner, size: 110, pulse: 0.03, bob: 4)] + clouds,
+                    prewarm: 30
+                )
+            }
+            return SceneSpec(
+                emitters: [sunRays(emoji: ["✨"], at: anchor), driftingClouds],
+                heroes: [HeroSpec(emoji: "☀️", position: anchor, size: 150, spin: 4, pulse: 0.04)] + clouds,
+                prewarm: 30
+            )
+
         case .sunny:
             return SceneSpec(
                 emitters: [

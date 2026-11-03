@@ -55,7 +55,7 @@ struct WatchCityPage: View {
                     showsLocationIcon: place == .currentLocation,
                     timeZone: timeZone,
                     snapshot: snapshot,
-                    tagline: conditions.scene.tagline
+                    tagline: conditions.scene.tagline(in: conditions.sky)
                 )
                 .containerRelativeFrame(.vertical, alignment: .bottom)
 

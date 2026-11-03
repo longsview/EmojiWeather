@@ -36,7 +36,7 @@ struct WeatherWidgetView: View {
             case .accessoryRectangular:
                 RectangularWidgetView(entry: entry, place: place, weather: weather)
             case .accessoryInline:
-                Text(verbatim: "\(weather.weatherScene.emoji) \(place.name) \(weather.temperature.shortTemperature)")
+                Text(verbatim: "\(weather.weatherScene.emoji(in: weather.skyMode)) \(place.name) \(weather.temperature.shortTemperature)")
             case .systemMedium:
                 HomeWidgetView(entry: entry, place: place, weather: weather, layout: .medium)
             case .systemLarge:
@@ -126,7 +126,7 @@ private struct HomeWidgetView: View {
 
     private func sceneCard(textInset: CGFloat) -> some View {
         ZStack(alignment: .topLeading) {
-            SceneDecor(scene: weather.weatherScene, compact: layout == .small)
+            SceneDecor(scene: weather.weatherScene, sky: weather.skyMode, compact: layout == .small)
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 0) {
@@ -171,15 +171,19 @@ private struct HomeWidgetView: View {
 /// smaller pieces scattered around it.
 private struct SceneDecor: View {
     let scene: WeatherScene
+    let sky: SkyMode
     let compact: Bool
 
     private var hero: String {
+        // The time of day picks the sun or the moon.
+        if scene.showsSunOrMoon { return scene.emoji(in: sky) }
         switch scene {
         case .thunderstorm: "⛈️"
         case .rain: "🌧️"
         case .snow: "🌨️"
         case .sunny: "☀️"
         case .clearNight: "🌙"
+        case .partlyCloudy: "⛅️"
         case .cloudy: "☁️"
         case .windy: "🌬️"
         case .foggy: "🌫️"
@@ -188,12 +192,17 @@ private struct SceneDecor: View {
     }
 
     private var bits: [String] {
+        if scene.showsSunOrMoon, sky == .night {
+            return scene == .partlyCloudy ? ["☁️", "⭐️", "☁️"] : ["⭐️", "✨", "⭐️", "✨"]
+        }
+        if scene == .clearNight { return ["✨", "✨", "✨"] }
         switch scene {
         case .thunderstorm: ["⚡️", "💧", "⚡️", "💧"]
         case .rain: ["💧", "💧", "☂️", "💧"]
         case .snow: ["❄️", "❄️", "☃️", "❄️"]
         case .sunny: ["✨", "✨", "✨"]
         case .clearNight: ["⭐️", "✨", "⭐️", "✨"]
+        case .partlyCloudy: ["☁️", "✨", "☁️"]
         case .cloudy: ["☁️", "☁️"]
         case .windy: ["🍃", "🍂", "🍃"]
         case .foggy: ["🌫️", "🌫️"]
@@ -280,7 +289,7 @@ private struct CircularWidgetView: View {
             ZStack {
                 AccessoryWidgetBackground()
                 VStack(spacing: -2) {
-                    Text(weather.weatherScene.emoji).font(.system(size: 22))
+                    Text(weather.weatherScene.emoji(in: weather.skyMode)).font(.system(size: 22))
                     Text(weather.temperature.shortTemperature)
                         .font(.system(.headline, design: .rounded, weight: .heavy))
                 }
@@ -299,7 +308,7 @@ private struct RectangularWidgetView: View {
     var body: some View {
         CycleButton(enabled: entry.isCycling) {
             HStack(spacing: 8) {
-                Text(weather.weatherScene.emoji)
+                Text(weather.weatherScene.emoji(in: weather.skyMode))
                     .font(.system(size: 34))
                 VStack(alignment: .leading, spacing: 0) {
                     HStack(spacing: 3) {
