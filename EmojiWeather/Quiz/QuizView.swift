@@ -395,3 +395,58 @@ private struct QuizCard<Content: View>: View {
             .background(Color.primary.opacity(0.06), in: .rect(cornerRadius: 24))
     }
 }
+
+/// A small bottom sheet offering today's quiz, shown at most once a day when it hasn't been played.
+struct QuizNudgeSheet: View {
+    let streak: Int
+    let onPlay: () -> Void
+    let onDismiss: () -> Void
+
+    @State private var bounce = false
+
+    var body: some View {
+        VStack(spacing: 14) {
+            Text(verbatim: "🧩")
+                .font(.system(size: 64))
+                .rotationEffect(.degrees(bounce ? -8 : 8))
+                .animation(.easeInOut(duration: 0.9).repeatForever(autoreverses: true), value: bounce)
+                .accessibilityHidden(true)
+            Text("Today's Skymoji Daily is ready")
+                .font(.system(.title2, design: .rounded, weight: .bold))
+                .multilineTextAlignment(.center)
+            Group {
+                if streak > 0 {
+                    Text("Keep your 🔥 \(streak)-day streak going.")
+                } else {
+                    Text("Five quick questions about where you are.")
+                }
+            }
+            .font(.body)
+            .foregroundStyle(.secondary)
+            .multilineTextAlignment(.center)
+
+            Button(action: onPlay) {
+                Text("Play now")
+                    .font(.headline)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
+            }
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.capsule)
+            .controlSize(.large)
+            .padding(.top, 6)
+
+            Button("Not now", action: onDismiss)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.secondary)
+        }
+        .padding(.horizontal, 28)
+        .padding(.top, 28)
+        .padding(.bottom, 12)
+        .presentationDetents([.height(360)])
+        .presentationDragIndicator(.visible)
+        .presentationCornerRadius(36)
+        .preferredColorScheme(SystemAppearance.shared.colorScheme)
+        .onAppear { bounce = true }
+    }
+}

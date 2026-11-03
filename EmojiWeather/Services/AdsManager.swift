@@ -1,6 +1,7 @@
 import Foundation
 import GoogleMobileAds
 import Observation
+import StoreKit
 import os
 import AppTrackingTransparency
 import UIKit
@@ -12,22 +13,34 @@ import UserMessagingPlatform
 @MainActor
 @Observable
 final class AdsManager: NSObject, FullScreenContentDelegate, BannerViewDelegate {
-    /// Debug builds use Google's public test IDs, so testing never counts as real traffic.
-    /// Release builds use the real ad units from AdMob (Apps > Skymoji > Ad units).
+    /// Debug and TestFlight builds use Google's public test IDs, so testing never counts as real
+    /// traffic (AdMob can suspend accounts for clicks on their own real ads). App Store builds use
+    /// the real ad units from AdMob (Apps > Skymoji > Ad units).
     /// The App ID lives in Info.plist as GADApplicationIdentifier.
     enum AdUnit {
-        #if DEBUG
-        static let homeBanner = "ca-app-pub-3940256099942544/2934735716"
-        static let forecastCard = "ca-app-pub-3940256099942544/2934735716"
-        static let citySwipe = "ca-app-pub-3940256099942544/4411468910"
-        #else
-        static let homeBanner = "ca-app-pub-3535864006125488/1066637172"
-        static let forecastCard = "ca-app-pub-3535864006125488/2204459022"
-        static let citySwipe = "ca-app-pub-3535864006125488/1445251983"
-        #endif
+        /// Set once at startup: always in Debug, and in Release when running from TestFlight.
+        @MainActor static var usesTestAds: Bool = {
+            #if DEBUG
+            return true
+            #else
+            return false
+            #endif
+        }()
 
-        static var isConfigured: Bool {
-            !homeBanner.isEmpty && !forecastCard.isEmpty && !citySwipe.isEmpty
+        @MainActor static var homeBanner: String {
+            usesTestAds ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3535864006125488/1066637172"
+        }
+        @MainActor static var forecastCard: String {
+            usesTestAds ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3535864006125488/2204459022"
+        }
+        @MainActor static var citySwipe: String {
+            usesTestAds ? "ca-app-pub-3940256099942544/4411468910" : "ca-app-pub-3535864006125488/1445251983"
+        }
+
+        /// TestFlight and Xcode installs have a sandbox App Store receipt; App Store installs don't.
+        static func isSandboxInstall() async -> Bool {
+            guard case .verified(let transaction)? = try? await AppTransaction.shared else { return false }
+            return transaction.environment != .production
         }
     }
 
@@ -41,6 +54,9 @@ final class AdsManager: NSObject, FullScreenContentDelegate, BannerViewDelegate 
     /// True once consent is settled and the SDK has started.
     private(set) var isReady = false
     private(set) var isShowingFullScreenAd = false
+    /// True while the consent form or Apple's tracking prompt may be about to show, so other
+    /// pop-ups (like the daily quiz nudge) can wait their turn.
+    private(set) var isPrompting = false
     /// True once the home banner has an ad, so the page only makes room for it then.
     private(set) var isHomeBannerLoaded = false
     /// Created once and reused, so page re-renders never rebuild its web view.
@@ -72,11 +88,17 @@ final class AdsManager: NSObject, FullScreenContentDelegate, BannerViewDelegate 
     /// shows Google's consent form where the law requires it (EU/UK), then starts the SDK.
     /// The SDK does heavy main-thread setup, so it must never run during launch.
     func start(after delay: Duration = .seconds(3)) async {
-        guard !started, AdUnit.isConfigured else { return }
+        guard !started else { return }
         #if DEBUG
         guard UserDefaults.standard.bool(forKey: Self.debugAdsEnabledKey) else { return }
         #endif
         started = true
+        isPrompting = true
+        defer { isPrompting = false }
+        if await AdUnit.isSandboxInstall() {
+            AdUnit.usesTestAds = true
+            logger.info("TestFlight install: using test ads")
+        }
 
         launchCount = UserDefaults.standard.integer(forKey: Self.launchCountKey) + 1
         UserDefaults.standard.set(launchCount, forKey: Self.launchCountKey)

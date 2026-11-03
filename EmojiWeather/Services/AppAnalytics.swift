@@ -17,6 +17,8 @@ enum AppAnalytics {
         case shareExported = "share_exported"
         case quizOpened = "quiz_opened"
         case quizFinished = "quiz_finished"
+        case quizNudgeShown = "quiz_nudge_shown"
+        case quizNudgeAccepted = "quiz_nudge_accepted"
         case guessLocked = "tomorrow_guess_locked"
         case reminderEnabled = "reminder_enabled"
         case paywallViewed = "paywall_viewed"

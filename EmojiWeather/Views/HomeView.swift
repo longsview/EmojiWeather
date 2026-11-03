@@ -17,6 +17,11 @@ struct HomeView: View {
 
     @State private var showingPlaces = false
     @State private var showingQuiz = false
+    /// The "today's quiz is ready" bottom sheet, offered at most once a day.
+    @State private var showingQuizNudge = false
+    @State private var playAfterNudge = false
+    @AppStorage("quiz.lastNudgeDay") private var lastNudgeDay = ""
+    @Environment(\.scenePhase) private var scenePhase
     /// Height covered by the tab bar and home indicator, so the bottom controls sit above it.
     @State private var bottomInset: CGFloat = 0
     /// Bumped by the fixed Forecast hint to open the visible page's forecast.
@@ -73,6 +78,25 @@ struct HomeView: View {
         .preferredColorScheme(activeSky.isDark ? .dark : .light)
         .sheet(isPresented: $showingQuiz) {
             QuizView()
+        }
+        .sheet(isPresented: $showingQuizNudge, onDismiss: {
+            if playAfterNudge {
+                playAfterNudge = false
+                showingQuiz = true
+            }
+        }) {
+            QuizNudgeSheet(streak: quiz.currentStreak) {
+                AppAnalytics.log(.quizNudgeAccepted)
+                playAfterNudge = true
+                showingQuizNudge = false
+            } onDismiss: {
+                showingQuizNudge = false
+            }
+        }
+        // Offer today's quiz once the weather is up, and again on the next day's first open.
+        .task(id: activeHasWeather) { await nudgeIfNeeded() }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { Task { await nudgeIfNeeded() } }
         }
         // The streak widget opens the quiz with skymoji://daily.
         .onOpenURL { url in
@@ -254,6 +278,25 @@ struct HomeView: View {
     }
 
     // MARK: - Shared
+
+    /// Shows the daily quiz nudge if today's quiz isn't done and it hasn't been offered today.
+    private func nudgeIfNeeded() async {
+        #if DEBUG
+        if ScreenshotMode.isActive { return }
+        #endif
+        guard activeHasWeather, isVisible, lastNudgeDay != QuizStore.today else { return }
+        // Let the weather land first, and wait for any consent or tracking prompt to finish.
+        try? await Task.sleep(for: .seconds(4))
+        for _ in 0..<60 where ads.isPrompting {
+            try? await Task.sleep(for: .milliseconds(500))
+        }
+        guard !Task.isCancelled, !ads.isPrompting, !ads.isShowingFullScreenAd,
+              !quiz.hasPlayedToday, !showingQuiz, !showingPlaces, !showingGallery,
+              lastNudgeDay != QuizStore.today else { return }
+        lastNudgeDay = QuizStore.today
+        AppAnalytics.log(.quizNudgeShown)
+        showingQuizNudge = true
+    }
 
     /// Opens Skymoji Daily. Shows the streak, and a check once today's quiz is done.
     private var quizButton: some View {
