@@ -150,9 +150,7 @@ struct CityPageView: View {
         }
         .sheet(isPresented: $showingDetails) {
             if let snapshot {
-                DetailsView(placeName: placeName, snapshot: snapshot, timeZone: timeZone) {
-                    await load(forceRefresh: true)
-                }
+                DetailsView(placeName: placeName, snapshot: snapshot, timeZone: timeZone)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
                 // The app forces light or dark to match the sky, so read the system setting

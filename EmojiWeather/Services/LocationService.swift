@@ -29,6 +29,22 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
         super.init()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyKilometer
+        // Only report moves of about a kilometer or more: enough to notice a new town or a
+        // trip, cheap on the battery.
+        manager.distanceFilter = 1_000
+    }
+
+    /// Call when the app comes to the foreground: gets a fresh fix right away (in case the
+    /// user traveled while the app was closed) and keeps watching for big moves while open.
+    func startUpdating() {
+        guard isAuthorized else { return }
+        refresh()
+        manager.startUpdatingLocation()
+    }
+
+    /// Call when the app leaves the foreground.
+    func stopUpdating() {
+        manager.stopUpdatingLocation()
     }
 
     var isAuthorized: Bool {
@@ -59,7 +75,7 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
         let status = manager.authorizationStatus
         Task { @MainActor in
             self.authorization = status
-            self.refresh()
+            self.startUpdating()
         }
     }
 

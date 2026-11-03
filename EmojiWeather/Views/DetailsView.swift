@@ -6,7 +6,6 @@ struct DetailsView: View {
     let placeName: String
     let snapshot: WeatherSnapshot
     let timeZone: TimeZone
-    var refresh: () async -> Void
 
     var body: some View {
         ScrollView {
@@ -27,7 +26,6 @@ struct DetailsView: View {
             }
             .padding()
         }
-        .refreshable { await refresh() }
     }
 }
 

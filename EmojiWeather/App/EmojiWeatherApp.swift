@@ -17,6 +17,8 @@ struct EmojiWeatherApp: App {
         return "\(coordinate)|\(location.placeName ?? "")|\(cities)|\(purchases.hasPlus)"
     }
 
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some Scene {
         WindowGroup {
             RootView()
@@ -35,6 +37,15 @@ struct EmojiWeatherApp: App {
                         hasPlus: purchases.hasPlus
                     )
                 }
+        }
+        // Watch for big moves (about 1 km) while the app is open, and get a fresh fix each
+        // time it comes back, so the current-location page follows you when you travel.
+        .onChange(of: scenePhase, initial: true) { _, phase in
+            switch phase {
+            case .active: location.startUpdating()
+            case .background: location.stopUpdating()
+            default: break
+            }
         }
     }
 }
