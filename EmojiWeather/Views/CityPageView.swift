@@ -99,6 +99,14 @@ struct CityPageView: View {
         return ForecastContent(snapshot: snapshot, timeZone: timeZone)
     }
 
+    /// Half height to start, like Apple Maps. Screenshots on iPad open it fully.
+    private var detailsDetents: Set<PresentationDetent> {
+        #if DEBUG
+        if ScreenshotMode.isActive, UIDevice.current.userInterfaceIdiom == .pad { return [.large] }
+        #endif
+        return [.medium, .large]
+    }
+
     /// Changes whenever the weather should be reloaded.
     private var loadKey: String {
         guard let target = targetLocation else { return "\(place.id)-none" }
@@ -209,7 +217,7 @@ struct CityPageView: View {
         .sheet(isPresented: $showingDetails) {
             if let forecast {
                 DetailsView(placeName: placeName, forecast: forecast)
-                .presentationDetents([.medium, .large])
+                .presentationDetents(detailsDetents)
                 .presentationDragIndicator(.visible)
                 // The app forces light or dark to match the sky, so read the system setting
                 // from the screen and give the forecast sheet that instead.
