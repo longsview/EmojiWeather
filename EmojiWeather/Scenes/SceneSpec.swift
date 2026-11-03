@@ -201,13 +201,20 @@ extension SceneSpec {
                         emoji: ["⭐️", "⭐️", "✨"], rate: 7, size: 7...18, lifetime: 2.5...6,
                         origin: .scattered, band: 0.02...0.98, fades: true
                     ),
+                    // Now and then a comet streaks down-left, head first (the ☄️ glyph's tail
+                    // points up and right). 🌠 is drawn as a framed tile, so it looked like a box.
                     EmitterSpec(
-                        emoji: ["🌠"], rate: 0.1, size: 22...30, speed: 380...480, angle: 20,
-                        lifetime: 3...3, origin: .left, band: 0.02...0.35
+                        emoji: ["☄️"], rate: 0.1, size: 24...32, speed: 380...480, angle: 145,
+                        lifetime: 3...3, band: 0...0, xRange: 0.4...1.2
+                    ),
+                    // A few clouds drift by, like the odd cloud on a sunny day (Mostly Clear).
+                    EmitterSpec(
+                        emoji: ["☁️"], rate: 0.05, size: 44...64, speed: 12...20, angle: 0,
+                        lifetime: 60...80, origin: .left, band: 0.5...0.62, opacity: 0.85...1
                     ),
                 ],
                 heroes: [HeroSpec(emoji: "🌙", position: moonCorner, size: 115, pulse: 0.03, bob: 4)],
-                prewarm: 6
+                prewarm: 30
             )
 
         case .thunderstorm:

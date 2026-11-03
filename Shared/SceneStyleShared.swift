@@ -233,7 +233,7 @@ enum SceneStyle {
         case "☁️": .cloud
         case "💧": .raindrop
         case "❄️": .snowflake
-        case "⭐️", "🌟", "🌠": .star
+        case "⭐️", "🌟", "🌠", "☄️": .star
         case "✨": .sparkle
         default: EmojiSlot.allCases.first { $0.original == emoji }
         }
