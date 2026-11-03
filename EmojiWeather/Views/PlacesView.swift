@@ -36,8 +36,8 @@ struct PlacesView: View {
                     placeRow(
                         id: Place.currentLocationID,
                         emoji: "📍",
-                        title: location.placeName ?? "My Location",
-                        subtitle: location.isAuthorized ? "Current location" : "Location access is off"
+                        title: location.placeName ?? String(localized: "My Location"),
+                        subtitle: location.isAuthorized ? String(localized: "Current location") : String(localized: "Location access is off")
                     )
                 }
 
@@ -70,14 +70,14 @@ struct PlacesView: View {
                 AddCityView()
             }
             .sheet(isPresented: $showingPaywall) {
-                PaywallView(reason: "Free includes \(PurchaseManager.freeCityLimit) cities. EmojiWeather+ removes the limit.")
+                PaywallView(reason: String(localized: "Free includes \(PurchaseManager.freeCityLimit) cities. EmojiWeather+ removes the limit."))
             }
     }
 
     private var footerText: String {
-        var text = "Your cities sync to all your devices through iCloud."
+        var text = String(localized: "Your cities sync to all your devices through iCloud.")
         if !purchases.hasPlus {
-            text += " Free includes \(PurchaseManager.freeCityLimit) cities (\(cityStore.cities.count) used)."
+            text += " " + String(localized: "Free includes \(PurchaseManager.freeCityLimit) cities (\(cityStore.cities.count) used).")
         }
         return text
     }
@@ -96,7 +96,7 @@ struct PlacesView: View {
             if !isSidebar { dismiss() }
         } label: {
             HStack(spacing: 12) {
-                Text(emoji).font(.title2)
+                Text(emoji).font(.title2).accessibilityHidden(true)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title).foregroundStyle(.primary)
                     if !subtitle.isEmpty {
@@ -113,5 +113,6 @@ struct PlacesView: View {
             }
         }
         .listRowBackground(isSidebar && selectedPlaceID == id ? Color.accentColor.opacity(0.15) : nil)
+        .accessibilityAddTraits(selectedPlaceID == id ? .isSelected : [])
     }
 }

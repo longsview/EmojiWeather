@@ -42,15 +42,15 @@ enum WeatherScene: String, CaseIterable, Identifiable, Sendable {
 
     var title: String {
         switch self {
-        case .thunderstorm: "Thunderstorm"
-        case .rain: "Rain"
-        case .snow: "Snow"
-        case .sunny: "Sunny"
-        case .clearNight: "Clear Night"
-        case .cloudy: "Cloudy"
-        case .windy: "Windy"
-        case .foggy: "Fog"
-        case .hot: "Heat"
+        case .thunderstorm: String(localized: "Thunderstorm")
+        case .rain: String(localized: "Rain")
+        case .snow: String(localized: "Snow")
+        case .sunny: String(localized: "Sunny")
+        case .clearNight: String(localized: "Clear Night")
+        case .cloudy: String(localized: "Cloudy")
+        case .windy: String(localized: "Windy")
+        case .foggy: String(localized: "Fog")
+        case .hot: String(localized: "Heat")
         }
     }
 
@@ -71,15 +71,15 @@ enum WeatherScene: String, CaseIterable, Identifiable, Sendable {
     /// A short, playful line under the temperature. (Foundation Models can personalize this later.)
     var tagline: String {
         switch self {
-        case .thunderstorm: "Stay in. The sky's putting on a show. ⚡️"
-        case .rain: "Umbrella weather. ☂️"
-        case .snow: "Bundle up, it's snowing. 🧣"
-        case .sunny: "Sunglasses on. 😎"
-        case .clearNight: "Clear skies. Go find a star. 🔭"
-        case .cloudy: "A soft, gray kind of day."
-        case .windy: "Hold on to your hat. 🎩"
-        case .foggy: "Low visibility. Take it slow."
-        case .hot: "Stay cool and drink some water. 🥤"
+        case .thunderstorm: String(localized: "Stay in. The sky's putting on a show. ⚡️")
+        case .rain: String(localized: "Umbrella weather. ☂️")
+        case .snow: String(localized: "Bundle up, it's snowing. 🧣")
+        case .sunny: String(localized: "Sunglasses on. 😎")
+        case .clearNight: String(localized: "Clear skies. Go find a star. 🔭")
+        case .cloudy: String(localized: "A soft, gray kind of day.")
+        case .windy: String(localized: "Hold on to your hat. 🎩")
+        case .foggy: String(localized: "Low visibility. Take it slow.")
+        case .hot: String(localized: "Stay cool and drink some water. 🥤")
         }
     }
 

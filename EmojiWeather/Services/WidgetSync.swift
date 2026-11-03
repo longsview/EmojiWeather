@@ -11,7 +11,7 @@ enum WidgetSync {
         if let currentLocation {
             places.append(WidgetPlace(
                 id: WidgetPlace.currentLocationID,
-                name: currentName ?? "My Location",
+                name: currentName ?? String(localized: "My Location"),
                 latitude: currentLocation.coordinate.latitude,
                 longitude: currentLocation.coordinate.longitude,
                 timeZoneIdentifier: TimeZone.current.identifier

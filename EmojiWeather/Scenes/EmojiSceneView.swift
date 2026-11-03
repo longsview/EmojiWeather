@@ -10,6 +10,8 @@ struct EmojiSceneView: View {
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
+    /// Settings > Animated scenes. Off shows a still picture of the scene.
+    @AppStorage(DisplaySettings.animateScenesKey, store: SharedStore.defaults) private var animateScenes = true
     @State private var system: EmojiParticleSystem
     @State private var tilt = MotionTilt()
 
@@ -22,7 +24,7 @@ struct EmojiSceneView: View {
     var body: some View {
         // 60 fps normally, 30 fps in Low Power Mode, paused in the background.
         let lowPower = ProcessInfo.processInfo.isLowPowerModeEnabled
-        TimelineView(.animation(minimumInterval: lowPower ? 1.0 / 30 : nil, paused: paused || scenePhase != .active)) { timeline in
+        TimelineView(.animation(minimumInterval: lowPower ? 1.0 / 30 : nil, paused: paused || !animateScenes || scenePhase != .active)) { timeline in
             Canvas { context, size in
                 system.update(
                     now: timeline.date.timeIntervalSinceReferenceDate,

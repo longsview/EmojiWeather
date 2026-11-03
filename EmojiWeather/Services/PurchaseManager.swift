@@ -30,13 +30,13 @@ enum PlusFeature: CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .noAds: "No ads, ever"
-        case .unlimitedCities: "Unlimited cities"
-        case .widgets: "Home and Lock Screen widgets"
-        case .weatherMap: "Emoji weather map"
-        case .scenePacks: "Seasonal scene packs"
-        case .customEmoji: "Pick your own weather emoji"
-        case .cleanShareClips: "Share clips without the watermark"
+        case .noAds: String(localized: "No ads, ever")
+        case .unlimitedCities: String(localized: "Unlimited cities")
+        case .widgets: String(localized: "Home and Lock Screen widgets")
+        case .weatherMap: String(localized: "Emoji weather map")
+        case .scenePacks: String(localized: "Seasonal scene packs")
+        case .customEmoji: String(localized: "Pick your own weather emoji")
+        case .cleanShareClips: String(localized: "Share clips without the watermark")
         }
     }
 }

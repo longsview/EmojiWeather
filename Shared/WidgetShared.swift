@@ -137,8 +137,27 @@ struct WidgetWeather: Codable, Hashable, Sendable {
 }
 
 extension Measurement where UnitType == UnitTemperature {
-    /// "72°" in the user's preferred unit.
+    /// "72°" in the unit chosen in Settings, or the region's unit by default.
     var shortTemperature: String {
-        formatted(.measurement(width: .narrow, usage: .weather, numberFormatStyle: .number.precision(.fractionLength(0))))
+        let number = FloatingPointFormatStyle<Double>.number.precision(.fractionLength(0))
+        switch DisplaySettings.temperature {
+        case .automatic:
+            return formatted(.measurement(width: .narrow, usage: .weather, numberFormatStyle: number))
+        case .celsius:
+            return converted(to: .celsius).formatted(.measurement(width: .narrow, usage: .asProvided, numberFormatStyle: number))
+        case .fahrenheit:
+            return converted(to: .fahrenheit).formatted(.measurement(width: .narrow, usage: .asProvided, numberFormatStyle: number))
+        }
+    }
+
+    /// "72 degrees" style text for VoiceOver.
+    var spokenTemperature: String {
+        let number = FloatingPointFormatStyle<Double>.number.precision(.fractionLength(0))
+        let unit: UnitTemperature = switch DisplaySettings.temperature {
+        case .automatic: DisplaySettings.regionTemperatureUnit
+        case .celsius: .celsius
+        case .fahrenheit: .fahrenheit
+        }
+        return converted(to: unit).formatted(.measurement(width: .wide, usage: .asProvided, numberFormatStyle: number))
     }
 }

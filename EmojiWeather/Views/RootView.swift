@@ -3,20 +3,35 @@ import SwiftUI
 
 /// The app's two modes in a Liquid Glass tab bar: the emoji weather pages and the weather map.
 struct RootView: View {
-    enum AppTab: Hashable { case weather, map }
+    enum AppTab: Hashable { case weather, map, settings }
 
     @State private var tab: AppTab = .weather
+
+    // Read here so changing a unit or the clock redraws every screen.
+    @AppStorage(DisplaySettings.temperatureKey, store: SharedStore.defaults)
+    private var temperature: TemperatureSetting = .automatic
+    @AppStorage(DisplaySettings.clockKey, store: SharedStore.defaults)
+    private var clock: ClockSetting = .automatic
+
+    private var displayKey: String { "\(temperature.rawValue)-\(clock.rawValue)" }
 
     var body: some View {
         TabView(selection: $tab) {
             Tab("Weather", systemImage: "sun.max.fill", value: AppTab.weather) {
                 HomeView(isVisible: tab == .weather)
+                    .id(displayKey)
             }
             Tab("Map", systemImage: "map.fill", value: AppTab.map) {
                 MapTab()
+                    .id(displayKey)
+            }
+            Tab("Settings", systemImage: "gearshape.fill", value: AppTab.settings) {
+                SettingsView()
             }
         }
         .tabBarMinimizeBehavior(.never)
+        // Times everywhere follow the 12/24-hour choice.
+        .environment(\.locale, DisplaySettings.locale)
     }
 }
 
@@ -53,6 +68,7 @@ private struct MapTab: View {
             VStack(spacing: 14) {
                 Text("🗺️⛈️☀️")
                     .font(.system(size: 56))
+                    .accessibilityHidden(true)
                 Text("Emoji Weather Map")
                     .font(.system(.title, design: .rounded, weight: .heavy))
                 Text("See storms, sun and temperatures across the map, like the old TV weather.")
@@ -73,7 +89,7 @@ private struct MapTab: View {
                 .padding(.top, 6)
             }
             .sheet(isPresented: $showingPaywall) {
-                PaywallView(reason: "The emoji weather map is part of EmojiWeather+.")
+                PaywallView(reason: String(localized: "The emoji weather map is part of EmojiWeather+."))
             }
         }
     }

@@ -78,11 +78,11 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
             self.isLocating = false
             guard self.location == nil else { return }
             #if targetEnvironment(simulator)
-            self.failureMessage = "The simulator has no location set. In the Simulator menu, choose Features > Location > Apple, then pull down to refresh."
+            self.failureMessage = String(localized: "The simulator has no location set. In the Simulator menu, choose Features > Location > Apple, then pull down to refresh.")
             #else
             self.failureMessage = code == .denied
-                ? "Location access is off."
-                : "Couldn't find your location. Pull down to try again."
+                ? String(localized: "Location access is off.")
+                : String(localized: "Couldn't find your location. Pull down to try again.")
             #endif
         }
     }

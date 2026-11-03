@@ -15,7 +15,7 @@ struct PlaceEntity: AppEntity {
 
     init(place: WidgetPlace) {
         id = place.id
-        name = place.isCurrentLocation ? "Current Location" : place.name
+        name = place.isCurrentLocation ? String(localized: "Current Location") : place.name
     }
 }
 

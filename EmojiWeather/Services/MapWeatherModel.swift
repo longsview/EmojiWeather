@@ -16,6 +16,7 @@ final class MapWeatherModel {
         let name: String
         let coordinate: CLLocationCoordinate2D
         let emoji: String
+        let condition: String
         let temperature: Measurement<UnitTemperature>
 
         static func == (lhs: Marker, rhs: Marker) -> Bool {
@@ -107,6 +108,7 @@ final class MapWeatherModel {
             name: place.name,
             coordinate: location.coordinate,
             emoji: WeatherScene.emoji(for: current.condition, isDaylight: current.isDaylight),
+            condition: current.condition.description,
             temperature: current.temperature
         )
     }

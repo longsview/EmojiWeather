@@ -8,6 +8,7 @@ struct WeatherMapView: View {
     let center: CLLocationCoordinate2D?
 
     @State private var model = MapWeatherModel()
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var position: MapCameraPosition
 
     init(center: CLLocationCoordinate2D?) {
@@ -27,6 +28,8 @@ struct WeatherMapView: View {
             ForEach(model.markers) { marker in
                 Annotation("", coordinate: marker.coordinate, anchor: .center) {
                     EmojiMapMarker(name: marker.name, emoji: marker.emoji, temperature: marker.temperature.shortTemperature)
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel("\(marker.name), \(marker.condition), \(marker.temperature.spokenTemperature)")
                         .transition(.scale.combined(with: .opacity))
                 }
                 .annotationTitles(.hidden)
@@ -38,7 +41,7 @@ struct WeatherMapView: View {
             MapUserLocationButton()
             MapScaleView()
         }
-        .animation(.spring(duration: 0.4), value: model.markers.map(\.id))
+        .animation(reduceMotion ? nil : .spring(duration: 0.4), value: model.markers.map(\.id))
         .onMapCameraChange(frequency: .onEnd) { context in
             model.update(region: context.region)
         }
@@ -62,6 +65,7 @@ struct WeatherMapView: View {
         HStack {
             Text("Weather Map")
                 .font(.system(.title3, design: .rounded, weight: .heavy))
+                .accessibilityAddTraits(.isHeader)
             if model.isLoading {
                 ProgressView().controlSize(.small)
             }

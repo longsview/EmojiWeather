@@ -43,6 +43,15 @@ struct HomeView: View {
 
     private var currentID: String { currentPlace.id }
 
+    private var currentIndex: Int { places.firstIndex { $0.id == currentID } ?? 0 }
+
+    private var currentPlaceName: String {
+        switch currentPlace {
+        case .currentLocation: String(localized: "My Location")
+        case .city(let city): city.name
+        }
+    }
+
     var body: some View {
         Group {
             if sizeClass == .regular {
@@ -110,6 +119,19 @@ struct HomeView: View {
                     openDetailsToken += 1
                 }
                 PageDots(places: places, currentID: currentID, color: activeSky.textColor)
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(Text("Page \(currentIndex + 1) of \(places.count)"))
+                    .accessibilityValue(Text(currentPlaceName))
+                    // Swipe up or down with VoiceOver to change city, like a page control.
+                    .accessibilityAdjustableAction { direction in
+                        let next: Int
+                        switch direction {
+                        case .increment: next = min(currentIndex + 1, places.count - 1)
+                        case .decrement: next = max(currentIndex - 1, 0)
+                        @unknown default: next = currentIndex
+                        }
+                        selectedPlaceID = places[next].id
+                    }
             }
             .padding(.bottom, 6)
         }

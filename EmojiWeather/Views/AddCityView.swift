@@ -71,7 +71,7 @@ struct AddCityView: View {
             if cityStore.add(city) {
                 dismiss()
             } else {
-                errorMessage = "\(city.name) is already in your list."
+                errorMessage = String(localized: "\(city.name) is already in your list.")
             }
         } catch {
             errorMessage = error.localizedDescription

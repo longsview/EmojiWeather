@@ -30,6 +30,12 @@ struct WeatherSummaryView: View {
     var high: String?
     var low: String?
     let tagline: String
+    /// What VoiceOver reads for the whole block, e.g. "68 degrees, Cloudy, High 72 degrees,
+    /// Low 55 degrees". Uses the visible text when nil.
+    var spokenWeather: String?
+
+    /// The big temperature grows and shrinks with the text size setting.
+    @ScaledMetric(relativeTo: .largeTitle) private var temperatureSize: CGFloat = 112
 
     var body: some View {
         VStack(spacing: 4) {
@@ -39,7 +45,9 @@ struct WeatherSummaryView: View {
                 .padding(.top, 2)
 
             Text(temperature)
-                .font(.system(size: 112, weight: .heavy, design: .rounded))
+                .font(.system(size: temperatureSize, weight: .heavy, design: .rounded))
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
                 .contentTransition(.numericText())
                 .padding(.vertical, -10)
 
@@ -63,6 +71,23 @@ struct WeatherSummaryView: View {
         }
         .frame(maxWidth: .infinity)
         .readableOverEmoji()
+        // The page is one screen tall, so cap the very largest sizes to keep it all visible.
+        .dynamicTypeSize(...DynamicTypeSize.accessibility3)
+        // VoiceOver: one stop for the place name (a heading) and one for the weather, like
+        // Apple Weather.
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(accessibilityText)
+    }
+
+    private var accessibilityText: String {
+        let time = Date.now.formatted(DisplaySettings.timeStyle(timeZone))
+        var parts = [placeName, time, spokenWeather ?? "\(temperature), \(condition)"]
+        if spokenWeather == nil, let high, let low {
+            parts.append(String(localized: "High \(high)"))
+            parts.append(String(localized: "Low \(low)"))
+        }
+        parts.append(tagline)
+        return parts.joined(separator: ", ")
     }
 }
 
@@ -74,7 +99,7 @@ struct LocalTimeView: View {
     var body: some View {
         TimelineView(.everyMinute) { context in
             HStack(spacing: 6) {
-                Text(context.date.formatted(Date.FormatStyle(timeZone: timeZone).hour().minute()))
+                Text(context.date.formatted(DisplaySettings.timeStyle(timeZone)))
                     .monospacedDigit()
                 if let offset = Self.offsetText(at: context.date, timeZone: timeZone) {
                     Text(offset)
@@ -96,11 +121,11 @@ struct LocalTimeView: View {
         let fraction = hours - Double(whole)
         let amount: String
         switch fraction {
-        case 0: amount = "\(whole)"
-        case 0.5: amount = whole == 0 ? "½" : "\(whole)½"
+        case 0: amount = whole.formatted()
+        case 0.5: amount = whole == 0 ? "½" : "\(whole.formatted())½"
         default: amount = hours.formatted(.number.precision(.fractionLength(0...2)))
         }
-        return "\(amount) hr \(difference > 0 ? "ahead" : "behind")"
+        return difference > 0 ? String(localized: "\(amount) hr ahead") : String(localized: "\(amount) hr behind")
     }
 }
 

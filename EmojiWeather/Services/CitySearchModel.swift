@@ -13,7 +13,7 @@ final class CitySearchModel: NSObject, MKLocalSearchCompleterDelegate {
 
     enum SearchError: LocalizedError {
         case notFound
-        var errorDescription: String? { "We couldn't find that place. Try another search." }
+        var errorDescription: String? { String(localized: "We couldn't find that place. Try another search.") }
     }
 
     override init() {

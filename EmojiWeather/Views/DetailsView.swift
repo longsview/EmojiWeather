@@ -14,6 +14,7 @@ struct DetailsView: View {
                 Text(placeName)
                     .font(.system(.title2, design: .rounded, weight: .bold))
                     .padding(.top, 8)
+                    .accessibilityAddTraits(.isHeader)
 
                 HourlyForecastView(hours: snapshot.hourly, timeZone: timeZone)
                 ForecastAdCard()
@@ -36,6 +37,8 @@ private struct ConditionsGrid: View {
     let today: DayWeather?
     let timeZone: TimeZone
 
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+
     private struct Tile: Identifiable {
         let emoji: String
         let title: String
@@ -45,37 +48,39 @@ private struct ConditionsGrid: View {
 
     private var tiles: [Tile] {
         var tiles = [
-            Tile(emoji: "🌡️", title: "Feels like", value: current.apparentTemperature.shortTemperature),
-            Tile(emoji: "💦", title: "Humidity", value: current.humidity.formatted(.percent.precision(.fractionLength(0)))),
+            Tile(emoji: "🌡️", title: String(localized: "Feels like"), value: current.apparentTemperature.shortTemperature),
+            Tile(emoji: "💦", title: String(localized: "Humidity"), value: current.humidity.formatted(.percent.precision(.fractionLength(0)))),
             Tile(
-                emoji: "🌬️", title: "Wind",
+                emoji: "🌬️", title: String(localized: "Wind"),
                 value: current.wind.speed.formatted(.measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(0))))
                     + " " + current.wind.compassDirection.abbreviation
             ),
-            Tile(emoji: "🕶️", title: "UV index", value: "\(current.uvIndex.value) \(current.uvIndex.category.description)"),
+            Tile(emoji: "🕶️", title: String(localized: "UV index"), value: "\(current.uvIndex.value) \(current.uvIndex.category.description)"),
             Tile(
-                emoji: "👀", title: "Visibility",
+                emoji: "👀", title: String(localized: "Visibility"),
                 value: current.visibility.formatted(.measurement(width: .abbreviated, usage: .road, numberFormatStyle: .number.precision(.fractionLength(0))))
             ),
         ]
         if let today {
-            tiles.append(Tile(emoji: "☔️", title: "Rain chance", value: today.precipitationChance.formatted(.percent.precision(.fractionLength(0)))))
-            let timeStyle = Date.FormatStyle(timeZone: timeZone).hour().minute()
+            tiles.append(Tile(emoji: "☔️", title: String(localized: "Rain chance"), value: today.precipitationChance.formatted(.percent.precision(.fractionLength(0)))))
+            let timeStyle = DisplaySettings.timeStyle(timeZone)
             if let sunrise = today.sun.sunrise {
-                tiles.append(Tile(emoji: "🌅", title: "Sunrise", value: sunrise.formatted(timeStyle)))
+                tiles.append(Tile(emoji: "🌅", title: String(localized: "Sunrise"), value: sunrise.formatted(timeStyle)))
             }
             if let sunset = today.sun.sunset {
-                tiles.append(Tile(emoji: "🌇", title: "Sunset", value: sunset.formatted(timeStyle)))
+                tiles.append(Tile(emoji: "🌇", title: String(localized: "Sunset"), value: sunset.formatted(timeStyle)))
             }
         }
         return tiles
     }
 
     var body: some View {
-        LazyVGrid(columns: [GridItem(.flexible(), spacing: 12), GridItem(.flexible(), spacing: 12)], spacing: 12) {
+        // One column at the largest text sizes so values don't shrink or truncate.
+        let columnCount = dynamicTypeSize.isAccessibilitySize ? 1 : 2
+        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: columnCount), spacing: 12) {
             ForEach(tiles) { tile in
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(tile.emoji).font(.title)
+                    Text(tile.emoji).font(.title).accessibilityHidden(true)
                     Text(tile.title)
                         .font(.caption.weight(.semibold))
                         .textCase(.uppercase)
@@ -88,6 +93,7 @@ private struct ConditionsGrid: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
                 .background(Color.primary.opacity(0.06), in: .rect(cornerRadius: 24))
+                .accessibilityElement(children: .combine)
             }
         }
     }

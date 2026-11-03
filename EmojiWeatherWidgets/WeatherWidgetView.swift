@@ -127,6 +127,7 @@ private struct HomeWidgetView: View {
     private func sceneCard(textInset: CGFloat) -> some View {
         ZStack(alignment: .topLeading) {
             SceneDecor(scene: weather.weatherScene, compact: layout == .small)
+                .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 0) {
                 Text(place.name)
@@ -134,7 +135,7 @@ private struct HomeWidgetView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .padding(.trailing, 44)
-                Text(entry.date, format: Date.FormatStyle(timeZone: place.timeZone).hour().minute())
+                Text(entry.date, format: DisplaySettings.timeStyle(place.timeZone))
                     .id(place.id)
                     .font(.system(.caption, design: .rounded, weight: .semibold))
                     .opacity(0.7)
@@ -158,6 +159,8 @@ private struct HomeWidgetView: View {
             }
             .foregroundStyle(sky.textColor)
             .shadow(color: sky.haloColor, radius: 4)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(spokenSummary(place: place, weather: weather, date: entry.date))
             .padding(14)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
@@ -229,7 +232,7 @@ private struct HourlyStrip: View {
         HStack(spacing: 0) {
             ForEach(hours, id: \.date) { hour in
                 VStack(spacing: 4) {
-                    Text(hour.date, format: Date.FormatStyle(timeZone: timeZone).hour())
+                    Text(hour.date, format: DisplaySettings.hourStyle(timeZone))
                         .font(.system(.caption2, design: .rounded, weight: .semibold))
                         .opacity(0.6)
                     Text(hour.emoji).font(.system(size: 22))
@@ -237,6 +240,8 @@ private struct HourlyStrip: View {
                         .font(.system(.footnote, design: .rounded, weight: .bold))
                 }
                 .frame(maxWidth: .infinity)
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("\(hour.date.formatted(DisplaySettings.hourStyle(timeZone))), \(hour.temperature.spokenTemperature)")
             }
         }
     }
@@ -250,7 +255,7 @@ private struct DailyRows: View {
         VStack(spacing: 6) {
             ForEach(days, id: \.date) { day in
                 HStack {
-                    Text(day.date, format: Date.FormatStyle(timeZone: timeZone).weekday(.abbreviated))
+                    Text(day.date, format: DisplaySettings.weekdayStyle(timeZone))
                         .frame(width: 44, alignment: .leading)
                     Text(day.emoji)
                     Spacer()
@@ -280,6 +285,8 @@ private struct CircularWidgetView: View {
                         .font(.system(.headline, design: .rounded, weight: .heavy))
                 }
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(spokenSummary(place: entry.place, weather: weather, date: nil))
         }
     }
 }
@@ -316,11 +323,28 @@ private struct RectangularWidgetView: View {
                 }
                 Spacer(minLength: 0)
             }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(spokenSummary(place: place, weather: weather, date: nil))
         }
     }
 }
 
 // MARK: - Shared pieces
+
+/// What VoiceOver reads for a widget: "Cupertino, 9:41 PM, 68 degrees, Cloudy, High 72 degrees,
+/// Low 55 degrees".
+private func spokenSummary(place: WidgetPlace?, weather: WidgetWeather, date: Date?) -> String {
+    var parts: [String] = []
+    if let place { parts.append(place.name) }
+    if let date, let place { parts.append(date.formatted(DisplaySettings.timeStyle(place.timeZone))) }
+    parts.append(weather.temperature.spokenTemperature)
+    parts.append(weather.condition)
+    if let high = weather.high, let low = weather.low {
+        parts.append(String(localized: "High \(high.spokenTemperature)"))
+        parts.append(String(localized: "Low \(low.spokenTemperature)"))
+    }
+    return parts.joined(separator: ", ")
+}
 
 /// Wraps Lock Screen content in the "next place" button when the widget steps through places.
 private struct CycleButton<Content: View>: View {
@@ -331,6 +355,7 @@ private struct CycleButton<Content: View>: View {
         if enabled {
             Button(intent: StepPlaceIntent(forward: true)) { content }
                 .buttonStyle(.plain)
+                .accessibilityHint(Text("Shows your next place"))
         } else {
             content
         }
@@ -352,7 +377,7 @@ private struct PlaceStepButton: View {
                 .background(tint.opacity(0.12), in: Circle())
         }
         .buttonStyle(.plain)
-        .accessibilityLabel(direction == .next ? "Next place" : "Previous place")
+        .accessibilityLabel(direction == .next ? Text("Next place") : Text("Previous place"))
     }
 }
 
@@ -395,7 +420,7 @@ private struct EmptyWidgetView: View {
     let hasPlace: Bool
 
     private var message: String {
-        hasPlace ? "Loading weather…" : "Open EmojiWeather to add a place"
+        hasPlace ? String(localized: "Loading weather…") : String(localized: "Open EmojiWeather to add a place")
     }
 
     var body: some View {

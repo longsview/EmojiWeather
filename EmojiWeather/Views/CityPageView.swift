@@ -59,7 +59,7 @@ struct CityPageView: View {
 
     private var placeName: String {
         switch place {
-        case .currentLocation: location.placeName ?? "My Location"
+        case .currentLocation: location.placeName ?? String(localized: "My Location")
         case .city(let city): city.name
         }
     }
@@ -112,6 +112,10 @@ struct CityPageView: View {
         }
         .environment(\.skyMode, sceneConditions.sky)
         .contentShape(Rectangle())
+        // VoiceOver can't swipe up, so offer the forecast as an action on the page.
+        .accessibilityAction(named: Text("Show forecast")) {
+            if snapshot != nil { showingDetails = true }
+        }
         .onChange(of: sceneConditions, initial: true) { _, conditions in
             if isActive { onSceneChange(conditions) }
         }
@@ -168,6 +172,17 @@ struct CityPageView: View {
         return false
     }
 
+    /// "68 degrees, Cloudy, High 72 degrees, Low 55 degrees" for VoiceOver.
+    private var spokenWeather: String? {
+        guard let current = snapshot?.current else { return nil }
+        var parts = [current.temperature.spokenTemperature, current.condition.description]
+        if let today = snapshot?.daily.first {
+            parts.append(String(localized: "High \(today.highTemperature.spokenTemperature)"))
+            parts.append(String(localized: "Low \(today.lowTemperature.spokenTemperature)"))
+        }
+        return parts.joined(separator: ", ")
+    }
+
     @ViewBuilder
     private var summary: some View {
         if let current = snapshot?.current {
@@ -179,7 +194,8 @@ struct CityPageView: View {
                 condition: current.condition.description,
                 high: snapshot?.daily.first?.highTemperature.shortTemperature,
                 low: snapshot?.daily.first?.lowTemperature.shortTemperature,
-                tagline: sceneConditions.scene.tagline
+                tagline: sceneConditions.scene.tagline,
+                spokenWeather: spokenWeather
             )
         } else {
             VStack(spacing: 16) {
@@ -199,7 +215,7 @@ struct CityPageView: View {
             if location.isLocating {
                 ProgressView("Finding your location…")
             } else {
-                retryMessage(location.failureMessage ?? "Waiting for your location…") {
+                retryMessage(location.failureMessage ?? String(localized: "Waiting for your location…")) {
                     location.refresh()
                 }
             }
@@ -260,7 +276,7 @@ struct CityPageView: View {
             // Usually WeatherKit isn't enabled for the App ID yet, or signing has no team.
             errorMessage = "Couldn't load the weather.\n\(error.localizedDescription)\nCheck that WeatherKit is enabled for this App ID (Capabilities and App Services)."
             #else
-            errorMessage = "Couldn't load the weather."
+            errorMessage = String(localized: "Couldn't load the weather.")
             #endif
         }
     }
@@ -299,6 +315,8 @@ struct ForecastHint: View {
     let isEnabled: Bool
     let action: () -> Void
 
+    @Environment(\.colorSchemeContrast) private var contrast
+
     var body: some View {
         Button(action: action) {
             VStack(spacing: 2) {
@@ -307,8 +325,10 @@ struct ForecastHint: View {
                 Text("Forecast")
                     .font(.system(.footnote, design: .rounded, weight: .semibold))
             }
-            .foregroundStyle(color.opacity(0.55))
+            .foregroundStyle(color.opacity(contrast == .increased ? 0.9 : 0.55))
         }
+        .accessibilityLabel(Text("Show forecast"))
+        .accessibilityHint(Text("Hourly and 10-day forecast, and today's conditions."))
         .opacity(isEnabled ? 1 : 0)
         .disabled(!isEnabled)
         .animation(.easeInOut(duration: 0.3), value: isEnabled)

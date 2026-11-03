@@ -35,9 +35,9 @@ struct PaywallView: View {
 
         var title: String {
             switch self {
-            case .monthly: "Monthly"
-            case .yearly: "Yearly"
-            case .lifetime: "Lifetime"
+            case .monthly: String(localized: "Monthly")
+            case .yearly: String(localized: "Yearly")
+            case .lifetime: String(localized: "Lifetime")
             }
         }
 
@@ -52,9 +52,9 @@ struct PaywallView: View {
 
         var period: String {
             switch self {
-            case .monthly: "a month"
-            case .yearly: "a year"
-            case .lifetime: "once"
+            case .monthly: String(localized: "a month")
+            case .yearly: String(localized: "a year")
+            case .lifetime: String(localized: "once")
             }
         }
     }
@@ -103,7 +103,7 @@ struct PaywallView: View {
             VStack(spacing: 6) {
                 Text("EmojiWeather+")
                     .font(.system(size: 40, weight: .heavy, design: .rounded))
-                Text(reason ?? "No ads, more cities, more emoji.")
+                Text(reason ?? String(localized: "No ads, more cities, more emoji."))
                     .font(.system(.body, design: .rounded, weight: .medium))
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
@@ -121,6 +121,7 @@ struct PaywallView: View {
                     Text(feature.emoji)
                         .font(.system(size: 28))
                         .frame(width: 36)
+                        .accessibilityHidden(true)
                     Text(feature.title)
                         .font(.system(.headline, design: .rounded))
                 }
@@ -206,22 +207,24 @@ struct PaywallView: View {
 
     private var callToAction: String {
         switch selectedPlan {
-        case .yearly where hasTrial: "Try 7 days free"
-        case .lifetime: "Unlock forever"
-        default: "Continue"
+        case .yearly where hasTrial: String(localized: "Try 7 days free")
+        case .lifetime: String(localized: "Unlock forever")
+        default: String(localized: "Continue")
         }
     }
 
     private var finePrint: String {
         switch selectedPlan {
         case .lifetime:
-            "One payment. Yours on every device signed in to your Apple Account."
+            String(localized: "One payment. Yours on every device signed in to your Apple Account.")
         case .yearly where hasTrial:
-            "Free for 7 days, then \(price(for: .yearly)) a year. Cancel anytime in Settings."
+            String(localized: "Free for 7 days, then \(yearlyPrice) a year. Cancel anytime in Settings.")
         default:
-            "Renews automatically. Cancel anytime in Settings."
+            String(localized: "Renews automatically. Cancel anytime in Settings.")
         }
     }
+
+    private var yearlyPrice: String { price(for: .yearly) }
 
     private func price(for plan: Plan) -> String {
         purchases.product(plan.productID)?.displayPrice ?? plan.fallbackPrice
@@ -229,7 +232,7 @@ struct PaywallView: View {
 
     private func buy() async {
         guard let product = purchases.product(selectedPlan.productID) else {
-            errorMessage = "The App Store isn't available right now. Try again in a moment."
+            errorMessage = String(localized: "The App Store isn't available right now. Try again in a moment.")
             await purchases.loadProducts()
             return
         }
@@ -257,17 +260,17 @@ private struct PlanCard: View {
         case .yearly:
             if let product {
                 let monthly = (product.price / 12).formatted(product.priceFormatStyle)
-                return "Just \(monthly) a month"
+                return String(localized: "Just \(monthly) a month")
             }
-            return "Just $0.83 a month"
-        case .lifetime: return "Pay once, keep it forever"
+            return String(localized: "Just \("$0.83") a month")
+        case .lifetime: return String(localized: "Pay once, keep it forever")
         case .monthly: return nil
         }
     }
 
     var body: some View {
         HStack(spacing: 14) {
-            Text(plan.emoji).font(.system(size: 30))
+            Text(plan.emoji).font(.system(size: 30)).accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 8) {
                     Text(plan.title)
