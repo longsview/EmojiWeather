@@ -7,7 +7,7 @@ import UserMessagingPlatform
 
 /// Google AdMob for the free tier: a small banner on the current-location page, a card in the
 /// forecast sheet, and an occasional full-screen ad when swiping between cities.
-/// EmojiWeather+ turns all of it off.
+/// Skymoji+ turns all of it off.
 @MainActor
 @Observable
 final class AdsManager: NSObject, FullScreenContentDelegate, BannerViewDelegate {

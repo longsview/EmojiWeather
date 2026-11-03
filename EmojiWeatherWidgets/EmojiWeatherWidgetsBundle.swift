@@ -17,7 +17,7 @@ struct EmojiWeatherWidget: Widget {
         AppIntentConfiguration(kind: kind, intent: SelectPlaceIntent.self, provider: WeatherTimelineProvider()) { entry in
             WeatherWidgetView(entry: entry)
         }
-        .configurationDisplayName("EmojiWeather")
+        .configurationDisplayName("Skymoji")
         .description("Your weather as emoji. Tap the arrow to step through your places.")
         .supportedFamilies([
             .accessoryCircular, .accessoryRectangular, .accessoryInline,

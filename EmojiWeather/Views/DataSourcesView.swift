@@ -40,7 +40,7 @@ struct DataSourcesView: View {
                 Link(destination: URL(string: "https://policies.google.com/technologies/partner-sites")!) {
                     Label("How Google uses data from apps", systemImage: "hand.raised")
                 }
-                Text("The free version shows ads from Google AdMob. EmojiWeather+ removes them.")
+                Text("The free version shows ads from Google AdMob. Skymoji+ removes them.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             } header: {

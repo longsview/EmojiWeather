@@ -2,7 +2,7 @@ import StoreKit
 import SwiftUI
 import WidgetKit
 
-/// Units, clock, motion and EmojiWeather+. "Automatic" follows the region in iOS Settings.
+/// Units, clock, motion and Skymoji+. "Automatic" follows the region in iOS Settings.
 struct SettingsView: View {
     @Environment(PurchaseManager.self) private var purchases
 
@@ -64,24 +64,24 @@ struct SettingsView: View {
 
                 Section {
                     if purchases.hasPlus {
-                        Label("EmojiWeather+ is active. Thank you!", systemImage: "checkmark.seal.fill")
+                        Label("Skymoji+ is active. Thank you!", systemImage: "checkmark.seal.fill")
                         Button("Manage Subscription") { showingManageSubscription = true }
                     } else {
                         Button {
                             showingPaywall = true
                         } label: {
-                            Label("Get EmojiWeather+", systemImage: "sparkles")
+                            Label("Get Skymoji+", systemImage: "sparkles")
                         }
                     }
                     Button("Restore Purchases") {
                         Task { await purchases.restore() }
                     }
                 } header: {
-                    Text("EmojiWeather+")
+                    Text("Skymoji+")
                 }
 
                 Section {
-                    Link(destination: URL(string: "https://longsview.github.io/emojiweather/privacy")!) {
+                    Link(destination: URL(string: "https://longsview.github.io/skymoji/privacy")!) {
                         Label("Privacy Policy", systemImage: "hand.raised")
                     }
                     NavigationLink {

@@ -56,7 +56,7 @@ struct BannerAdView: UIViewRepresentable {
     }
 }
 
-/// The small ad near the bottom of the current-location page, with a way out to EmojiWeather+.
+/// The small ad near the bottom of the current-location page, with a way out to Skymoji+.
 struct BannerAdWithUpsell: View {
     var onRemoveAds: () -> Void
 
@@ -71,7 +71,7 @@ struct BannerAdWithUpsell: View {
                     .frame(width: 320, height: 50)
                     .clipShape(.rect(cornerRadius: 10))
                 Button(action: onRemoveAds) {
-                    Text("Remove ads with EmojiWeather+")
+                    Text("Remove ads with Skymoji+")
                         .font(.system(.caption2, design: .rounded, weight: .semibold))
                         .foregroundStyle(sky.textColor.opacity(0.6))
                 }

@@ -387,7 +387,7 @@ private struct LockedWidgetView: View {
     var body: some View {
         switch family {
         case .accessoryInline:
-            Text(verbatim: "✨ EmojiWeather+")
+            Text(verbatim: "✨ Skymoji+")
         case .accessoryCircular:
             ZStack {
                 AccessoryWidgetBackground()
@@ -395,14 +395,14 @@ private struct LockedWidgetView: View {
             }
         case .accessoryRectangular:
             VStack(alignment: .leading) {
-                Text(verbatim: "✨ EmojiWeather+").font(.headline)
+                Text(verbatim: "✨ Skymoji+").font(.headline)
                 Text("Unlock widgets in the app").font(.caption)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         default:
             VStack(spacing: 6) {
                 Text(verbatim: "✨").font(.system(size: 44))
-                Text("EmojiWeather+")
+                Text("Skymoji+")
                     .font(.system(.headline, design: .rounded, weight: .heavy))
                 Text("Unlock widgets in the app")
                     .font(.system(.caption, design: .rounded))
@@ -420,12 +420,12 @@ private struct EmptyWidgetView: View {
     let hasPlace: Bool
 
     private var message: String {
-        hasPlace ? String(localized: "Loading weather…") : String(localized: "Open EmojiWeather to add a place")
+        hasPlace ? String(localized: "Loading weather…") : String(localized: "Open Skymoji to add a place")
     }
 
     var body: some View {
         if family.isAccessory {
-            Text(family == .accessoryInline ? "EmojiWeather" : message)
+            Text(family == .accessoryInline ? "Skymoji" : message)
                 .font(.caption)
         } else {
             VStack(spacing: 6) {

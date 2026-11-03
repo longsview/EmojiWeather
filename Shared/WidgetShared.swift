@@ -2,7 +2,7 @@ import Foundation
 import WeatherKit
 
 /// Data the app shares with the widgets through the App Group: the places to show, the latest
-/// weather for each, and whether the user has EmojiWeather+. Compiled into both targets.
+/// weather for each, and whether the user has Skymoji+. Compiled into both targets.
 enum SharedStore {
     static let appGroup = "group.com.longsview.EmojiWeather"
 

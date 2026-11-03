@@ -35,7 +35,7 @@ struct RootView: View {
     }
 }
 
-/// The map, or an EmojiWeather+ teaser for free users in Release builds.
+/// The map, or a Skymoji+ teaser for free users in Release builds.
 private struct MapTab: View {
     @Environment(PurchaseManager.self) private var purchases
     @Environment(CityStore.self) private var cityStore
@@ -69,7 +69,7 @@ private struct MapTab: View {
                 Text("🗺️⛈️☀️")
                     .font(.system(size: 56))
                     .accessibilityHidden(true)
-                Text("Emoji Weather Map")
+                Text("Skymoji Map")
                     .font(.system(.title, design: .rounded, weight: .heavy))
                 Text("See storms, sun and temperatures across the map, like the old TV weather.")
                     .font(.system(.body, design: .rounded))
@@ -79,7 +79,7 @@ private struct MapTab: View {
                 Button {
                     showingPaywall = true
                 } label: {
-                    Text("Unlock with EmojiWeather+")
+                    Text("Unlock with Skymoji+")
                         .font(.system(.headline, design: .rounded, weight: .bold))
                         .padding(.horizontal, 8)
                 }
@@ -89,7 +89,7 @@ private struct MapTab: View {
                 .padding(.top, 6)
             }
             .sheet(isPresented: $showingPaywall) {
-                PaywallView(reason: String(localized: "The emoji weather map is part of EmojiWeather+."))
+                PaywallView(reason: String(localized: "The emoji weather map is part of Skymoji+."))
             }
         }
     }

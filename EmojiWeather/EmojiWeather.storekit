@@ -14,13 +14,13 @@
       "internalID" : "6F1C2A11",
       "localizations" : [
         {
-          "description" : "EmojiWeather+ forever, paid once.",
-          "displayName" : "EmojiWeather+ Lifetime",
+          "description" : "Skymoji+ forever, paid once.",
+          "displayName" : "Skymoji+ Lifetime",
           "locale" : "en_US"
         }
       ],
       "productID" : "com.longsview.EmojiWeather.plus.lifetime",
-      "referenceName" : "EmojiWeather+ Lifetime",
+      "referenceName" : "Skymoji+ Lifetime",
       "type" : "NonConsumable"
     }
   ],
@@ -32,7 +32,7 @@
     {
       "id" : "6F1C2A12",
       "localizations" : [ ],
-      "name" : "EmojiWeather+",
+      "name" : "Skymoji+",
       "subscriptions" : [
         {
           "adHocOffers" : [ ],
@@ -44,14 +44,14 @@
           "introductoryOffer" : null,
           "localizations" : [
             {
-              "description" : "All of EmojiWeather+, billed monthly.",
-              "displayName" : "EmojiWeather+ Monthly",
+              "description" : "All of Skymoji+, billed monthly.",
+              "displayName" : "Skymoji+ Monthly",
               "locale" : "en_US"
             }
           ],
           "productID" : "com.longsview.EmojiWeather.plus.monthly",
           "recurringSubscriptionPeriod" : "P1M",
-          "referenceName" : "EmojiWeather+ Monthly",
+          "referenceName" : "Skymoji+ Monthly",
           "subscriptionGroupID" : "6F1C2A12",
           "type" : "RecurringSubscription",
           "winbackOffers" : [ ]
@@ -70,14 +70,14 @@
           },
           "localizations" : [
             {
-              "description" : "All of EmojiWeather+, billed yearly.",
-              "displayName" : "EmojiWeather+ Yearly",
+              "description" : "All of Skymoji+, billed yearly.",
+              "displayName" : "Skymoji+ Yearly",
               "locale" : "en_US"
             }
           ],
           "productID" : "com.longsview.EmojiWeather.plus.yearly",
           "recurringSubscriptionPeriod" : "P1Y",
-          "referenceName" : "EmojiWeather+ Yearly",
+          "referenceName" : "Skymoji+ Yearly",
           "subscriptionGroupID" : "6F1C2A12",
           "type" : "RecurringSubscription",
           "winbackOffers" : [ ]

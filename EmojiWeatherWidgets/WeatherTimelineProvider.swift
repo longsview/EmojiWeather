@@ -6,7 +6,7 @@ struct WeatherEntry: TimelineEntry {
     let date: Date
     let place: WidgetPlace?
     let weather: WidgetWeather?
-    /// EmojiWeather+ (or any Debug build).
+    /// Skymoji+ (or any Debug build).
     let isUnlocked: Bool
     /// True when the widget steps through all places, so it shows the arrow.
     let isCycling: Bool

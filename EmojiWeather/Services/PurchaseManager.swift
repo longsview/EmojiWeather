@@ -3,7 +3,7 @@ import Observation
 import os
 import StoreKit
 
-/// What EmojiWeather+ unlocks. The paywall lists these, and the app checks them through
+/// What Skymoji+ unlocks. The paywall lists these, and the app checks them through
 /// `PurchaseManager` so the split between free and paid lives in one place.
 enum PlusFeature: CaseIterable, Identifiable {
     case noAds
@@ -41,7 +41,7 @@ enum PlusFeature: CaseIterable, Identifiable {
     }
 }
 
-/// EmojiWeather+ purchases with StoreKit 2. Entitlements are checked on device, so there's no
+/// Skymoji+ purchases with StoreKit 2. Entitlements are checked on device, so there's no
 /// receipt server. In Xcode, the `EmojiWeather.storekit` file lets you test purchases in the
 /// simulator before the products exist in App Store Connect.
 @MainActor

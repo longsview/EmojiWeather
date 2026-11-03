@@ -18,7 +18,7 @@ struct EmojiWeatherComplication: Widget {
         StaticConfiguration(kind: kind, provider: ComplicationProvider()) { entry in
             ComplicationView(entry: entry)
         }
-        .configurationDisplayName("EmojiWeather")
+        .configurationDisplayName("Skymoji")
         .description("Your weather as emoji.")
         .supportedFamilies([.accessoryCircular, .accessoryCorner, .accessoryRectangular, .accessoryInline])
     }

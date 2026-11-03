@@ -1,7 +1,7 @@
 import StoreKit
 import SwiftUI
 
-/// The EmojiWeather+ upsell: a little sunny scene, what Plus includes, and the three plans.
+/// The Skymoji+ upsell: a little sunny scene, what Plus includes, and the three plans.
 struct PaywallView: View {
     var reason: String?
 
@@ -101,7 +101,7 @@ struct PaywallView: View {
             .mask(LinearGradient(colors: [.black, .black, .clear], startPoint: .top, endPoint: .bottom))
 
             VStack(spacing: 6) {
-                Text("EmojiWeather+")
+                Text("Skymoji+")
                     .font(.system(size: 40, weight: .heavy, design: .rounded))
                 Text(reason ?? String(localized: "No ads, more cities, more emoji."))
                     .font(.system(.body, design: .rounded, weight: .medium))
@@ -312,6 +312,6 @@ private struct PlanCard: View {
 }
 
 #Preview {
-    PaywallView(reason: "Free includes 3 cities. EmojiWeather+ removes the limit.")
+    PaywallView(reason: "Free includes 3 cities. Skymoji+ removes the limit.")
         .environment(PurchaseManager())
 }

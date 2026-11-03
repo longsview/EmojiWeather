@@ -8,7 +8,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "EmojiWeather"
+            "value" : "Skymoji"
           }
         }
       }
@@ -20,43 +20,43 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "يستخدم EmojiWeather موقعك لعرض الطقس حيث أنت."
+            "value" : "يستخدم Skymoji موقعك لعرض الطقس حيث أنت."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "EmojiWeather uses your location to show the weather where you are."
+            "value" : "Skymoji uses your location to show the weather where you are."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "EmojiWeather usa tu ubicación para mostrar el tiempo donde estás."
+            "value" : "Skymoji usa tu ubicación para mostrar el tiempo donde estás."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "EmojiWeather utilise votre position pour afficher la météo là où vous êtes."
+            "value" : "Skymoji utilise votre position pour afficher la météo là où vous êtes."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "EmojiWeatherは現在地の天気を表示するために位置情報を使用します。"
+            "value" : "Skymojiは現在地の天気を表示するために位置情報を使用します。"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O EmojiWeather usa sua localização para mostrar o clima onde você está."
+            "value" : "O Skymoji usa sua localização para mostrar o clima onde você está."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "EmojiWeather 使用你的位置来显示你所在地的天气。"
+            "value" : "Skymoji 使用你的位置来显示你所在地的天气。"
           }
         }
       }

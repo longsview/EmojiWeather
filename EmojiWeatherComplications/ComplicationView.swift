@@ -8,7 +8,7 @@ struct ComplicationView: View {
 
     private var emoji: String { entry.weather?.weatherScene.emoji ?? "🌤️" }
     private var temperature: String { entry.weather?.temperature.shortTemperature ?? "--" }
-    private var name: String { entry.place?.name ?? String(localized: "Open EmojiWeather to add a place") }
+    private var name: String { entry.place?.name ?? String(localized: "Open Skymoji to add a place") }
 
     var body: some View {
         content

@@ -70,7 +70,7 @@ struct PlacesView: View {
                 AddCityView()
             }
             .sheet(isPresented: $showingPaywall) {
-                PaywallView(reason: String(localized: "Free includes \(PurchaseManager.freeCityLimit) cities. EmojiWeather+ removes the limit."))
+                PaywallView(reason: String(localized: "Free includes \(PurchaseManager.freeCityLimit) cities. Skymoji+ removes the limit."))
             }
     }
 

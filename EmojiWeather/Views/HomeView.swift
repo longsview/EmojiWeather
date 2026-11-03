@@ -227,7 +227,7 @@ struct HomeView: View {
     private var debugMenu: some View {
         Menu {
             Toggle("Show ads", isOn: $debugAdsEnabled)
-            Toggle("EmojiWeather+ unlocked", isOn: Bindable(purchases).debugUnlock)
+            Toggle("Skymoji+ unlocked", isOn: Bindable(purchases).debugUnlock)
             Button {
                 showingGallery = true
             } label: {

@@ -728,7 +728,7 @@
 				DEVELOPMENT_TEAM = SCH5964PEN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EmojiWeatherComplications/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = EmojiWeather;
+				INFOPLIST_KEY_CFBundleDisplayName = Skymoji;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 0.1;
@@ -757,9 +757,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EmojiWeather/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = EmojiWeather;
+				INFOPLIST_KEY_CFBundleDisplayName = Skymoji;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.weather";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "EmojiWeather uses your location to show the weather where you are.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Skymoji uses your location to show the weather where you are.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -794,7 +794,7 @@
 				DEVELOPMENT_TEAM = SCH5964PEN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EmojiWeatherWidgets/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = EmojiWeather;
+				INFOPLIST_KEY_CFBundleDisplayName = Skymoji;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
@@ -881,7 +881,7 @@
 				DEVELOPMENT_TEAM = SCH5964PEN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EmojiWeatherWidgets/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = EmojiWeather;
+				INFOPLIST_KEY_CFBundleDisplayName = Skymoji;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
@@ -965,9 +965,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EmojiWeather/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = EmojiWeather;
+				INFOPLIST_KEY_CFBundleDisplayName = Skymoji;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.weather";
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "EmojiWeather uses your location to show the weather where you are.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Skymoji uses your location to show the weather where you are.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -1000,7 +1000,7 @@
 				DEVELOPMENT_TEAM = SCH5964PEN;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EmojiWeatherComplications/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = EmojiWeather;
+				INFOPLIST_KEY_CFBundleDisplayName = Skymoji;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MARKETING_VERSION = 0.1;
@@ -1027,8 +1027,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EmojiWeatherWatch/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = EmojiWeather;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "EmojiWeather uses your location to show the weather where you are.";
+				INFOPLIST_KEY_CFBundleDisplayName = Skymoji;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Skymoji uses your location to show the weather where you are.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.longsview.EmojiWeather;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1058,8 +1058,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = EmojiWeatherWatch/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = EmojiWeather;
-				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "EmojiWeather uses your location to show the weather where you are.";
+				INFOPLIST_KEY_CFBundleDisplayName = Skymoji;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Skymoji uses your location to show the weather where you are.";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.longsview.EmojiWeather;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

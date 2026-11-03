@@ -1727,46 +1727,6 @@
         }
       }
     },
-    "Emoji Weather Map" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "خريطة الطقس بالرموز التعبيرية"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mapa del tiempo con emoji"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Carte météo en emoji"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "絵文字天気マップ"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mapa do clima com emoji"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "表情天气地图"
-          }
-        }
-      }
-    },
     "Emoji weather map" : {
       "localizations" : {
         "ar" : {
@@ -1806,55 +1766,6 @@
           }
         }
       }
-    },
-    "EmojiWeather" : {
-
-    },
-    "EmojiWeather+" : {
-
-    },
-    "EmojiWeather+ is active. Thank you!" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EmojiWeather+ مفعّل. شكرًا لك!"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EmojiWeather+ está activo. ¡Gracias!"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EmojiWeather+ est actif. Merci !"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EmojiWeather+が有効です。ありがとうございます！"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O EmojiWeather+ está ativo. Obrigado!"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EmojiWeather+ 已启用。谢谢！"
-          }
-        }
-      }
-    },
-    "EmojiWeather+ unlocked" : {
-
     },
     "Fahrenheit (°F)" : {
       "localizations" : {
@@ -2176,42 +2087,42 @@
         }
       }
     },
-    "Free includes %lld cities. EmojiWeather+ removes the limit." : {
+    "Free includes %lld cities. Skymoji+ removes the limit." : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تتضمن النسخة المجانية %lld مدن. يزيل EmojiWeather+ هذا الحد."
+            "value" : "تتضمن النسخة المجانية %lld مدن. يزيل Skymoji+ هذا الحد."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La versión gratis incluye %lld ciudades. EmojiWeather+ quita el límite."
+            "value" : "La versión gratis incluye %lld ciudades. Skymoji+ quita el límite."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La version gratuite inclut %lld villes. EmojiWeather+ supprime la limite."
+            "value" : "La version gratuite inclut %lld villes. Skymoji+ supprime la limite."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無料版は%lld都市まで。EmojiWeather+なら制限がありません。"
+            "value" : "無料版は%lld都市まで。Skymoji+なら制限がありません。"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A versão grátis inclui %lld cidades. O EmojiWeather+ remove o limite."
+            "value" : "A versão grátis inclui %lld cidades. O Skymoji+ remove o limite."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "免费版包含 %lld 个城市。EmojiWeather+ 取消此限制。"
+            "value" : "免费版包含 %lld 个城市。Skymoji+ 取消此限制。"
           }
         }
       }
@@ -2256,42 +2167,42 @@
         }
       }
     },
-    "Get EmojiWeather+" : {
+    "Get Skymoji+" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "احصل على EmojiWeather+"
+            "value" : "احصل على Skymoji+"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obtener EmojiWeather+"
+            "value" : "Obtener Skymoji+"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obtenir EmojiWeather+"
+            "value" : "Obtenir Skymoji+"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "EmojiWeather+を入手"
+            "value" : "Skymoji+を入手"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Obter o EmojiWeather+"
+            "value" : "Obter o Skymoji+"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "获取 EmojiWeather+"
+            "value" : "获取 Skymoji+"
           }
         }
       }
@@ -3579,46 +3490,6 @@
         }
       }
     },
-    "Open EmojiWeather to add a place" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "افتح EmojiWeather لإضافة مكان"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abre EmojiWeather para añadir un lugar"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ouvrez EmojiWeather pour ajouter un lieu"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "EmojiWeatherを開いて場所を追加"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Abra o EmojiWeather para adicionar um lugar"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "打开 EmojiWeather 添加地点"
-          }
-        }
-      }
-    },
     "Open Settings" : {
       "localizations" : {
         "ar" : {
@@ -3655,6 +3526,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "打开设置"
+          }
+        }
+      }
+    },
+    "Open Skymoji to add a place" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "افتح Skymoji لإضافة مكان"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abre Skymoji para añadir un lugar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrez Skymoji pour ajouter un lieu"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skymojiを開いて場所を追加"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abra o Skymoji para adicionar um lugar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打开 Skymoji 添加地点"
           }
         }
       }
@@ -4139,42 +4050,42 @@
         }
       }
     },
-    "Remove ads with EmojiWeather+" : {
+    "Remove ads with Skymoji+" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "أزل الإعلانات مع EmojiWeather+"
+            "value" : "أزل الإعلانات مع Skymoji+"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quita los anuncios con EmojiWeather+"
+            "value" : "Quita los anuncios con Skymoji+"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Supprimer les pubs avec EmojiWeather+"
+            "value" : "Supprimer les pubs avec Skymoji+"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "EmojiWeather+で広告を非表示"
+            "value" : "Skymoji+で広告を非表示"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Remova os anúncios com o EmojiWeather+"
+            "value" : "Remova os anúncios com o Skymoji+"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "使用 EmojiWeather+ 去除广告"
+            "value" : "使用 Skymoji+ 去除广告"
           }
         }
       }
@@ -4588,6 +4499,95 @@
         }
       }
     },
+    "Skymoji" : {
+
+    },
+    "Skymoji Map" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "خريطة Skymoji"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mapa Skymoji"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Carte Skymoji"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skymojiマップ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mapa Skymoji"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skymoji 地图"
+          }
+        }
+      }
+    },
+    "Skymoji+" : {
+
+    },
+    "Skymoji+ is active. Thank you!" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skymoji+ مفعّل. شكرًا لك!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skymoji+ está activo. ¡Gracias!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skymoji+ est actif. Merci !"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skymoji+が有効です。ありがとうございます！"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Skymoji+ está ativo. Obrigado!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skymoji+ 已启用。谢谢！"
+          }
+        }
+      }
+    },
+    "Skymoji+ unlocked" : {
+
+    },
     "Snow" : {
       "localizations" : {
         "ar" : {
@@ -4988,82 +4988,82 @@
         }
       }
     },
-    "The emoji weather map is part of EmojiWeather+." : {
+    "The emoji weather map is part of Skymoji+." : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "خريطة الطقس بالرموز التعبيرية جزء من EmojiWeather+."
+            "value" : "خريطة الطقس بالرموز التعبيرية جزء من Skymoji+."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "El mapa del tiempo con emoji forma parte de EmojiWeather+."
+            "value" : "El mapa del tiempo con emoji forma parte de Skymoji+."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La carte météo en emoji fait partie d’EmojiWeather+."
+            "value" : "La carte météo en emoji fait partie de Skymoji+."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "絵文字天気マップはEmojiWeather+の機能です。"
+            "value" : "絵文字天気マップはSkymoji+の機能です。"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "O mapa do clima com emoji faz parte do EmojiWeather+."
+            "value" : "O mapa do clima com emoji faz parte do Skymoji+."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "表情天气地图属于 EmojiWeather+ 功能。"
+            "value" : "表情天气地图属于 Skymoji+ 功能。"
           }
         }
       }
     },
-    "The free version shows ads from Google AdMob. EmojiWeather+ removes them." : {
+    "The free version shows ads from Google AdMob. Skymoji+ removes them." : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "تعرض النسخة المجانية إعلانات من Google AdMob. يزيلها EmojiWeather+."
+            "value" : "تعرض النسخة المجانية إعلانات من Google AdMob. يزيلها Skymoji+."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La versión gratis muestra anuncios de Google AdMob. EmojiWeather+ los quita."
+            "value" : "La versión gratis muestra anuncios de Google AdMob. Skymoji+ los quita."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "La version gratuite affiche des pubs Google AdMob. EmojiWeather+ les supprime."
+            "value" : "La version gratuite affiche des pubs Google AdMob. Skymoji+ les supprime."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "無料版にはGoogle AdMobの広告が表示されます。EmojiWeather+で非表示にできます。"
+            "value" : "無料版にはGoogle AdMobの広告が表示されます。Skymoji+で非表示にできます。"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A versão grátis mostra anúncios do Google AdMob. O EmojiWeather+ os remove."
+            "value" : "A versão grátis mostra anúncios do Google AdMob. O Skymoji+ os remove."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "免费版显示 Google AdMob 广告。EmojiWeather+ 可去除广告。"
+            "value" : "免费版显示 Google AdMob 广告。Skymoji+ 可去除广告。"
           }
         }
       }
@@ -5551,42 +5551,42 @@
         }
       }
     },
-    "Unlock with EmojiWeather+" : {
+    "Unlock with Skymoji+" : {
       "localizations" : {
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "افتحها مع EmojiWeather+"
+            "value" : "افتحها مع Skymoji+"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Desbloquear con EmojiWeather+"
+            "value" : "Desbloquear con Skymoji+"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Débloquer avec EmojiWeather+"
+            "value" : "Débloquer avec Skymoji+"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "EmojiWeather+で利用可能に"
+            "value" : "Skymoji+で利用可能に"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Desbloquear com o EmojiWeather+"
+            "value" : "Desbloquear com o Skymoji+"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "使用 EmojiWeather+ 解锁"
+            "value" : "使用 Skymoji+ 解锁"
           }
         }
       }

@@ -1,4 +1,6 @@
-# EmojiWeather
+# Skymoji
+
+The app is called **Skymoji** (formerly EmojiWeather). Bundle IDs, the App Group, product IDs and the project, target and folder names still say EmojiWeather; only what people see was renamed.
 
 Weather shown as animated scenes built only from emoji. A thunderstorm is ⛈️ falling like rain with ⚡️ bolts that flash the screen, snow is ❄️ drifting and settling, and so on.
 
@@ -9,7 +11,7 @@ Requires Xcode 26 and iOS 26.
 1. Open `EmojiWeather.xcodeproj`.
 2. In **Signing & Capabilities**, pick your team and change the bundle ID if `com.longsview.EmojiWeather` is taken.
 3. In the [Apple Developer portal](https://developer.apple.com/account/resources/identifiers/list), open the App ID and turn on **WeatherKit** under both *Capabilities* and *App Services*. It can take up to 30 minutes before WeatherKit calls succeed.
-4. Run. In debug builds the 🐞 menu on the home screen previews every scene and toggles EmojiWeather+.
+4. Run. In debug builds the 🐞 menu on the home screen previews every scene and toggles Skymoji+.
 
 The `#Preview("All scenes")` in `EmojiSceneView.swift` lets you swipe through every scene in the canvas without WeatherKit.
 
@@ -30,7 +32,7 @@ EmojiWeather/
   App/        App entry point, dependency setup
   Models/     City, Place
   Services/   LocationService, CityStore (iCloud sync), WeatherProvider (WeatherKit + cache),
-              CitySearchModel, PurchaseManager (free vs EmojiWeather+)
+              CitySearchModel, PurchaseManager (free vs Skymoji+)
   Scenes/     WeatherScene (condition → scene), SceneSpec (scene recipes),
               EmojiParticleSystem (simulation + Canvas drawing), EmojiSceneView
   Views/      Home, forecast cards, places list, add city, paywall
@@ -52,9 +54,9 @@ Portal setup: the App ID `com.longsview.EmojiWeather.watchkitapp` needs **Weathe
 
 Each scene is a `SceneSpec` in `Scenes/SceneSpec.swift`: a background gradient, one or more `EmitterSpec` particle streams (emoji, rate, size, speed, angle, landing behavior) and optional `HeroSpec` fixed emoji. Lightning is a `lightningInterval`. Change the numbers and watch the preview.
 
-## Free vs EmojiWeather+
+## Free vs Skymoji+
 
-| | Free | EmojiWeather+ |
+| | Free | Skymoji+ |
 | --- | --- | --- |
 | Live emoji scenes, forecast | ✓ | ✓ |
 | Saved cities | 3 | Unlimited |
