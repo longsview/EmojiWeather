@@ -20,6 +20,11 @@ struct EmojiWeatherApp: App {
 
     @Environment(\.scenePhase) private var scenePhase
 
+    init() {
+        // Keeps the watch's scenes, units and clock in step with the phone.
+        WatchSync.shared.start()
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView()

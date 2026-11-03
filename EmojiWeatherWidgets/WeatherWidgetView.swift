@@ -215,16 +215,26 @@ private struct SceneDecor: View {
         (0.52, 0.30, 18), (0.78, 0.62, 16), (0.66, 0.46, 13), (0.58, 0.80, 12),
     ]
 
+    /// The scene's bits with the season's pack sprinkled in (Skymoji+).
+    private var decoratedBits: [String] {
+        var result = bits
+        for (offset, accent) in SceneStyle.activePack.accents.enumerated() {
+            let index = offset * 2 + 1
+            if index < result.count { result[index] = accent } else { result.append(accent) }
+        }
+        return result
+    }
+
     var body: some View {
+        // Read once per render: the person's own emoji and Genmoji (Skymoji+).
+        let swaps = SceneStyle.customEmoji
         GeometryReader { proxy in
             let heroSize: CGFloat = compact ? 52 : 60
-            Text(hero)
-                .font(.system(size: heroSize))
+            SceneEmojiText(emoji: hero, size: heroSize, swaps: swaps)
                 .position(x: proxy.size.width - heroSize * 0.42, y: heroSize * 0.42)
-            ForEach(Array(bits.enumerated()), id: \.offset) { index, bit in
+            ForEach(Array(decoratedBits.enumerated()), id: \.offset) { index, bit in
                 let spot = Self.spots[index % Self.spots.count]
-                Text(bit)
-                    .font(.system(size: spot.size))
+                SceneEmojiText(emoji: bit, size: spot.size, swaps: swaps)
                     .opacity(0.8)
                     .rotationEffect(.degrees(Double(index) * 17 - 20))
                     .position(x: proxy.size.width * spot.x, y: proxy.size.height * spot.y)

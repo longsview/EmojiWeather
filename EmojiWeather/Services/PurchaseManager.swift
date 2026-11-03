@@ -2,6 +2,7 @@ import Foundation
 import Observation
 import os
 import StoreKit
+import WidgetKit
 
 /// What Skymoji+ unlocks. The paywall lists these, and the app checks them through
 /// `PurchaseManager` so the split between free and paid lives in one place.
@@ -58,11 +59,11 @@ final class PurchaseManager {
 
     private(set) var products: [Product] = []
     private(set) var purchasedProductIDs: Set<String> = [] {
-        didSet { SceneStyle.plusActive = hasPlus }
+        didSet { syncPlusStatus() }
     }
     /// Flipped from the debug menu to test both tiers without buying anything.
     var debugUnlock = false {
-        didSet { SceneStyle.plusActive = hasPlus }
+        didSet { syncPlusStatus() }
     }
 
     var hasPlus: Bool { debugUnlock || !purchasedProductIDs.isEmpty }
@@ -81,6 +82,14 @@ final class PurchaseManager {
             }
         }
         Task { await loadProducts() }
+    }
+
+    /// Scenes, widgets and the watch use packs and custom emoji only while Plus is active.
+    private func syncPlusStatus() {
+        guard SceneStyle.plusActive != hasPlus else { return }
+        SceneStyle.plusActive = hasPlus
+        WidgetCenter.shared.reloadAllTimelines()
+        WatchSync.shared.send()
     }
 
     func canAddCity(currentCount: Int) -> Bool {

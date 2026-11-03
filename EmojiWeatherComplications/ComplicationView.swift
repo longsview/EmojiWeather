@@ -24,7 +24,7 @@ struct ComplicationView: View {
             ZStack {
                 AccessoryWidgetBackground()
                 VStack(spacing: -2) {
-                    Text(verbatim: emoji).font(.system(size: 22))
+                    SceneEmojiText(emoji: emoji, size: 22)
                     Text(verbatim: temperature)
                         .font(.system(.body, design: .rounded, weight: .bold))
                         .minimumScaleFactor(0.7)
@@ -32,15 +32,14 @@ struct ComplicationView: View {
             }
 
         case .accessoryCorner:
-            Text(verbatim: emoji)
-                .font(.system(size: 30))
+            SceneEmojiText(emoji: emoji, size: 30)
                 .widgetLabel {
                     Text(verbatim: "\(temperature) \(entry.place?.name ?? "")")
                 }
 
         case .accessoryRectangular:
             HStack(spacing: 8) {
-                Text(verbatim: emoji).font(.system(size: 38))
+                SceneEmojiText(emoji: emoji, size: 38)
                 VStack(alignment: .leading, spacing: 0) {
                     Text(verbatim: name)
                         .font(.system(.headline, design: .rounded, weight: .bold))

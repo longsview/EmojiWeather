@@ -32,10 +32,12 @@
 		3671022F2814A60912C4CDA9 /* SceneText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94F8AFF568EEC5C108709D73 /* SceneText.swift */; };
 		3A74C9CDCBA9C6CC8D4ABF15 /* EmojiParticleSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534C33757F6286A4B367D015 /* EmojiParticleSystem.swift */; };
 		415F47C0F3AD9B77BA5E1229 /* ComplicationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F32BF8159393E7CC20FB334 /* ComplicationView.swift */; };
+		4186EE7409B75DE0A2ACAF28 /* SceneStyleShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21821D7C8422E710ED348198 /* SceneStyleShared.swift */; };
 		426AFEC1A23475A7B5BD55AC /* WatchForecastSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85B60DD00C89A560FCA2BAA2 /* WatchForecastSections.swift */; };
 		45D3717CD60CE5BC6B764C50 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 80D9419E336A15CDBD763DA3 /* Localizable.xcstrings */; };
 		48EE75BD803146ED59F2C995 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40C9B91B7D0FC642A3660D2 /* Color+Hex.swift */; };
 		4F460E651F479B9E13E2FCA9 /* WatchRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C86BBB3C3785ED7497403DDF /* WatchRootView.swift */; };
+		506EE2EBB9CDCD92122AC396 /* WatchSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24E7CD94D4B44A7B9E5C34F4 /* WatchSync.swift */; };
 		5198F3D957BE6452F21187FA /* PlacesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 518073510C421840BE30F8EC /* PlacesView.swift */; };
 		5199B9DBA3B3EA1823F6B636 /* WidgetShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2579C65596E26021AA9BD12C /* WidgetShared.swift */; };
 		51E9F08990813346B3815895 /* WeatherProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E4B9650AEB046F7CCE5F2D4 /* WeatherProvider.swift */; };
@@ -56,6 +58,7 @@
 		7F07C7AEA14451558ED21A5D /* EmojiWeatherComplications.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA9F7F11D1678175A307BF8A /* EmojiWeatherComplications.swift */; };
 		7F4DFFF8D3346CEA5D43B332 /* EmojiWeatherWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99210C012254A664EEF41853 /* EmojiWeatherWatchApp.swift */; };
 		8402175D784470D9EDD6F55E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19B187FD55AD790A15B7D4CF /* Assets.xcassets */; };
+		840533329E7236B9FC8B6A09 /* SceneStyleShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21821D7C8422E710ED348198 /* SceneStyleShared.swift */; };
 		841A172DEC534CA58FFD53B8 /* WidgetSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = C02B3A1B85C2E530D635ABFB /* WidgetSync.swift */; };
 		8491DD397B4ED68D1CF3304A /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89944B124C8BC566B9DB4E00 /* PaywallView.swift */; };
 		8A7CE53BAE3F881234891F8B /* EmojiWeatherWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FDEBA9E4FE4BB855083F2D7 /* EmojiWeatherWidgetsBundle.swift */; };
@@ -63,6 +66,7 @@
 		8E588E4011184067C9E88102 /* EmojiWeatherComplications.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 618E4A9EDBA4C22D672E3D32 /* EmojiWeatherComplications.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		8EC47D55E97E2B5CC258854A /* QuizStats.swift in Sources */ = {isa = PBXBuildFile; fileRef = C26B89FCD4DF6EF66F55B7B3 /* QuizStats.swift */; };
 		9108A7192BC87A7578B91225 /* DisplaySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007719C4B208E545100281A2 /* DisplaySettings.swift */; };
+		914B78EF0AEE82E1FEAE9627 /* SceneStyleShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21821D7C8422E710ED348198 /* SceneStyleShared.swift */; };
 		9242E6A52B5A9C9AD56BE022 /* SceneGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A5B567B59B09993FFD3A79F /* SceneGalleryView.swift */; };
 		92BEDF52F667B73A39CC1F6F /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125B792FC16ED71D28407284 /* PurchaseManager.swift */; };
 		94A1F2931DA433BE18EDDF06 /* WeatherWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4617BAEB298C8C25EFD1B8 /* WeatherWidgetView.swift */; };
@@ -81,10 +85,12 @@
 		C5334F0844D6C073CDD0E358 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 80D9419E336A15CDBD763DA3 /* Localizable.xcstrings */; };
 		CB23BA320499F16E4227CEBB /* QuizStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9FD55FCD2555E1BF0C62752 /* QuizStore.swift */; };
 		CD99E87C05E55C341FB8ADAF /* countries.tsv in Resources */ = {isa = PBXBuildFile; fileRef = B8C4E0F090FBC2D7AE20B207 /* countries.tsv */; };
+		CDCBD5BC8C00F7AF49916CEF /* PhoneSync.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F79F557A661A0073C6CDD5 /* PhoneSync.swift */; };
 		D03B8290D8697489FBB73244 /* QuizAtlas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17B8B0474A8C8AC41DE4A852 /* QuizAtlas.swift */; };
 		D13CA3A7498315F36A051793 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 7878E0B6FA6F139FB3BE657B /* GoogleMobileAds */; };
 		D1B712B1E9B3626E893EC111 /* QuizView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330C505BC2B4E68DA6EDE4CF /* QuizView.swift */; };
 		D2E37C300D6BD1107328827B /* CitySearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DBA20AF882DFBA4C1A3184 /* CitySearchModel.swift */; };
+		D4F47580E52849C9E6E94E6E /* SceneStyleShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21821D7C8422E710ED348198 /* SceneStyleShared.swift */; };
 		D4FEEEDBF60326E4E721712C /* ForecastViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F11B758C7D5ABF0F4D967 /* ForecastViews.swift */; };
 		D8EA47EEC30403EF197B96C1 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = DC3ACDA7ECB5D1B2CEC49747 /* InfoPlist.xcstrings */; };
 		D92137B8F8168C8146098835 /* SceneStyleViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D05F6267C241D142CBDBCC6 /* SceneStyleViews.swift */; };
@@ -175,6 +181,8 @@
 		19AD54FA797C2D57397162E4 /* WeatherAttributionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeatherAttributionView.swift; sourceTree = "<group>"; };
 		19B187FD55AD790A15B7D4CF /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1D05F6267C241D142CBDBCC6 /* SceneStyleViews.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SceneStyleViews.swift; sourceTree = "<group>"; };
+		21821D7C8422E710ED348198 /* SceneStyleShared.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SceneStyleShared.swift; sourceTree = "<group>"; };
+		24E7CD94D4B44A7B9E5C34F4 /* WatchSync.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchSync.swift; sourceTree = "<group>"; };
 		2579C65596E26021AA9BD12C /* WidgetShared.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetShared.swift; sourceTree = "<group>"; };
 		29B8212869D131E40560600E /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		330C505BC2B4E68DA6EDE4CF /* QuizView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QuizView.swift; sourceTree = "<group>"; };
@@ -224,6 +232,7 @@
 		D0077B608A1FFEE2F13DAE26 /* EmojiWeather.storekit */ = {isa = PBXFileReference; includeInIndex = 1; path = EmojiWeather.storekit; sourceTree = "<group>"; };
 		D40C9B91B7D0FC642A3660D2 /* Color+Hex.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		D65C2ECC2E8BE2C2B58565FE /* EmojiWeatherWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = EmojiWeatherWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		D8F79F557A661A0073C6CDD5 /* PhoneSync.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PhoneSync.swift; sourceTree = "<group>"; };
 		D91E8DFA4C1BD8E801F2412F /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DA1D35D3BC0024804F5C61C5 /* LocationPermissionCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocationPermissionCard.swift; sourceTree = "<group>"; };
 		DC3ACDA7ECB5D1B2CEC49747 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
@@ -306,6 +315,7 @@
 				007719C4B208E545100281A2 /* DisplaySettings.swift */,
 				80D9419E336A15CDBD763DA3 /* Localizable.xcstrings */,
 				C26B89FCD4DF6EF66F55B7B3 /* QuizStats.swift */,
+				21821D7C8422E710ED348198 /* SceneStyleShared.swift */,
 			);
 			name = Shared;
 			path = Shared;
@@ -353,6 +363,7 @@
 				19B187FD55AD790A15B7D4CF /* Assets.xcassets */,
 				6AFCF3241545DC5E7388578B /* EmojiWeatherWatch.entitlements */,
 				88E802199F8EB1172031604D /* Info.plist */,
+				D8F79F557A661A0073C6CDD5 /* PhoneSync.swift */,
 			);
 			name = EmojiWeatherWatch;
 			path = EmojiWeatherWatch;
@@ -396,6 +407,7 @@
 				E9E51D6BB2E073C64E813C4B /* AdsManager.swift */,
 				C02B3A1B85C2E530D635ABFB /* WidgetSync.swift */,
 				BBB3DDA73E1F7695D97B5E90 /* MapWeatherModel.swift */,
+				24E7CD94D4B44A7B9E5C34F4 /* WatchSync.swift */,
 			);
 			name = Services;
 			path = Services;
@@ -690,6 +702,8 @@
 				8EC47D55E97E2B5CC258854A /* QuizStats.swift in Sources */,
 				BFE6F7C9F189701477106A51 /* SceneStyle.swift in Sources */,
 				D92137B8F8168C8146098835 /* SceneStyleViews.swift in Sources */,
+				840533329E7236B9FC8B6A09 /* SceneStyleShared.swift in Sources */,
+				506EE2EBB9CDCD92122AC396 /* WatchSync.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -707,6 +721,7 @@
 				9108A7192BC87A7578B91225 /* DisplaySettings.swift in Sources */,
 				7EF94C05A6CA9BB3BA639876 /* QuizStats.swift in Sources */,
 				BC6B106026C025ECEF1D39BD /* DailyQuizWidget.swift in Sources */,
+				914B78EF0AEE82E1FEAE9627 /* SceneStyleShared.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -732,6 +747,8 @@
 				535AF2BC2705AF60C261F27E /* SceneText.swift in Sources */,
 				841A172DEC534CA58FFD53B8 /* WidgetSync.swift in Sources */,
 				25271E08039A500A456A5BB4 /* SceneStyle.swift in Sources */,
+				4186EE7409B75DE0A2ACAF28 /* SceneStyleShared.swift in Sources */,
+				CDCBD5BC8C00F7AF49916CEF /* PhoneSync.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -745,6 +762,7 @@
 				EA10561896CBCD2FF7C772AF /* Color+Hex.swift in Sources */,
 				2A0B2726FB92495669ECB097 /* WeatherScene.swift in Sources */,
 				BAFE306D21B714017910B0A8 /* DisplaySettings.swift in Sources */,
+				D4F47580E52849C9E6E94E6E /* SceneStyleShared.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

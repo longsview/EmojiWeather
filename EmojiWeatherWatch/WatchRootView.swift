@@ -9,6 +9,18 @@ struct WatchRootView: View {
 
     @AppStorage("watch.selectedPlace") private var selectedID = Place.currentLocationID
 
+    // Sent from the phone (see PhoneSync). Scenes and temperatures rebuild when they change.
+    @AppStorage(SceneStyle.packKey, store: SharedStore.defaults) private var scenePack: ScenePack = .classic
+    @AppStorage(SceneStyle.customEmojiKey, store: SharedStore.defaults) private var customEmoji = ""
+    @AppStorage(SceneStyle.plusActiveKey, store: SharedStore.defaults) private var plusActive = false
+    @AppStorage(StyleSync.genmojiVersionKey, store: SharedStore.defaults) private var genmojiVersion = 0
+    @AppStorage(DisplaySettings.temperatureKey, store: SharedStore.defaults) private var temperature: TemperatureSetting = .automatic
+
+    private var styleKey: String {
+        let style = SceneStyle.styleKey(pack: scenePack.rawValue, customJSON: customEmoji, plus: plusActive)
+        return "\(style)|\(genmojiVersion)|\(temperature.rawValue)"
+    }
+
     private var places: [Place] {
         let cities = cityStore.cities.map(Place.city)
         // With location turned off, skip the My Location page if there are cities to show.
@@ -29,6 +41,7 @@ struct WatchRootView: View {
             }
         }
         .tabViewStyle(.page)
+        .id(styleKey)
         .onChange(of: selectedID) { _, _ in
             WKInterfaceDevice.current().play(.click)
         }

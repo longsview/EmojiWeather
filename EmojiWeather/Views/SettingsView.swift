@@ -130,6 +130,7 @@ struct SettingsView: View {
                 PaywallView()
             }
             .manageSubscriptionsSheet(isPresented: $showingManageSubscription)
+            .onChange(of: animateScenes) { WatchSync.shared.send() }
             .onChange(of: temperature) { WidgetCenter.shared.reloadAllTimelines() }
             .onChange(of: clock) { WidgetCenter.shared.reloadAllTimelines() }
         }

@@ -1,5 +1,6 @@
 import CoreLocation
 import SwiftUI
+import WidgetKit
 
 /// The app's two modes in a Liquid Glass tab bar: the emoji weather pages and the weather map.
 struct RootView: View {
@@ -40,6 +41,11 @@ struct RootView: View {
             }
         }
         .tabBarMinimizeBehavior(.never)
+        .onChange(of: displayKey) {
+            // Widgets and the watch follow units, the clock, the scene pack and your own emoji.
+            WidgetCenter.shared.reloadAllTimelines()
+            WatchSync.shared.send()
+        }
         // Times everywhere follow the 12/24-hour choice.
         .environment(\.locale, DisplaySettings.locale)
     }

@@ -349,8 +349,10 @@ enum EmojiImageCache {
         if let cached = images[emoji] { return cached }
         let image: UIImage
         if case .genmoji(let id) = SceneEmoji(emoji) {
-            // A Genmoji saved as a picture. If the file is gone, fall back to a sparkle.
-            image = GenmojiStore.image(for: id).map(fitted) ?? render("✨")
+            // A Genmoji saved as a picture. Until the file is there (the watch may still be
+            // receiving it from the phone), draw a sparkle and try again next time.
+            guard let picture = GenmojiStore.image(for: id) else { return Self.image(for: "✨") }
+            image = fitted(picture)
         } else {
             image = render(emoji)
         }
@@ -370,10 +372,22 @@ enum EmojiImageCache {
 
     /// Scales a Genmoji picture to fill the same box an emoji would, keeping its shape.
     private static func fitted(_ picture: UIImage) -> UIImage {
-        #if os(watchOS)
-        return picture
-        #else
         let canvas = glyphSize
+        #if os(watchOS)
+        let side = min(canvas.width, canvas.height) * 0.98
+        return MainActor.assumeIsolated {
+            let renderer = ImageRenderer(content:
+                Image(uiImage: picture)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: side, height: side)
+                    .frame(width: canvas.width, height: canvas.height)
+            )
+            renderer.scale = 2
+            guard let cgImage = renderer.cgImage else { return picture }
+            return UIImage(cgImage: cgImage, scale: 2, orientation: .up)
+        }
+        #else
         let side = min(canvas.width, canvas.height) * 0.98
         let scale = min(side / max(picture.size.width, 1), side / max(picture.size.height, 1))
         let size = CGSize(width: picture.size.width * scale, height: picture.size.height * scale)
