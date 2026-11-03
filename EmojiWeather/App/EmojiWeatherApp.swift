@@ -29,7 +29,7 @@ struct EmojiWeatherApp: App {
         let purchases = PurchaseManager()
         #if DEBUG
         if ScreenshotMode.plus { purchases.debugUnlock = true }
-        if let pack = ScreenshotMode.pack { SceneStyle.chosenPack = pack }
+        if ScreenshotMode.isActive { SceneStyle.chosenPack = ScreenshotMode.pack ?? .classic }
         #endif
         _purchases = State(initialValue: purchases)
         _ads = State(initialValue: AdsManager())

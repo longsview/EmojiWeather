@@ -350,7 +350,11 @@ extension HomeView {
             selectedPlaceID = city.id.uuidString
         }
         guard let open = ScreenshotMode.open else { return }
-        try? await Task.sleep(for: .seconds(3))
+        // Wait for the weather (and so the location) before opening anything, up to 30 s.
+        for _ in 0..<60 where !activeHasWeather {
+            try? await Task.sleep(for: .milliseconds(500))
+        }
+        try? await Task.sleep(for: .seconds(1.5))
         switch open {
         case "forecast": openDetailsToken += 1
         case "share": shareToken += 1

@@ -30,6 +30,10 @@ final class QuizStore {
     init() {
         stats = QuizStats.load()
         quiz = Self.decode(DailyQuiz.self, defaults.data(forKey: Self.quizKey))
+        #if DEBUG
+        // Screenshots: always build a fresh quiz for where the simulator is.
+        if ScreenshotMode.isActive { quiz = nil }
+        #endif
         pendingGuess = Self.decode(HighGuess.self, defaults.data(forKey: Self.guessKey))
     }
 
