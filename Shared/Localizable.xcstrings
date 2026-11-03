@@ -7,6 +7,46 @@
     "%@" : {
       "shouldTranslate" : false
     },
+    "%@ %@ / %@ in %@ today. Your quiz is ready, keep your 🔥 streak going!" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@ / %3$@ في %4$@ اليوم. اختبارك جاهز، حافظ على سلسلتك 🔥!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@ / %3$@ hoy en %4$@. Tu quiz está listo, ¡mantén tu racha 🔥!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@ / %3$@ à %4$@ aujourd'hui. Votre quiz est prêt, gardez votre série 🔥 !"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日の%4$@は %1$@ %2$@ / %3$@。クイズの準備ができました。🔥 連続記録を続けよう！"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$@ %2$@ / %3$@ hoje em %4$@. Seu quiz está pronto, mantenha sua sequência 🔥!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%4$@ 今天 %1$@ %2$@ / %3$@。今日问答已就绪，保持你的 🔥 连胜！"
+          }
+        }
+      }
+    },
     "%@ chance of rain" : {
       "localizations" : {
         "ar" : {

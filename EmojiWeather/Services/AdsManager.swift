@@ -11,12 +11,23 @@ import UserMessagingPlatform
 @MainActor
 @Observable
 final class AdsManager: NSObject, FullScreenContentDelegate, BannerViewDelegate {
-    /// Google's public test IDs. Swap in the real ones from AdMob before release
-    /// (the App ID lives in Info.plist as GADApplicationIdentifier).
+    /// Debug builds use Google's public test IDs. Release builds use the real ad units from
+    /// AdMob (Apps > Skymoji > Ad units); until those are filled in, Release shows no ads at all.
+    /// The App ID lives in Info.plist as GADApplicationIdentifier.
     enum AdUnit {
+        #if DEBUG
         static let homeBanner = "ca-app-pub-3940256099942544/2934735716"
         static let forecastCard = "ca-app-pub-3940256099942544/2934735716"
         static let citySwipe = "ca-app-pub-3940256099942544/4411468910"
+        #else
+        static let homeBanner = ""
+        static let forecastCard = ""
+        static let citySwipe = ""
+        #endif
+
+        static var isConfigured: Bool {
+            !homeBanner.isEmpty && !forecastCard.isEmpty && !citySwipe.isEmpty
+        }
     }
 
     /// Full-screen ad rules, to keep within AdMob policy and keep people happy:
@@ -54,7 +65,7 @@ final class AdsManager: NSObject, FullScreenContentDelegate, BannerViewDelegate 
     /// shows Google's consent form where the law requires it (EU/UK), then starts the SDK.
     /// The SDK does heavy main-thread setup, so it must never run during launch.
     func start(after delay: Duration = .seconds(3)) async {
-        guard !started else { return }
+        guard !started, AdUnit.isConfigured else { return }
         #if DEBUG
         guard UserDefaults.standard.bool(forKey: Self.debugAdsEnabledKey) else { return }
         #endif

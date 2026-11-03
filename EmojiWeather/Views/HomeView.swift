@@ -72,6 +72,12 @@ struct HomeView: View {
         .onOpenURL { url in
             if url.scheme == "skymoji", url.host == "daily" { showingQuiz = true }
         }
+        // A tapped morning reminder.
+        .onChange(of: quiz.openRequested, initial: true) {
+            guard quiz.openRequested else { return }
+            quiz.openRequested = false
+            showingQuiz = true
+        }
         .sheet(isPresented: $showingPlaces) {
             PlacesView(selectedPlaceID: $selectedPlaceID)
         }

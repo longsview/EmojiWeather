@@ -48,7 +48,7 @@ final class CitySearchModel: NSObject, MKLocalSearchCompleterDelegate {
         let response = try await MKLocalSearch(request: request).start()
         guard let item = response.mapItems.first else { throw SearchError.notFound }
 
-        let coordinate = item.placemark.coordinate
+        let coordinate = item.location.coordinate
         let name = completion.title.components(separatedBy: ",").first ?? completion.title
         return City(
             name: name.trimmingCharacters(in: .whitespaces),

@@ -7,7 +7,7 @@ struct EmojiWeatherApp: App {
     @State private var weather = WeatherProvider()
     @State private var purchases = PurchaseManager()
     @State private var ads = AdsManager()
-    @State private var quiz = QuizStore()
+    @State private var quiz: QuizStore
 
     /// Changes whenever the widgets' list of places or the Plus status changes.
     private var widgetKey: String {
@@ -21,6 +21,11 @@ struct EmojiWeatherApp: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
+        let quiz = QuizStore()
+        _quiz = State(initialValue: quiz)
+        // Tapping a morning reminder opens the quiz.
+        NotificationRouter.shared.quiz = quiz
+        NotificationRouter.shared.start()
         // Keeps the watch's scenes, units and clock in step with the phone.
         WatchSync.shared.start()
     }
@@ -50,7 +55,10 @@ struct EmojiWeatherApp: App {
         .onChange(of: scenePhase, initial: true) { _, phase in
             switch phase {
             case .active: location.startUpdating()
-            case .background: location.stopUpdating()
+            case .background:
+                location.stopUpdating()
+                // Refresh the next mornings' reminders with the latest forecast.
+                Task { await QuizStore.scheduleReminders() }
             default: break
             }
         }

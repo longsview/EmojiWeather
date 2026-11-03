@@ -16,6 +16,8 @@ final class QuizStore {
     private(set) var guessResult: GuessResult?
     /// Today's guess for tomorrow, once locked in.
     private(set) var pendingGuess: HighGuess?
+    /// Set when a morning reminder is tapped, so the home screen opens the quiz.
+    var openRequested = false
 
     @ObservationIgnored private var atlas: QuizAtlas?
     @ObservationIgnored private let defaults = UserDefaults.standard
@@ -138,21 +140,71 @@ final class QuizStore {
     // MARK: - Morning reminder
 
     static let reminderID = "skymoji.daily.reminder"
+    static let reminderEnabledKey = "quiz.reminder"
+    /// Opened when a reminder is tapped.
+    static let quizURL = URL(string: "skymoji://daily")!
+    /// Mornings scheduled ahead. Each has its own text, so they're one-off notifications that
+    /// are scheduled again whenever the app goes to the background.
+    private static let daysAhead = 14
 
-    /// Asks for permission the first time, then repeats every morning at 8.
+    /// Asks for permission the first time, then schedules a reminder each morning at 8.
     func setReminder(_ enabled: Bool) async -> Bool {
         let center = UNUserNotificationCenter.current()
-        center.removePendingNotificationRequests(withIdentifiers: [Self.reminderID])
-        guard enabled else { return false }
+        guard enabled else {
+            await Self.removeReminders()
+            return false
+        }
         let granted = (try? await center.requestAuthorization(options: [.alert, .sound])) ?? false
         guard granted else { return false }
-        let content = UNMutableNotificationContent()
-        content.title = String(localized: "Skymoji Daily 🧩")
-        content.body = String(localized: "Today's quiz is ready. Keep your 🔥 streak going!")
-        content.sound = .default
-        let trigger = UNCalendarNotificationTrigger(dateMatching: DateComponents(hour: 8, minute: 0), repeats: true)
-        try? await center.add(UNNotificationRequest(identifier: Self.reminderID, content: content, trigger: trigger))
+        await Self.scheduleReminders()
         return true
+    }
+
+    private static func removeReminders() async {
+        let center = UNUserNotificationCenter.current()
+        let ids = await center.pendingNotificationRequests().map(\.identifier).filter { $0.hasPrefix(reminderID) }
+        center.removePendingNotificationRequests(withIdentifiers: ids)
+    }
+
+    /// Schedules the next two weeks of 8 AM reminders. Mornings the forecast covers say what the
+    /// weather will be: "☀️ 72° / 55° in Cupertino today."
+    static func scheduleReminders() async {
+        // The toggle is saved before permission is asked, so check permission too.
+        let center = UNUserNotificationCenter.current()
+        let settings = await center.notificationSettings()
+        guard settings.authorizationStatus == .authorized || settings.authorizationStatus == .provisional else { return }
+        await removeReminders()
+
+        // The widgets' copy of the first place (My Location, or the first city) and its forecast.
+        let place = SharedStore.places.first
+        let weather = place.flatMap { SharedStore.weather(for: $0.id) }
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: .now)
+
+        for offset in 0..<daysAhead {
+            guard let day = calendar.date(byAdding: .day, value: offset, to: today),
+                  let morning = calendar.date(bySettingHour: 8, minute: 0, second: 0, of: day),
+                  morning > .now else { continue }
+
+            let content = UNMutableNotificationContent()
+            content.title = String(localized: "Skymoji Daily 🧩")
+            if let place, let forecast = weather?.days.first(where: { calendar.isDate($0.date, inSameDayAs: day) }) {
+                let emoji = forecast.emoji
+                let high = forecast.high.shortTemperature
+                let low = forecast.low.shortTemperature
+                let name = place.name
+                content.body = String(localized: "\(emoji) \(high) / \(low) in \(name) today. Your quiz is ready, keep your 🔥 streak going!")
+            } else {
+                content.body = String(localized: "Today's quiz is ready. Keep your 🔥 streak going!")
+            }
+            content.sound = .default
+            content.userInfo = ["url": quizURL.absoluteString]
+
+            let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: morning)
+            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+            let id = "\(reminderID).\(dayString(for: day))"
+            try? await center.add(UNNotificationRequest(identifier: id, content: content, trigger: trigger))
+        }
     }
 
     // MARK: - Saving

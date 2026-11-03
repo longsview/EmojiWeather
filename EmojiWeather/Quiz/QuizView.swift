@@ -366,7 +366,7 @@ private struct StatsCard: View {
 
 private struct ReminderCard: View {
     @Environment(QuizStore.self) private var store
-    @AppStorage("quiz.reminder") private var isOn = false
+    @AppStorage(QuizStore.reminderEnabledKey) private var isOn = false
 
     var body: some View {
         QuizCard {
