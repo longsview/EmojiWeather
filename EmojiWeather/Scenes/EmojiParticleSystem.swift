@@ -255,18 +255,7 @@ final class EmojiParticleSystem {
 
     // MARK: - Drawing
 
-    /// How far the nearest emoji slide when the phone is fully tilted, in points.
-    private static let parallaxDistance: Double = 70
-    /// Emoji that sit far back in the sky and barely move with tilt.
-    private static let farHeroes: Set<String> = ["☀️", "🌙", "🌕", "🌝", "🌛"]
-
-    /// Draws the scene. `parallax` (-1...1 on each axis, from the phone's tilt) slides emoji
-    /// by depth: big, near ones move most and small, far ones barely, so the scene feels layered.
-    func draw(in context: inout GraphicsContext, size: CGSize, parallax: CGVector = .zero) {
-        func shift(depth: Double) -> CGVector {
-            CGVector(dx: -parallax.dx * Self.parallaxDistance * depth,
-                     dy: -parallax.dy * Self.parallaxDistance * depth)
-        }
+    func draw(in context: inout GraphicsContext, size: CGSize) {
         let bounds = CGRect(origin: .zero, size: size)
         context.fill(
             Path(bounds),
@@ -307,9 +296,7 @@ final class EmojiParticleSystem {
             if particle.wobble > 0 {
                 x += sin(particle.age * 1.6 + particle.wobblePhase) * particle.wobble
             }
-            // Small particles read as far away, big ones as close.
-            let offset = shift(depth: min(max(particle.size / 50, 0.2), 1.4))
-            draw(text(particle.emoji), in: base, at: CGPoint(x: x + offset.dx, y: particle.position.y + offset.dy),
+            draw(text(particle.emoji), in: base, at: CGPoint(x: x, y: particle.position.y),
                  size: particle.size, rotation: particle.rotation, opacity: opacity)
         }
 
@@ -317,11 +304,10 @@ final class EmojiParticleSystem {
             let phase = hero.phase * .pi / 180
             let orbitAngle = (hero.phase + hero.orbitSpeed * elapsed) * .pi / 180
             let scale = 1 + sin(elapsed * 1.8 + phase) * hero.pulse
-            let offset = shift(depth: Self.farHeroes.contains(hero.emoji) ? 0.25 : 0.9)
             let point = CGPoint(
-                x: hero.position.x * size.width + hero.offset.width + cos(orbitAngle) * hero.orbitRadius + offset.dx,
+                x: hero.position.x * size.width + hero.offset.width + cos(orbitAngle) * hero.orbitRadius,
                 y: hero.position.y * size.height + hero.offset.height + sin(orbitAngle) * hero.orbitRadius
-                    + sin(elapsed * 1.3 + phase) * hero.bob + offset.dy
+                    + sin(elapsed * 1.3 + phase) * hero.bob
             )
             draw(text(hero.emoji), in: base, at: point,
                  size: hero.size * scale, rotation: elapsed * hero.spin, opacity: hero.opacity)
