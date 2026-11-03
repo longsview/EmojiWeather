@@ -11,7 +11,7 @@ struct LocalTimeView: View {
     var body: some View {
         TimelineView(.everyMinute) { context in
             HStack(spacing: 6) {
-                Text(context.date.formatted(DisplaySettings.timeStyle(timeZone)))
+                Text(Self.displayDate(context.date).formatted(DisplaySettings.timeStyle(timeZone)))
                     .monospacedDigit()
                 if let offset = Self.offsetText(at: context.date, timeZone: timeZone) {
                     Text(offset)
@@ -22,6 +22,14 @@ struct LocalTimeView: View {
             .contentTransition(.numericText())
         }
         .accessibilityLabel("Local time")
+    }
+
+    private static func displayDate(_ date: Date) -> Date {
+        #if DEBUG
+        return ScreenshotMode.fixedDate ?? date
+        #else
+        return date
+        #endif
     }
 
     /// "3 hr ahead", "5½ hr behind", or nil for the device's own time zone.

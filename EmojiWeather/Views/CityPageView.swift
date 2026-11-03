@@ -62,8 +62,12 @@ struct CityPageView: View {
 
     private var placeName: String {
         switch place {
-        case .currentLocation: location.placeName ?? String(localized: "My Location")
-        case .city(let city): city.name
+        case .currentLocation:
+            #if DEBUG
+            if let name = ScreenshotMode.place { return name }
+            #endif
+            return location.placeName ?? String(localized: "My Location")
+        case .city(let city): return city.name
         }
     }
 
@@ -74,7 +78,11 @@ struct CityPageView: View {
             #if DEBUG
             if let forced = ScreenshotMode.sky { sky = forced }
             #endif
-            return SceneConditions(scene: previewScene, intensity: 0.8, windDrift: 0.3, sky: sky)
+            var sunProgress = 0.1
+            #if DEBUG
+            if ScreenshotMode.isActive { sunProgress = ScreenshotMode.sunProgress }
+            #endif
+            return SceneConditions(scene: previewScene, intensity: 0.8, windDrift: 0.3, sky: sky, sunProgress: sunProgress)
         }
         if let snapshot { return SceneConditions(current: snapshot.current, today: snapshot.daily.first) }
         return SceneConditions(scene: .cloudy)

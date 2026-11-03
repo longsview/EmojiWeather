@@ -196,7 +196,7 @@ struct HomeView: View {
     private var topBar: some View {
         HStack {
             #if DEBUG
-            debugMenu
+            if !ScreenshotMode.isActive { debugMenu }
             #endif
             quizButton
             Spacer()
@@ -226,7 +226,9 @@ struct HomeView: View {
             PlacesView(selectedPlaceID: $selectedPlaceID, isSidebar: true)
                 #if DEBUG
                 .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) { debugMenu }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        if !ScreenshotMode.isActive { debugMenu }
+                    }
                 }
                 #endif
                 .toolbar {

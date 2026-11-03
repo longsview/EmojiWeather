@@ -14,6 +14,10 @@ import Foundation
 /// - `-SkymojiOpen forecast|quiz|quizSummary|share|paywall|scenePack`: opens that screen.
 /// - `-SkymojiPack thanksgiving|halloween|autumn|holidays|spring|summer|seasonal|classic`.
 /// - `-SkymojiCity Honolulu`: opens a saved city by name.
+/// - `-SkymojiPlace Cupertino`: the name shown for My Location (no waiting for geocoding).
+///
+/// While any of these is set, the 🐞 menu is hidden and clocks show 9:41 (AM for day,
+/// 6:41 PM for sunset, 9:41 PM for night).
 enum ScreenshotMode {
     private static let defaults = UserDefaults.standard
 
@@ -36,5 +40,25 @@ enum ScreenshotMode {
     static var open: String? { defaults.string(forKey: "SkymojiOpen") }
     static var pack: ScenePack? { defaults.string(forKey: "SkymojiPack").flatMap(ScenePack.init(rawValue:)) }
     static var city: String? { defaults.string(forKey: "SkymojiCity") }
+    static var place: String? { defaults.string(forKey: "SkymojiPlace") }
+
+    /// True when any screenshot argument was passed.
+    static let isActive: Bool = ProcessInfo.processInfo.arguments.contains { $0.hasPrefix("-Skymoji") }
+
+    /// The time every clock shows in screenshot mode.
+    static var fixedDate: Date? {
+        guard isActive else { return nil }
+        let hour = switch sky {
+        case .golden: 18
+        case .night: 21
+        default: scene == .clearNight ? 21 : 9
+        }
+        return Calendar.current.date(bySettingHour: hour, minute: 41, second: 0, of: .now)
+    }
+
+    /// Where the sun sits for the fixed time: mid-morning, or low in the west at sunset.
+    static var sunProgress: Double {
+        sky == .golden ? 0.96 : 0.3
+    }
 }
 #endif
