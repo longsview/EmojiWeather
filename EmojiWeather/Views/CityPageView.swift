@@ -70,7 +70,10 @@ struct CityPageView: View {
     private var sceneConditions: SceneConditions {
         if let previewScene {
             let liveSky = snapshot.map { SkyMode(current: $0.current, today: $0.daily.first) }
-            let sky = liveSky ?? (previewScene == .clearNight ? .night : .day)
+            var sky = liveSky ?? (previewScene == .clearNight ? .night : .day)
+            #if DEBUG
+            if let forced = ScreenshotMode.sky { sky = forced }
+            #endif
             return SceneConditions(scene: previewScene, intensity: 0.8, windDrift: 0.3, sky: sky)
         }
         if let snapshot { return SceneConditions(current: snapshot.current, today: snapshot.daily.first) }
@@ -221,6 +224,30 @@ struct CityPageView: View {
 
     @ViewBuilder
     private var summary: some View {
+        #if DEBUG
+        if let scene = ScreenshotMode.scene, previewScene == scene {
+            // Screenshot mode: sample numbers that match the forced scene.
+            WeatherSummaryView(
+                placeName: placeName,
+                showsLocationIcon: isCurrentLocation,
+                timeZone: timeZone,
+                temperature: scene.sampleTemperature,
+                condition: scene.title,
+                high: scene.sampleHigh,
+                low: scene.sampleLow,
+                tagline: scene.tagline(in: sceneConditions.sky),
+                spokenWeather: spokenWeather
+            )
+        } else {
+            liveSummary
+        }
+        #else
+        liveSummary
+        #endif
+    }
+
+    @ViewBuilder
+    private var liveSummary: some View {
         if let current = snapshot?.current {
             WeatherSummaryView(
                 placeName: placeName,

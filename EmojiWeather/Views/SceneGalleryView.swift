@@ -144,7 +144,7 @@ struct SceneGalleryView: View {
     }
 }
 
-private extension WeatherScene {
+extension WeatherScene {
     var sampleTemperature: String {
         switch self {
         case .thunderstorm: "71°"

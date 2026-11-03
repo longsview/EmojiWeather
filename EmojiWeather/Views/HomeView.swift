@@ -24,7 +24,13 @@ struct HomeView: View {
     /// Bumped by the Share button to share the visible page.
     @State private var shareToken = 0
     @State private var activeHasWeather = false
-    @State private var previewScene: WeatherScene?
+    @State private var previewScene: WeatherScene? = {
+        #if DEBUG
+        return ScreenshotMode.scene
+        #else
+        return nil
+        #endif
+    }()
     @State private var showingGallery = false
     /// The visible page's scene. On iPhone it's drawn once behind all pages, so swiping
     /// slides only the text while the scene cross-fades.
@@ -72,6 +78,9 @@ struct HomeView: View {
         .onOpenURL { url in
             if url.scheme == "skymoji", url.host == "daily" { showingQuiz = true }
         }
+        #if DEBUG
+        .task { await runScreenshotMode() }
+        #endif
         // A tapped morning reminder.
         .onChange(of: quiz.openRequested, initial: true) {
             guard quiz.openRequested else { return }
@@ -329,3 +338,28 @@ private struct PageDots: View {
         .opacity(places.count > 1 ? 1 : 0)
     }
 }
+
+#if DEBUG
+extension HomeView {
+    /// Opens the screen named by `-SkymojiOpen` once the weather has loaded (see ScreenshotMode).
+    func runScreenshotMode() async {
+        if let name = ScreenshotMode.city,
+           let city = cityStore.cities.first(where: { $0.name.localizedCaseInsensitiveContains(name) }) {
+            selectedPlaceID = city.id.uuidString
+        }
+        guard let open = ScreenshotMode.open else { return }
+        try? await Task.sleep(for: .seconds(3))
+        switch open {
+        case "forecast": openDetailsToken += 1
+        case "share": shareToken += 1
+        case "quiz":
+            showingQuiz = true
+        case "quizSummary":
+            showingQuiz = true
+            try? await Task.sleep(for: .seconds(4))
+            quiz.debugAnswerAll()
+        default: break
+        }
+    }
+}
+#endif

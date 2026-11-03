@@ -80,6 +80,7 @@
 		94A1F2931DA433BE18EDDF06 /* WeatherWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4617BAEB298C8C25EFD1B8 /* WeatherWidgetView.swift */; };
 		95D25B09E4D1E52109BBC590 /* EmojiSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000E644B0103D5034C02B2EF /* EmojiSceneView.swift */; };
 		95E14D3A75BF904093DCCC5F /* CrashReporting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C4A4133263A44F299CB321 /* CrashReporting.swift */; };
+		9F888F282CB9771705049FB3 /* ScreenshotMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3E4A86CE81DB5D787B8400 /* ScreenshotMode.swift */; };
 		A6526464901AB36B9D3FF714 /* EmojiParticleSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534C33757F6286A4B367D015 /* EmojiParticleSystem.swift */; };
 		A9AEFCC4104337F285C0DA0A /* WeatherAttributionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19AD54FA797C2D57397162E4 /* WeatherAttributionView.swift */; };
 		AAC5C5B276BDCF6CFC8EFFB4 /* WatchCityPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760E51E7D0BCC82A6EF98400 /* WatchCityPage.swift */; };
@@ -119,6 +120,7 @@
 		F4638467106C21875CA380E0 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E98CFD6C906678C56D414B93 /* FirebaseAnalytics */; };
 		F74A899ECADEE50500E9B4C5 /* WeatherMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB24BD2F12E4639B83341AC /* WeatherMapView.swift */; };
 		F77D75177D19B32BCC14C9E5 /* AppAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C457FAAA157CB5650DFCA66A /* AppAnalytics.swift */; };
+		FA9288E661E6F6E172F38B51 /* ScreenshotMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E3E4A86CE81DB5D787B8400 /* ScreenshotMode.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -232,6 +234,7 @@
 		94F8AFF568EEC5C108709D73 /* SceneText.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SceneText.swift; sourceTree = "<group>"; };
 		99210C012254A664EEF41853 /* EmojiWeatherWatchApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EmojiWeatherWatchApp.swift; sourceTree = "<group>"; };
 		9A1C10B0EB2C593F3D3A446E /* EmojiWeatherComplications.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = EmojiWeatherComplications.entitlements; sourceTree = "<group>"; };
+		9E3E4A86CE81DB5D787B8400 /* ScreenshotMode.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ScreenshotMode.swift; sourceTree = "<group>"; };
 		9EA22BA0B0FA0618B7809374 /* SceneStyle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SceneStyle.swift; sourceTree = "<group>"; };
 		A1BBCD82E7C7112ECD8D599A /* EmojiWeather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EmojiWeather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A339DC36E5BCD059D864B17B /* SceneSpec.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SceneSpec.swift; sourceTree = "<group>"; };
@@ -311,6 +314,7 @@
 			isa = PBXGroup;
 			children = (
 				74DEC4B8E5522B96E112F048 /* EmojiWeatherApp.swift */,
+				9E3E4A86CE81DB5D787B8400 /* ScreenshotMode.swift */,
 			);
 			name = App;
 			path = App;
@@ -814,6 +818,7 @@
 				5722191B12332DD5F071DA6E /* NotificationRouter.swift in Sources */,
 				E99EDF1E777F6B5DAC2B500C /* CrashReporting.swift in Sources */,
 				F77D75177D19B32BCC14C9E5 /* AppAnalytics.swift in Sources */,
+				FA9288E661E6F6E172F38B51 /* ScreenshotMode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -860,6 +865,7 @@
 				4186EE7409B75DE0A2ACAF28 /* SceneStyleShared.swift in Sources */,
 				CDCBD5BC8C00F7AF49916CEF /* PhoneSync.swift in Sources */,
 				95E14D3A75BF904093DCCC5F /* CrashReporting.swift in Sources */,
+				9F888F282CB9771705049FB3 /* ScreenshotMode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

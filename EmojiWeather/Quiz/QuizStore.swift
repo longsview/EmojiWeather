@@ -75,6 +75,17 @@ final class QuizStore {
         save()
     }
 
+    #if DEBUG
+    /// For screenshots: answers today's quiz, all right but one.
+    func debugAnswerAll() {
+        guard let quiz else { return }
+        for (offset, question) in quiz.questions.enumerated() where !question.isAnswered {
+            let wrong = (question.correctIndex + 1) % max(question.options.count, 1)
+            answer(question.id, with: offset == 2 ? wrong : question.correctIndex)
+        }
+    }
+    #endif
+
     private func finish(_ quiz: DailyQuiz) {
         guard stats.lastPlayedDay != quiz.day else { return }
         let yesterday = Self.dayString(for: Calendar.current.date(byAdding: .day, value: -1, to: .now) ?? .now)

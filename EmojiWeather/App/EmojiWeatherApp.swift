@@ -5,7 +5,7 @@ struct EmojiWeatherApp: App {
     @State private var location = LocationService()
     @State private var cityStore = CityStore()
     @State private var weather = WeatherProvider()
-    @State private var purchases = PurchaseManager()
+    @State private var purchases: PurchaseManager
     @State private var ads: AdsManager
     @State private var quiz: QuizStore
 
@@ -26,6 +26,12 @@ struct EmojiWeatherApp: App {
         CrashReporting.start()
         AppAnalytics.start()
         AdsManager.disableSDKCrashReporting()
+        let purchases = PurchaseManager()
+        #if DEBUG
+        if ScreenshotMode.plus { purchases.debugUnlock = true }
+        if let pack = ScreenshotMode.pack { SceneStyle.chosenPack = pack }
+        #endif
+        _purchases = State(initialValue: purchases)
         _ads = State(initialValue: AdsManager())
         let quiz = QuizStore()
         _quiz = State(initialValue: quiz)

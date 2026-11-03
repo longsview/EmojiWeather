@@ -19,6 +19,7 @@ struct SettingsView: View {
     private var customEmoji = ""
 
     @State private var showingPaywall = false
+    @State private var showingScenePack = false
     @State private var showingManageSubscription = false
 
     private var regionUnitName: String {
@@ -129,6 +130,17 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            .navigationDestination(isPresented: $showingScenePack) { ScenePackView() }
+            #if DEBUG
+            .task {
+                try? await Task.sleep(for: .seconds(1))
+                switch ScreenshotMode.open {
+                case "paywall": showingPaywall = true
+                case "scenePack": showingScenePack = true
+                default: break
+                }
+            }
+            #endif
             .sheet(isPresented: $showingPaywall) {
                 PaywallView()
             }

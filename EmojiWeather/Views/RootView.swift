@@ -6,7 +6,17 @@ import WidgetKit
 struct RootView: View {
     enum AppTab: Hashable { case weather, map, settings }
 
-    @State private var tab: AppTab = .weather
+    @State private var tab: AppTab = {
+        #if DEBUG
+        switch ScreenshotMode.tab {
+        case "map": return .map
+        case "settings": return .settings
+        default:
+            if ["paywall", "scenePack"].contains(ScreenshotMode.open) { return .settings }
+        }
+        #endif
+        return .weather
+    }()
 
     // Read here so changing a unit or the clock redraws every screen.
     @AppStorage(DisplaySettings.temperatureKey, store: SharedStore.defaults)

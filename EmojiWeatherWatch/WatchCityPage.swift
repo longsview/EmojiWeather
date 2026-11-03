@@ -43,6 +43,12 @@ struct WatchCityPage: View {
     }
 
     private var conditions: SceneConditions {
+        #if DEBUG
+        if let scene = ScreenshotMode.scene {
+            let sky = ScreenshotMode.sky ?? (scene == .clearNight ? .night : .day)
+            return SceneConditions(scene: scene, intensity: 0.8, windDrift: 0.3, sky: sky, sunProgress: 0.3)
+        }
+        #endif
         if let snapshot { return SceneConditions(current: snapshot.current, today: snapshot.daily.first) }
         return SceneConditions(scene: .cloudy)
     }
