@@ -35,6 +35,17 @@ struct DataSourcesView: View {
             } header: {
                 Text("Maps")
             }
+
+            Section {
+                Link(destination: URL(string: "https://policies.google.com/technologies/partner-sites")!) {
+                    Label("How Google uses data from apps", systemImage: "hand.raised")
+                }
+                Text("The free version shows ads from Google AdMob. EmojiWeather+ removes them.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            } header: {
+                Text("Advertising")
+            }
         }
         .navigationTitle("Data Sources")
         .navigationBarTitleDisplayMode(.inline)
