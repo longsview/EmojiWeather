@@ -103,6 +103,9 @@ private struct QuestionCard: View {
             Text(verbatim: question.emoji)
                 .font(.system(size: 72))
                 .accessibilityHidden(true)
+            if let difficulty = question.difficulty {
+                DifficultyChip(difficulty: difficulty)
+            }
             Text(question.prompt)
                 .font(.system(.title3, design: .rounded, weight: .bold))
                 .multilineTextAlignment(.center)
@@ -145,6 +148,48 @@ private struct QuestionCard: View {
         if index == question.correctIndex { return .right }
         if index == question.chosenIndex { return .wrong }
         return .dimmed
+    }
+}
+
+/// "Easy", "Medium" or "Hard", in green, orange or red.
+private struct DifficultyChip: View {
+    let difficulty: QuizQuestion.Difficulty
+
+    private var color: Color {
+        switch difficulty {
+        case .easy: .green
+        case .medium: .orange
+        case .hard: .red
+        }
+    }
+
+    private var dots: Int {
+        switch difficulty {
+        case .easy: 1
+        case .medium: 2
+        case .hard: 3
+        }
+    }
+
+    var body: some View {
+        HStack(spacing: 6) {
+            HStack(spacing: 3) {
+                ForEach(0..<3, id: \.self) { index in
+                    Circle()
+                        .frame(width: 6, height: 6)
+                        .opacity(index < dots ? 1 : 0.25)
+                }
+            }
+            Text(difficulty.title)
+                .font(.system(.caption, design: .rounded, weight: .heavy))
+                .textCase(.uppercase)
+        }
+        .foregroundStyle(color)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 4)
+        .background(color.opacity(0.15), in: Capsule())
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(difficulty.title))
     }
 }
 

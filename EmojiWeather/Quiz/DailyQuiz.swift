@@ -6,6 +6,34 @@ import WeatherKit
 struct QuizQuestion: Codable, Identifiable, Hashable {
     enum Kind: String, Codable {
         case closestTown, direction, hotterColder, whereWeather, capital, flag
+        case continent, cityCountry, northernmost, biggestCity, borders, landlocked, largestCountry
+
+        /// Needs to know where the user is.
+        var needsLocation: Bool { [.closestTown, .direction, .hotterColder].contains(self) }
+        /// Uses live weather.
+        var usesWeather: Bool { [.hotterColder, .whereWeather].contains(self) }
+    }
+
+    /// The quiz starts easy and gets harder: easy, easy, medium, medium, hard.
+    enum Difficulty: String, Codable {
+        case easy, medium, hard
+
+        var title: String {
+            switch self {
+            case .easy: String(localized: "Easy")
+            case .medium: String(localized: "Medium")
+            case .hard: String(localized: "Hard")
+            }
+        }
+
+        /// Which kinds of question fit each level.
+        var kinds: [Kind] {
+            switch self {
+            case .easy: [.closestTown, .hotterColder, .flag, .capital, .continent]
+            case .medium: [.direction, .cityCountry, .northernmost, .biggestCity, .borders, .landlocked, .largestCountry]
+            case .hard: [.whereWeather, .flag, .capital, .borders, .closestTown, .northernmost]
+            }
+        }
     }
 
     struct Option: Codable, Hashable {
@@ -15,6 +43,8 @@ struct QuizQuestion: Codable, Identifiable, Hashable {
 
     var id: Int
     var kind: Kind
+    /// Missing in quizzes saved before levels existed.
+    var difficulty: Difficulty?
     /// Big emoji at the top of the card.
     var emoji: String
     var prompt: String
@@ -49,8 +79,8 @@ struct DailyQuiz: Codable, Hashable {
 }
 
 /// Builds the day's questions from the bundled places, the user's location and live weather.
-/// Every question has a fallback (capitals and flags), so a quiz always has five questions
-/// even with no location or no network.
+/// Five questions that get harder (see `plan`), each a different kind. Flags and capitals are
+/// the fallback, so a quiz always has five questions even with no location or no network.
 @MainActor
 struct QuizBuilder {
     let atlas: QuizAtlas
@@ -71,45 +101,87 @@ struct QuizBuilder {
         ("↖️", { String(localized: "Northwest") }),
     ]
 
+    static let plan: [QuizQuestion.Difficulty] = [.easy, .easy, .medium, .medium, .hard]
+
     func build() async -> DailyQuiz {
         // Same seed all day in the same area, so rebuilding gives the same quiz.
         let area = origin.map { String(format: "%.0f,%.0f", $0.coordinate.latitude, $0.coordinate.longitude) } ?? "none"
         var rng = SeededGenerator(text: "\(day)|\(area)")
 
+        var nearby: QuizAtlas.Nearby?
+        if let origin {
+            nearby = await atlas.nearby(latitude: origin.coordinate.latitude, longitude: origin.coordinate.longitude)
+        }
+
         var questions: [QuizQuestion] = []
-        func add(_ question: QuizQuestion?) {
-            guard var question else { return }
+        var used = Set<QuizQuestion.Kind>()
+        for (slot, level) in Self.plan.enumerated() {
+            var kinds = level.kinds.filter { !used.contains($0) && (origin != nil || !$0.needsLocation) }
+                .shuffled(using: &rng)
+            // Start near you when we know where you are.
+            if slot == 0, origin != nil {
+                kinds.sort { $0.needsLocation && !$1.needsLocation }
+            }
+            // Make sure the weather shows up once.
+            if slot == Self.plan.count - 1, !used.contains(where: \.usesWeather) {
+                kinds.sort { $0.usesWeather && !$1.usesWeather }
+            }
+            var question: QuizQuestion?
+            for kind in kinds {
+                question = await make(kind, level: level, nearby: nearby, rng: &rng)
+                if question != nil { break }
+            }
+            // Flags and capitals always work, even offline.
+            if question == nil { question = flag(level: level, rng: &rng) ?? capital(level: level, rng: &rng) }
+            guard var question else { continue }
             question.id = questions.count
+            question.difficulty = level
+            used.insert(question.kind)
             questions.append(question)
         }
-
-        if let origin {
-            let nearby = await atlas.nearby(latitude: origin.coordinate.latitude, longitude: origin.coordinate.longitude)
-            add(closestTown(nearby, rng: &rng) ?? capital(rng: &rng))
-            add(direction(from: origin, nearby: nearby, rng: &rng) ?? flag(rng: &rng))
-            add(await hotterColder(from: origin, rng: &rng) ?? capital(rng: &rng))
-        } else {
-            add(capital(rng: &rng))
-            add(flag(rng: &rng))
-            add(capital(rng: &rng))
-        }
-        add(await whereWeather(rng: &rng) ?? flag(rng: &rng))
-        add(Bool.random(using: &rng) ? capital(rng: &rng) : flag(rng: &rng))
-
         return DailyQuiz(day: day, number: number, questions: questions)
+    }
+
+    private func make(
+        _ kind: QuizQuestion.Kind, level: QuizQuestion.Difficulty, nearby: QuizAtlas.Nearby?,
+        rng: inout SeededGenerator
+    ) async -> QuizQuestion? {
+        switch kind {
+        case .closestTown:
+            guard let nearby else { return nil }
+            return closestTown(nearby, level: level, rng: &rng)
+        case .direction:
+            guard let origin, let nearby else { return nil }
+            return direction(from: origin, nearby: nearby, rng: &rng)
+        case .hotterColder:
+            guard let origin else { return nil }
+            return await hotterColder(from: origin, rng: &rng)
+        case .whereWeather: return await whereWeather(rng: &rng)
+        case .capital: return capital(level: level, rng: &rng)
+        case .flag: return flag(level: level, rng: &rng)
+        case .continent: return continent(rng: &rng)
+        case .cityCountry: return cityCountry(rng: &rng)
+        case .northernmost: return northernmost(level: level, rng: &rng)
+        case .biggestCity: return biggestCity(rng: &rng)
+        case .borders: return borders(level: level, rng: &rng)
+        case .landlocked: return landlocked(rng: &rng)
+        case .largestCountry: return largestCountry(rng: &rng)
+        }
     }
 
     // MARK: - Near you
 
     /// "Which of these is closest to you?"
-    private func closestTown(_ nearby: QuizAtlas.Nearby, rng: inout SeededGenerator) -> QuizQuestion? {
+    private func closestTown(_ nearby: QuizAtlas.Nearby, level: QuizQuestion.Difficulty, rng: inout SeededGenerator) -> QuizQuestion? {
         var seen = Set<String>()
         let unique = nearby.towns.map { ($0.city, $0.distance) }.filter { seen.insert($0.0.name).inserted }
         guard unique.count >= 4 else { return nil }
-        // Four towns whose distances differ by at least 15%, so the answer is clear.
+        // Four towns whose distances differ enough that the answer is clear: by half on easy
+        // days, by only 15% on hard ones.
+        let gap = level == .easy ? 0.5 : 0.15
         var picks: [(QuizAtlas.City, Double)] = []
         for candidate in unique.shuffled(using: &rng) {
-            if picks.allSatisfy({ abs($0.1 - candidate.1) / max($0.1, candidate.1) > 0.15 }) {
+            if picks.allSatisfy({ abs($0.1 - candidate.1) / max($0.1, candidate.1) > gap }) {
                 picks.append(candidate)
             }
             if picks.count == 4 { break }
@@ -216,10 +288,11 @@ struct QuizBuilder {
         )
     }
 
-    /// "What's the capital of Portugal?" with three capitals from the same part of the world.
-    private func capital(rng: inout SeededGenerator) -> QuizQuestion? {
-        guard let country = atlas.countries.randomElement(using: &rng) else { return nil }
-        let others = sameArea(as: country, rng: &rng)
+    /// "What's the capital of Portugal?" Easy ones ask about well-known countries; hard ones
+    /// about the rest, with three capitals from the same part of the world.
+    private func capital(level: QuizQuestion.Difficulty, rng: inout SeededGenerator) -> QuizQuestion? {
+        guard let country = pickCountry(level: level, rng: &rng) else { return nil }
+        let others = sameArea(as: country, level: level, rng: &rng)
         let choices = (others + [country]).shuffled(using: &rng)
         return QuizQuestion(
             id: 0, kind: .capital, emoji: country.flag,
@@ -231,9 +304,9 @@ struct QuizBuilder {
     }
 
     /// "Which country has this flag?"
-    private func flag(rng: inout SeededGenerator) -> QuizQuestion? {
-        guard let country = atlas.countries.randomElement(using: &rng) else { return nil }
-        let others = sameArea(as: country, rng: &rng)
+    private func flag(level: QuizQuestion.Difficulty, rng: inout SeededGenerator) -> QuizQuestion? {
+        guard let country = pickCountry(level: level, rng: &rng) else { return nil }
+        let others = sameArea(as: country, level: level, rng: &rng)
         let choices = (others + [country]).shuffled(using: &rng)
         return QuizQuestion(
             id: 0, kind: .flag, emoji: country.flag,
@@ -244,12 +317,197 @@ struct QuizBuilder {
         )
     }
 
-    /// Three other countries, from the same subregion when there are enough.
-    private func sameArea(as country: QuizAtlas.Country, rng: inout SeededGenerator) -> [QuizAtlas.Country] {
+    /// "Which continent is Kenya in?"
+    private func continent(rng: inout SeededGenerator) -> QuizQuestion? {
+        let pool = atlas.countries.filter { $0.isWellKnown && $0.continent != nil }
+        guard let country = pool.randomElement(using: &rng), let answer = country.continent else { return nil }
+        var choices = Array(QuizAtlas.Continent.allCases.filter { $0 != answer }.shuffled(using: &rng).prefix(3))
+        choices.append(answer)
+        choices.shuffle(using: &rng)
+        let countryName = country.name
+        let continentName = answer.name
+        return QuizQuestion(
+            id: 0, kind: .continent, emoji: country.flag,
+            prompt: String(localized: "Which continent is \(countryName) in?"),
+            options: choices.map { .init(emoji: $0.emoji, text: $0.name) },
+            correctIndex: choices.firstIndex(of: answer)!,
+            explanation: String(localized: "\(countryName) is in \(continentName).")
+        )
+    }
+
+    /// "Which country is Osaka in?"
+    private func cityCountry(rng: inout SeededGenerator) -> QuizQuestion? {
+        for city in atlas.bigCities.shuffled(using: &rng).prefix(20) {
+            // Skip cities that share their country's name, like Mexico City or Singapore.
+            guard let country = atlas.country(city.countryCode),
+                  !city.name.localizedCaseInsensitiveContains(country.englishName),
+                  !country.englishName.localizedCaseInsensitiveContains(city.name) else { continue }
+            let others = sameArea(as: country, level: .hard, rng: &rng)
+            let choices = (others + [country]).shuffled(using: &rng)
+            let cityName = city.name
+            let countryName = country.name
+            return QuizQuestion(
+                id: 0, kind: .cityCountry, emoji: "🏙️",
+                prompt: String(localized: "Which country is \(cityName) in?"),
+                options: choices.map { .init(emoji: $0.flag, text: $0.name) },
+                correctIndex: choices.firstIndex(of: country)!,
+                explanation: String(localized: "\(cityName) is in \(countryName).")
+            )
+        }
+        return nil
+    }
+
+    /// "Which of these cities is furthest north?" Medium picks cities far apart; hard ones close.
+    private func northernmost(level: QuizQuestion.Difficulty, rng: inout SeededGenerator) -> QuizQuestion? {
+        let gap: ClosedRange<Double> = level == .hard ? 1.5...12 : 8...180
+        guard let picks = pickCities(from: atlas.bigCities, rng: &rng, apart: { abs($0.latitude - $1.latitude) }, in: gap)
+        else { return nil }
+        let answer = picks.max { $0.latitude < $1.latitude }!
+        let summary = picks
+            .sorted { $0.latitude > $1.latitude }
+            .map { "\($0.name) \(Self.latitude($0.latitude))" }
+            .joined(separator: " · ")
+        return QuizQuestion(
+            id: 0, kind: .northernmost, emoji: "⬆️",
+            prompt: String(localized: "Which of these cities is furthest north?"),
+            options: picks.map { .init(emoji: atlas.flag($0.countryCode), text: $0.name) },
+            correctIndex: picks.firstIndex(of: answer)!,
+            explanation: summary
+        )
+    }
+
+    /// "Which of these cities has the most people?"
+    private func biggestCity(rng: inout SeededGenerator) -> QuizQuestion? {
+        let pool = atlas.cities.filter { $0.population >= 500_000 }
+        guard let picks = pickCities(
+            from: pool, rng: &rng,
+            apart: { Double(max($0.population, $1.population)) / Double(max(min($0.population, $1.population), 1)) },
+            in: 1.4...50
+        ) else { return nil }
+        let answer = picks.max { $0.population < $1.population }!
+        let summary = picks
+            .sorted { $0.population > $1.population }
+            .map { "\($0.name) \($0.population.formatted(.number.notation(.compactName)))" }
+            .joined(separator: " · ")
+        return QuizQuestion(
+            id: 0, kind: .biggestCity, emoji: "👥",
+            prompt: String(localized: "Which of these cities has the most people?"),
+            options: picks.map { .init(emoji: atlas.flag($0.countryCode), text: $0.name) },
+            correctIndex: picks.firstIndex(of: answer)!,
+            explanation: summary
+        )
+    }
+
+    /// "Which of these countries borders Brazil?" The others are nearby but don't.
+    private func borders(level: QuizQuestion.Difficulty, rng: inout SeededGenerator) -> QuizQuestion? {
+        let pool = atlas.countries.filter { !$0.borders.isEmpty && (level == .hard) != $0.isWellKnown }
+        for country in pool.shuffled(using: &rng).prefix(10) {
+            let neighbors = country.borders.compactMap { atlas.country($0) }
+            guard let answer = neighbors.randomElement(using: &rng) else { continue }
+            let notNeighbors = atlas.countries.filter {
+                $0.region == country.region && $0 != country && !country.borders.contains($0.code)
+            }
+            guard notNeighbors.count >= 3 else { continue }
+            let choices = (Array(notNeighbors.shuffled(using: &rng).prefix(3)) + [answer]).shuffled(using: &rng)
+            let countryName = country.name
+            let answerName = answer.name
+            return QuizQuestion(
+                id: 0, kind: .borders, emoji: country.flag,
+                prompt: String(localized: "Which of these countries borders \(countryName)?"),
+                options: choices.map { .init(emoji: $0.flag, text: $0.name) },
+                correctIndex: choices.firstIndex(of: answer)!,
+                explanation: String(localized: "\(answerName) shares a border with \(countryName).")
+            )
+        }
+        return nil
+    }
+
+    /// "Which of these countries has no coastline?"
+    private func landlocked(rng: inout SeededGenerator) -> QuizQuestion? {
+        guard let answer = atlas.countries.filter(\.isLandlocked).randomElement(using: &rng) else { return nil }
+        var pool = atlas.countries.filter { !$0.isLandlocked && $0.region == answer.region }
+        if pool.count < 3 { pool = atlas.countries.filter { !$0.isLandlocked } }
+        let choices = (Array(pool.shuffled(using: &rng).prefix(3)) + [answer]).shuffled(using: &rng)
+        let answerName = answer.name
+        return QuizQuestion(
+            id: 0, kind: .landlocked, emoji: "🏖️",
+            prompt: String(localized: "Which of these countries has no coastline?"),
+            options: choices.map { .init(emoji: $0.flag, text: $0.name) },
+            correctIndex: choices.firstIndex(of: answer)!,
+            explanation: String(localized: "\(answerName) is landlocked: it has no coastline.")
+        )
+    }
+
+    /// "Which of these countries is the largest?" Four from the same region.
+    private func largestCountry(rng: inout SeededGenerator) -> QuizQuestion? {
+        let regions = Array(Set(atlas.countries.map(\.region))).sorted()
+        for region in regions.shuffled(using: &rng) {
+            let pool = atlas.countries.filter { $0.region == region && $0.area > 0 }
+            var picks: [QuizAtlas.Country] = []
+            for country in pool.shuffled(using: &rng) where picks.allSatisfy({
+                Double(max($0.area, country.area)) / Double(max(min($0.area, country.area), 1)) > 1.3
+            }) {
+                picks.append(country)
+                if picks.count == 4 { break }
+            }
+            guard picks.count == 4 else { continue }
+            let answer = picks.max { $0.area < $1.area }!
+            let summary = picks
+                .sorted { $0.area > $1.area }
+                .map { "\($0.name) \($0.area.formatted(.number.notation(.compactName))) km²" }
+                .joined(separator: " · ")
+            return QuizQuestion(
+                id: 0, kind: .largestCountry, emoji: "📏",
+                prompt: String(localized: "Which of these countries is the largest?"),
+                options: picks.map { .init(emoji: $0.flag, text: $0.name) },
+                correctIndex: picks.firstIndex(of: answer)!,
+                explanation: summary
+            )
+        }
+        return nil
+    }
+
+    // MARK: - Picking
+
+    /// A well-known country for easy and medium questions, any other for hard ones.
+    private func pickCountry(level: QuizQuestion.Difficulty, rng: inout SeededGenerator) -> QuizAtlas.Country? {
+        let pool = atlas.countries.filter { (level == .hard) != $0.isWellKnown }
+        return pool.randomElement(using: &rng) ?? atlas.countries.randomElement(using: &rng)
+    }
+
+    /// Three other countries. Easy: other well-known ones from anywhere, so it's a fair guess.
+    /// Otherwise from the same subregion when there are enough, which is harder.
+    private func sameArea(as country: QuizAtlas.Country, level: QuizQuestion.Difficulty, rng: inout SeededGenerator) -> [QuizAtlas.Country] {
+        if level == .easy {
+            let pool = atlas.countries.filter { $0.isWellKnown && $0 != country && $0.region != country.region }
+            if pool.count >= 3 { return Array(pool.shuffled(using: &rng).prefix(3)) }
+        }
         var pool = atlas.countries.filter { $0.subregion == country.subregion && $0 != country }
         if pool.count < 3 { pool = atlas.countries.filter { $0.region == country.region && $0 != country } }
         if pool.count < 3 { pool = atlas.countries.filter { $0 != country } }
         return Array(pool.shuffled(using: &rng).prefix(3))
+    }
+
+    /// Four cities in four countries, every pair `apart` by an amount within `range`.
+    private func pickCities(
+        from pool: [QuizAtlas.City], rng: inout SeededGenerator,
+        apart: (QuizAtlas.City, QuizAtlas.City) -> Double, in range: ClosedRange<Double>
+    ) -> [QuizAtlas.City]? {
+        var picks: [QuizAtlas.City] = []
+        var countries = Set<String>()
+        for city in pool.shuffled(using: &rng).prefix(400) where !countries.contains(city.countryCode) {
+            guard picks.allSatisfy({ range.contains(apart($0, city)) }) else { continue }
+            picks.append(city)
+            countries.insert(city.countryCode)
+            if picks.count == 4 { return picks }
+        }
+        return nil
+    }
+
+    /// "41°N" or "12°S".
+    static func latitude(_ value: Double) -> String {
+        let degrees = Int(abs(value).rounded())
+        return value >= 0 ? String(localized: "\(degrees)°N") : String(localized: "\(degrees)°S")
     }
 
     // MARK: - Helpers

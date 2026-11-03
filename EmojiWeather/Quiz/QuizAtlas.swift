@@ -4,7 +4,8 @@ import os
 
 /// The places the daily quiz asks about, loaded from the bundled lists:
 /// - cities.tsv: GeoNames towns and cities with 5,000+ people (CC BY 4.0).
-/// - countries.tsv: UN member countries with their capital, flag and region, from
+/// - countries.tsv: UN member countries with their capital, flag, region, area, coastline,
+///   neighbors and latitude, from
 ///   mledoze/countries (ODbL 1.0). Country names are shown in the user's language by iOS.
 struct QuizAtlas: Sendable {
     struct City: Sendable, Hashable {
@@ -24,10 +25,63 @@ struct QuizAtlas: Sendable {
         let region: String
         let subregion: String
         let englishName: String
+        /// Square kilometers.
+        var area: Int = 0
+        var isLandlocked = false
+        /// Neighbors' country codes.
+        var borders: [String] = []
+        var latitude: Double = 0
+
+        /// Countries most people can place, for the easy questions.
+        var isWellKnown: Bool { Self.wellKnown.contains(code) }
+
+        static let wellKnown: Set<String> = [
+            "US", "CA", "MX", "BR", "AR", "CL", "PE", "CO", "CU", "JM",
+            "GB", "IE", "FR", "DE", "IT", "ES", "PT", "NL", "BE", "CH", "AT", "SE", "NO", "DK", "FI", "IS", "GR", "PL", "UA",
+            "RU", "TR", "EG", "MA", "ZA", "KE", "NG", "ET",
+            "SA", "AE", "IL", "IN", "PK", "CN", "JP", "KR", "TH", "VN", "ID", "PH", "SG",
+            "AU", "NZ",
+        ]
+
+        /// The continent most people would name, or nil for countries that span two.
+        var continent: Continent? {
+            if ["RU", "TR", "KZ", "EG", "AZ", "GE", "AM", "CY"].contains(code) { return nil }
+            switch region {
+            case "Africa": return .africa
+            case "Asia": return .asia
+            case "Europe": return .europe
+            case "Oceania": return .oceania
+            case "Americas": return subregion == "South America" ? .southAmerica : .northAmerica
+            default: return nil
+            }
+        }
 
         /// The country's name in the user's language, e.g. "Allemagne" in French.
         var name: String {
             Locale.current.localizedString(forRegionCode: code) ?? englishName
+        }
+    }
+
+    enum Continent: CaseIterable, Hashable, Sendable {
+        case africa, asia, europe, northAmerica, southAmerica, oceania
+
+        var name: String {
+            switch self {
+            case .africa: String(localized: "Africa")
+            case .asia: String(localized: "Asia")
+            case .europe: String(localized: "Europe")
+            case .northAmerica: String(localized: "North America")
+            case .southAmerica: String(localized: "South America")
+            case .oceania: String(localized: "Oceania")
+            }
+        }
+
+        var emoji: String {
+            switch self {
+            case .africa, .europe: "🌍"
+            case .asia, .oceania: "🌏"
+            case .northAmerica, .southAmerica: "🌎"
+            }
         }
     }
 
@@ -109,10 +163,17 @@ struct QuizAtlas: Sendable {
             for line in countriesText.split(separator: "\n", omittingEmptySubsequences: true) {
                 let fields = line.split(separator: "\t", omittingEmptySubsequences: false)
                 guard fields.count >= 6 else { continue }
-                countries.append(Country(
+                var country = Country(
                     code: String(fields[0]), flag: String(fields[1]), capital: String(fields[2]),
                     region: String(fields[3]), subregion: String(fields[4]), englishName: String(fields[5])
-                ))
+                )
+                if fields.count >= 10 {
+                    country.area = Int(fields[6]) ?? 0
+                    country.isLandlocked = fields[7] == "1"
+                    country.borders = fields[8].split(separator: ",").map(String.init)
+                    country.latitude = Double(fields[9]) ?? 0
+                }
+                countries.append(country)
             }
             return QuizAtlas(cities: cities, countries: countries)
         }.value
