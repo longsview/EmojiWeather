@@ -84,7 +84,7 @@ enum ScenePack: String, CaseIterable, Identifiable, Sendable {
         case .halloween:
             // Bats and ghosts wobbling across the sky.
             return EmitterSpec(
-                emoji: ["🦇", "🦇", "👻", "🎃"], rate: 0.35, size: 20...34, speed: 45...85, angle: 0,
+                emoji: ["🦇", "🦇", "🎃", "👻", "🎃"], rate: 0.75, size: 20...34, speed: 45...85, angle: 0,
                 angleJitter: 8, lifetime: 10...14, origin: .left, band: 0.05...0.75, wobble: 22, opacity: 0.85...1
             )
         case .autumn:
