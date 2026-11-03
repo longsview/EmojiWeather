@@ -29,7 +29,7 @@ struct WeatherMapView: View {
                 Annotation("", coordinate: marker.coordinate, anchor: .center) {
                     EmojiMapMarker(name: marker.name, emoji: marker.emoji, temperature: marker.temperature.shortTemperature)
                         .accessibilityElement(children: .ignore)
-                        .accessibilityLabel("\(marker.name), \(marker.condition), \(marker.temperature.spokenTemperature)")
+                        .accessibilityLabel(Text(verbatim: "\(marker.name), \(marker.condition), \(marker.temperature.spokenTemperature)"))
                         .transition(.scale.combined(with: .opacity))
                 }
                 .annotationTitles(.hidden)

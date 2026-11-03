@@ -74,7 +74,7 @@ struct SceneGalleryView: View {
                     .background(sky.textColor.opacity(0.1), in: Circle())
             }
             Spacer()
-            Text("\(selection.emoji) \(selection.title)  \(index + 1)/\(WeatherScene.allCases.count)")
+            Text(verbatim: "\(selection.emoji) \(selection.title)  \(index + 1)/\(WeatherScene.allCases.count)")
                 .font(.system(.headline, design: .rounded))
             Spacer()
             Button {

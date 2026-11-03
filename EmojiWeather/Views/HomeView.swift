@@ -236,7 +236,7 @@ struct HomeView: View {
             Picker(selection: $previewScene) {
                 Text("Live weather").tag(WeatherScene?.none)
                 ForEach(WeatherScene.allCases) { scene in
-                    Text("\(scene.emoji) \(scene.title)").tag(Optional(scene))
+                    Text(verbatim: "\(scene.emoji) \(scene.title)").tag(Optional(scene))
                 }
             } label: {
                 Label("Show scene on every page", systemImage: "photo.on.rectangle")

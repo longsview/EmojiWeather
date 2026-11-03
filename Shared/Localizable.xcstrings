@@ -1,7 +1,12 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    " Weather" : {},
+    " Weather" : {
+
+    },
+    "%@" : {
+      "shouldTranslate" : false
+    },
     "%@ chance of rain" : {
       "localizations" : {
         "ar" : {
@@ -1722,8 +1727,12 @@
         }
       }
     },
-    "EmojiWeather" : {},
-    "EmojiWeather+" : {},
+    "EmojiWeather" : {
+
+    },
+    "EmojiWeather+" : {
+
+    },
     "EmojiWeather+ is active. Thank you!" : {
       "localizations" : {
         "ar" : {
@@ -1764,7 +1773,9 @@
         }
       }
     },
-    "EmojiWeather+ unlocked" : {},
+    "EmojiWeather+ unlocked" : {
+
+    },
     "Fahrenheit (°F)" : {
       "localizations" : {
         "ar" : {
@@ -2565,7 +2576,9 @@
         }
       }
     },
-    "Live weather" : {},
+    "Live weather" : {
+
+    },
     "Loading weather…" : {
       "localizations" : {
         "ar" : {
@@ -4046,7 +4059,9 @@
         }
       }
     },
-    "Scene Gallery" : {},
+    "Scene Gallery" : {
+
+    },
     "Search for a city" : {
       "localizations" : {
         "ar" : {
@@ -4247,7 +4262,9 @@
         }
       }
     },
-    "Show ads" : {},
+    "Show ads" : {
+
+    },
     "Show forecast" : {
       "localizations" : {
         "ar" : {
@@ -4328,7 +4345,9 @@
         }
       }
     },
-    "Show scene on every page" : {},
+    "Show scene on every page" : {
+
+    },
     "Shows your next place" : {
       "localizations" : {
         "ar" : {
@@ -4849,7 +4868,9 @@
         }
       }
     },
-    "The simulator has no location set. In the Simulator menu, choose Features > Location > Apple, then pull down to refresh." : {},
+    "The simulator has no location set. In the Simulator menu, choose Features > Location > Apple, then pull down to refresh." : {
+
+    },
     "The towns and cities on the weather map come from GeoNames, used under CC BY 4.0. Only names, locations and populations are used." : {
       "localizations" : {
         "ar" : {
@@ -5970,7 +5991,9 @@
         }
       }
     },
-    "✨ EmojiWeather+" : {},
+    "✨ EmojiWeather+" : {
+
+    },
     "📍 Weather where you are" : {
       "localizations" : {
         "ar" : {

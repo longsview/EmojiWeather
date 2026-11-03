@@ -22,7 +22,7 @@ struct HourlyForecastView: View {
                         }
                         // One VoiceOver stop per hour, read like Apple Weather: "3 PM, Sunny, 72 degrees".
                         .accessibilityElement(children: .ignore)
-                        .accessibilityLabel("\(time), \(hour.condition.description), \(hour.temperature.spokenTemperature)")
+                        .accessibilityLabel(Text(verbatim: "\(time), \(hour.condition.description), \(hour.temperature.spokenTemperature)"))
                     }
                 }
             }

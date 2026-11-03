@@ -36,7 +36,7 @@ struct WeatherWidgetView: View {
             case .accessoryRectangular:
                 RectangularWidgetView(entry: entry, place: place, weather: weather)
             case .accessoryInline:
-                Text("\(weather.weatherScene.emoji) \(place.name) \(weather.temperature.shortTemperature)")
+                Text(verbatim: "\(weather.weatherScene.emoji) \(place.name) \(weather.temperature.shortTemperature)")
             case .systemMedium:
                 HomeWidgetView(entry: entry, place: place, weather: weather, layout: .medium)
             case .systemLarge:
@@ -241,7 +241,7 @@ private struct HourlyStrip: View {
                 }
                 .frame(maxWidth: .infinity)
                 .accessibilityElement(children: .ignore)
-                .accessibilityLabel("\(hour.date.formatted(DisplaySettings.hourStyle(timeZone))), \(hour.temperature.spokenTemperature)")
+                .accessibilityLabel(Text(verbatim: "\(hour.date.formatted(DisplaySettings.hourStyle(timeZone))), \(hour.temperature.spokenTemperature)"))
             }
         }
     }
@@ -312,7 +312,7 @@ private struct RectangularWidgetView: View {
                                 .opacity(0.6)
                         }
                     }
-                    Text("\(weather.temperature.shortTemperature) \(weather.condition)")
+                    Text(verbatim: "\(weather.temperature.shortTemperature) \(weather.condition)")
                         .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .lineLimit(1)
                     if let high = weather.high, let low = weather.low {
