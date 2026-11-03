@@ -27,8 +27,14 @@ enum DisplaySettings {
 
     /// The unit the region uses for weather, for the "Automatic (°F)" label.
     static var regionTemperatureUnit: UnitTemperature {
-        UnitTemperature(forLocale: .current, usage: .weather)
+        // Looked up for every temperature on screen, so remember it until the region changes.
+        let identifier = Locale.current.identifier
+        if let cached = cachedRegionUnit, cached.locale == identifier { return cached.unit }
+        let unit = UnitTemperature(forLocale: .current, usage: .weather)
+        cachedRegionUnit = (identifier, unit)
+        return unit
     }
+    nonisolated(unsafe) private static var cachedRegionUnit: (locale: String, unit: UnitTemperature)?
 
     /// The unit temperatures are shown in.
     static var temperatureUnit: UnitTemperature {
