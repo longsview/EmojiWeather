@@ -2,41 +2,29 @@
   "appPolicies" : {
     "eula" : "",
     "policies" : [
-      { "locale" : "en_US", "policyText" : "", "policyURL" : "" }
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
     ]
   },
   "identifier" : "6F1C2A10",
-  "nonRenewingSubscriptions" : [ ],
-  "products" : [
-    {
-      "displayPrice" : "14.99",
-      "familyShareable" : true,
-      "internalID" : "6F1C2A11",
-      "localizations" : [
-        {
-          "description" : "Skymoji+ forever, paid once.",
-          "displayName" : "Skymoji+ Lifetime",
-          "locale" : "en_US"
-        }
-      ],
-      "productID" : "com.longsview.EmojiWeather.plus.lifetime",
-      "referenceName" : "Skymoji+ Lifetime",
-      "type" : "NonConsumable"
-    }
-  ],
+  "nonRenewingSubscriptions" : [],
+  "products" : [],
   "settings" : {
     "_failTransactionsEnabled" : false,
-    "_storeKitErrors" : [ ]
+    "_storeKitErrors" : []
   },
   "subscriptionGroups" : [
     {
       "id" : "6F1C2A12",
-      "localizations" : [ ],
+      "localizations" : [],
       "name" : "Skymoji+",
       "subscriptions" : [
         {
-          "adHocOffers" : [ ],
-          "codeOffers" : [ ],
+          "adHocOffers" : [],
+          "codeOffers" : [],
           "displayPrice" : "1.99",
           "familyShareable" : true,
           "groupNumber" : 2,
@@ -54,12 +42,12 @@
           "referenceName" : "Skymoji+ Monthly",
           "subscriptionGroupID" : "6F1C2A12",
           "type" : "RecurringSubscription",
-          "winbackOffers" : [ ]
+          "winbackOffers" : []
         },
         {
-          "adHocOffers" : [ ],
-          "codeOffers" : [ ],
-          "displayPrice" : "9.99",
+          "adHocOffers" : [],
+          "codeOffers" : [],
+          "displayPrice" : "14.99",
           "familyShareable" : true,
           "groupNumber" : 1,
           "internalID" : "6F1C2A14",
@@ -80,10 +68,13 @@
           "referenceName" : "Skymoji+ Yearly",
           "subscriptionGroupID" : "6F1C2A12",
           "type" : "RecurringSubscription",
-          "winbackOffers" : [ ]
+          "winbackOffers" : []
         }
       ]
     }
   ],
-  "version" : { "major" : 4, "minor" : 0 }
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
 }

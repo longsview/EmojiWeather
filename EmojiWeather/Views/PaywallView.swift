@@ -1,7 +1,7 @@
 import StoreKit
 import SwiftUI
 
-/// The Skymoji+ upsell: a little sunny scene, what Plus includes, and the three plans.
+/// The Skymoji+ upsell: a little sunny scene, what Plus includes, and the two plans.
 struct PaywallView: View {
     var reason: String?
 
@@ -13,7 +13,7 @@ struct PaywallView: View {
     @State private var errorMessage: String?
 
     enum Plan: CaseIterable, Identifiable {
-        case monthly, yearly, lifetime
+        case monthly, yearly
 
         var id: Self { self }
 
@@ -21,7 +21,6 @@ struct PaywallView: View {
             switch self {
             case .monthly: PurchaseManager.ProductID.monthly
             case .yearly: PurchaseManager.ProductID.yearly
-            case .lifetime: PurchaseManager.ProductID.lifetime
             }
         }
 
@@ -29,7 +28,6 @@ struct PaywallView: View {
             switch self {
             case .monthly: "🌙"
             case .yearly: "☀️"
-            case .lifetime: "🌈"
             }
         }
 
@@ -37,7 +35,6 @@ struct PaywallView: View {
             switch self {
             case .monthly: String(localized: "Monthly")
             case .yearly: String(localized: "Yearly")
-            case .lifetime: String(localized: "Lifetime")
             }
         }
 
@@ -45,8 +42,7 @@ struct PaywallView: View {
         var fallbackPrice: String {
             switch self {
             case .monthly: "$1.99"
-            case .yearly: "$9.99"
-            case .lifetime: "$14.99"
+            case .yearly: "$14.99"
             }
         }
 
@@ -54,7 +50,6 @@ struct PaywallView: View {
             switch self {
             case .monthly: String(localized: "a month")
             case .yearly: String(localized: "a year")
-            case .lifetime: String(localized: "once")
             }
         }
     }
@@ -209,15 +204,12 @@ struct PaywallView: View {
     private var callToAction: String {
         switch selectedPlan {
         case .yearly where hasTrial: String(localized: "Try 7 days free")
-        case .lifetime: String(localized: "Unlock forever")
         default: String(localized: "Continue")
         }
     }
 
     private var finePrint: String {
         switch selectedPlan {
-        case .lifetime:
-            String(localized: "One payment. Yours on every device signed in to your Apple Account.")
         case .yearly where hasTrial:
             String(localized: "Free for 7 days, then \(yearlyPrice) a year. Cancel anytime in Settings.")
         default:
@@ -263,8 +255,7 @@ private struct PlanCard: View {
                 let monthly = (product.price / 12).formatted(product.priceFormatStyle)
                 return String(localized: "Just \(monthly) a month")
             }
-            return String(localized: "Just \("$0.83") a month")
-        case .lifetime: return String(localized: "Pay once, keep it forever")
+            return String(localized: "Just \("$1.25") a month")
         case .monthly: return nil
         }
     }

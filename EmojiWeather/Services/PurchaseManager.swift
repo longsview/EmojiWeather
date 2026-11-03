@@ -53,8 +53,7 @@ final class PurchaseManager {
     enum ProductID {
         static let monthly = "com.longsview.EmojiWeather.plus.monthly"
         static let yearly = "com.longsview.EmojiWeather.plus.yearly"
-        static let lifetime = "com.longsview.EmojiWeather.plus.lifetime"
-        static let all = [monthly, yearly, lifetime]
+        static let all = [monthly, yearly]
     }
 
     private(set) var products: [Product] = []

@@ -4287,46 +4287,6 @@
         }
       }
     },
-    "Lifetime" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "مدى الحياة"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "De por vida"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "À vie"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "買い切り"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vitalício"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "终身"
-          }
-        }
-      }
-    },
     "Live weather" : {
 
     },
@@ -5570,46 +5530,6 @@
         }
       }
     },
-    "One payment. Yours on every device signed in to your Apple Account." : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "دفعة واحدة. لك على كل جهاز مسجّل الدخول بحساب Apple الخاص بك."
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Un solo pago. Tuyo en todos los dispositivos con tu cuenta de Apple."
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Un seul paiement. Sur tous les appareils connectés à votre compte Apple."
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "1回の支払いで、同じAppleアカウントのすべてのデバイスで使えます。"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Um só pagamento. Seu em todos os dispositivos conectados à sua Conta Apple."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "一次付费，登录你 Apple 账户的所有设备均可使用。"
-          }
-        }
-      }
-    },
     "Open Database License 1.0" : {
       "localizations" : {
         "ar" : {
@@ -5886,46 +5806,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "局部多云"
-          }
-        }
-      }
-    },
-    "Pay once, keep it forever" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ادفع مرة واحدة واحتفظ به للأبد"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Paga una vez y es tuyo para siempre"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Payez une fois, gardez-le pour toujours"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "一度の支払いでずっと使える"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pague uma vez e é seu para sempre"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "一次付费，永久拥有"
           }
         }
       }
@@ -9151,46 +9031,6 @@
         }
       }
     },
-    "Unlock forever" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "افتح للأبد"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desbloquear para siempre"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Débloquer pour toujours"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ずっと使えるようにする"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Desbloquear para sempre"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "永久解锁"
-          }
-        }
-      }
-    },
     "Unlock widgets in the app" : {
       "localizations" : {
         "ar" : {
@@ -10587,46 +10427,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "mledoze/countries"
-          }
-        }
-      }
-    },
-    "once" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "مرة واحدة"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "una vez"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "une fois"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "1回のみ"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "uma vez"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "一次性"
           }
         }
       }
