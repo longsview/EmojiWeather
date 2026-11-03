@@ -111,6 +111,11 @@ struct WatchCityPage: View {
                 }
             } else if let failure = location.failureMessage, place == .currentLocation {
                 Text(failure)
+            } else if place == .currentLocation, location.location == nil {
+                VStack(spacing: 6) {
+                    ProgressView()
+                    Text("Finding your location…")
+                }
             } else {
                 ProgressView()
             }
