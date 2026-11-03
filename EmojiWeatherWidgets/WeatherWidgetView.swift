@@ -150,7 +150,7 @@ private struct HomeWidgetView: View {
                     Text(weather.condition)
                         .lineLimit(1)
                     if layout != .small, let high = weather.high, let low = weather.low {
-                        Text("↑\(high.shortTemperature) ↓\(low.shortTemperature)")
+                        Text(verbatim: "↑\(high.shortTemperature) ↓\(low.shortTemperature)")
                             .opacity(0.7)
                     }
                 }
@@ -316,7 +316,7 @@ private struct RectangularWidgetView: View {
                         .font(.system(.subheadline, design: .rounded, weight: .semibold))
                         .lineLimit(1)
                     if let high = weather.high, let low = weather.low {
-                        Text("↑\(high.shortTemperature) ↓\(low.shortTemperature)")
+                        Text(verbatim: "↑\(high.shortTemperature) ↓\(low.shortTemperature)")
                             .font(.system(.caption, design: .rounded))
                             .opacity(0.7)
                     }
@@ -387,21 +387,21 @@ private struct LockedWidgetView: View {
     var body: some View {
         switch family {
         case .accessoryInline:
-            Text("✨ EmojiWeather+")
+            Text(verbatim: "✨ EmojiWeather+")
         case .accessoryCircular:
             ZStack {
                 AccessoryWidgetBackground()
-                Text("✨").font(.title2)
+                Text(verbatim: "✨").font(.title2)
             }
         case .accessoryRectangular:
             VStack(alignment: .leading) {
-                Text("✨ EmojiWeather+").font(.headline)
+                Text(verbatim: "✨ EmojiWeather+").font(.headline)
                 Text("Unlock widgets in the app").font(.caption)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         default:
             VStack(spacing: 6) {
-                Text("✨").font(.system(size: 44))
+                Text(verbatim: "✨").font(.system(size: 44))
                 Text("EmojiWeather+")
                     .font(.system(.headline, design: .rounded, weight: .heavy))
                 Text("Unlock widgets in the app")
@@ -429,7 +429,7 @@ private struct EmptyWidgetView: View {
                 .font(.caption)
         } else {
             VStack(spacing: 6) {
-                Text("🌤️").font(.system(size: 40))
+                Text(verbatim: "🌤️").font(.system(size: 40))
                 Text(message)
                     .font(.system(.caption, design: .rounded, weight: .semibold))
                     .multilineTextAlignment(.center)
