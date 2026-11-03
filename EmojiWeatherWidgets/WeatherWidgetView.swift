@@ -177,7 +177,7 @@ private struct SceneDecor: View {
     private var hero: String {
         // The time of day picks the sun or the moon.
         if scene.showsSunOrMoon { return scene.emoji(in: sky) }
-        switch scene {
+        return switch scene {
         case .thunderstorm: "⛈️"
         case .rain: "🌧️"
         case .snow: "🌨️"
@@ -196,7 +196,7 @@ private struct SceneDecor: View {
             return scene == .partlyCloudy ? ["☁️", "⭐️", "☁️"] : ["⭐️", "✨", "⭐️", "✨"]
         }
         if scene == .clearNight { return ["✨", "✨", "✨"] }
-        switch scene {
+        return switch scene {
         case .thunderstorm: ["⚡️", "💧", "⚡️", "💧"]
         case .rain: ["💧", "💧", "☂️", "💧"]
         case .snow: ["❄️", "❄️", "☃️", "❄️"]
