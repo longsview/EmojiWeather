@@ -65,6 +65,7 @@ struct QuizView: View {
             }
         }
         .sensoryFeedback(.success, trigger: rightAnswers)
+        .onAppear { AppAnalytics.log(.quizOpened) }
         .sensoryFeedback(.error, trigger: wrongAnswers)
         .preferredColorScheme(SystemAppearance.shared.colorScheme)
         .task {

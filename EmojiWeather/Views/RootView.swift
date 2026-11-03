@@ -41,6 +41,9 @@ struct RootView: View {
             }
         }
         .tabBarMinimizeBehavior(.never)
+        .onChange(of: tab) { _, newTab in
+            if newTab == .map { AppAnalytics.log(.mapOpened) }
+        }
         .onChange(of: displayKey) {
             // Widgets and the watch follow units, the clock, the scene pack and your own emoji.
             WidgetCenter.shared.reloadAllTimelines()

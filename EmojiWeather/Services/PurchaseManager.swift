@@ -115,11 +115,13 @@ final class PurchaseManager {
 
     /// Returns true when the purchase went through.
     func purchase(_ product: Product) async throws -> Bool {
+        AppAnalytics.log(.purchaseStarted, ["plan": product.id])
         switch try await product.purchase() {
         case .success(let verification):
             guard case .verified(let transaction) = verification else { return false }
             await transaction.finish()
             await refreshEntitlements()
+            AppAnalytics.log(.purchaseCompleted, ["plan": product.id])
             return true
         case .userCancelled, .pending:
             return false

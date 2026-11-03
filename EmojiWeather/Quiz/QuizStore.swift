@@ -86,6 +86,7 @@ final class QuizStore {
         stats.lastPlayedDay = quiz.day
         stats.save()
         WidgetCenter.shared.reloadTimelines(ofKind: QuizStats.widgetKind)
+        AppAnalytics.log(.quizFinished, ["score": quiz.score, "streak": stats.streak])
     }
 
     /// The text people paste into Messages:
@@ -109,6 +110,7 @@ final class QuizStore {
             longitude: location.coordinate.longitude
         )
         pendingGuess = saved
+        AppAnalytics.log(.guessLocked)
         defaults.set(try? JSONEncoder().encode(saved), forKey: Self.guessKey)
     }
 
@@ -157,6 +159,7 @@ final class QuizStore {
         let granted = (try? await center.requestAuthorization(options: [.alert, .sound])) ?? false
         guard granted else { return false }
         await Self.scheduleReminders()
+        AppAnalytics.log(.reminderEnabled)
         return true
     }
 

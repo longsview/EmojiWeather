@@ -70,6 +70,7 @@ struct PaywallView: View {
         }
         .scrollIndicators(.hidden)
         .safeAreaInset(edge: .bottom) { footer }
+        .onAppear { AppAnalytics.log(.paywallViewed) }
         .overlay(alignment: .topTrailing) { closeButton }
         .background(.white)
         .foregroundStyle(.black)

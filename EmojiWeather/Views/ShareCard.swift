@@ -398,6 +398,7 @@ struct ShareCardSheet: View {
                 progress = value
             }
             exported = ExportedFile(url: url)
+            AppAnalytics.log(.shareExported, ["format": "\(format)"])
         } catch {
             errorMessage = error.localizedDescription
         }

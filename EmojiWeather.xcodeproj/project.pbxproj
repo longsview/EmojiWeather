@@ -57,6 +57,7 @@
 		65F2B697C44E9BE7A8D80019 /* ShareCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C559D65907D40C741091222A /* ShareCard.swift */; };
 		6DB12FF5C8BCE6122298C7A3 /* EmojiWeatherApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DEC4B8E5522B96E112F048 /* EmojiWeatherApp.swift */; };
 		72A33D31C9E052D6505E6980 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 80D9419E336A15CDBD763DA3 /* Localizable.xcstrings */; };
+		7361CB5BD846158339CAB441 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8A64C96A62A0FD4AB4D59CD8 /* GoogleService-Info.plist */; };
 		79501FCD568C3A15E2D337E1 /* cities.tsv in Resources */ = {isa = PBXBuildFile; fileRef = E5DCDFC7C47ADBF04612EB7B /* cities.tsv */; };
 		7A886A19E56E2C7E2885DCB1 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = CFD0FF3B7517B73B214FDD3C /* PrivacyInfo.xcprivacy */; };
 		7B86A27BC1E91C7C76E813F8 /* WeatherProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E4B9650AEB046F7CCE5F2D4 /* WeatherProvider.swift */; };
@@ -114,7 +115,9 @@
 		F02302EB81493EF9DF54850A /* DisplaySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007719C4B208E545100281A2 /* DisplaySettings.swift */; };
 		F1250466F7DE7CBADB14B595 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40C9B91B7D0FC642A3660D2 /* Color+Hex.swift */; };
 		F1F93D57A06AE62EF45DCA98 /* DataSourcesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1215FB8BDFBBDF60CDE24FBD /* DataSourcesView.swift */; };
+		F4638467106C21875CA380E0 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = E98CFD6C906678C56D414B93 /* FirebaseAnalytics */; };
 		F74A899ECADEE50500E9B4C5 /* WeatherMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDB24BD2F12E4639B83341AC /* WeatherMapView.swift */; };
+		F77D75177D19B32BCC14C9E5 /* AppAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C457FAAA157CB5650DFCA66A /* AppAnalytics.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -222,6 +225,7 @@
 		85B60DD00C89A560FCA2BAA2 /* WatchForecastSections.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchForecastSections.swift; sourceTree = "<group>"; };
 		88E802199F8EB1172031604D /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		89944B124C8BC566B9DB4E00 /* PaywallView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		8A64C96A62A0FD4AB4D59CD8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8CAF47AD1AFD4446FB8B534B /* WeatherTimelineProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeatherTimelineProvider.swift; sourceTree = "<group>"; };
 		8E4B9650AEB046F7CCE5F2D4 /* WeatherProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WeatherProvider.swift; sourceTree = "<group>"; };
 		94F8AFF568EEC5C108709D73 /* SceneText.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SceneText.swift; sourceTree = "<group>"; };
@@ -238,6 +242,7 @@
 		C02B3A1B85C2E530D635ABFB /* WidgetSync.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSync.swift; sourceTree = "<group>"; };
 		C26B89FCD4DF6EF66F55B7B3 /* QuizStats.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QuizStats.swift; sourceTree = "<group>"; };
 		C38E1BAAF710611E87F4C5CA /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C457FAAA157CB5650DFCA66A /* AppAnalytics.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppAnalytics.swift; sourceTree = "<group>"; };
 		C559D65907D40C741091222A /* ShareCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ShareCard.swift; sourceTree = "<group>"; };
 		C86BBB3C3785ED7497403DDF /* WatchRootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WatchRootView.swift; sourceTree = "<group>"; };
 		CCAEE22CCF295CA3AB0EBB5E /* City.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
@@ -270,6 +275,7 @@
 				B585D7ABCF90C4400E9039FB /* GoogleUserMessagingPlatform in Frameworks */,
 				5C6FDDC24EA8B13CEC33CF24 /* FirebaseCore in Frameworks */,
 				5E89B1773906D5B871423DA4 /* FirebaseCrashlytics in Frameworks */,
+				F4638467106C21875CA380E0 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -324,6 +330,7 @@
 				DC3ACDA7ECB5D1B2CEC49747 /* InfoPlist.xcstrings */,
 				86F2FD2E1242BB8CA35DB7BC /* Quiz */,
 				4DE4AD3FCAE5DA42E584A0F3 /* PrivacyInfo.xcprivacy */,
+				8A64C96A62A0FD4AB4D59CD8 /* GoogleService-Info.plist */,
 			);
 			name = EmojiWeather;
 			path = EmojiWeather;
@@ -434,6 +441,7 @@
 				24E7CD94D4B44A7B9E5C34F4 /* WatchSync.swift */,
 				22B7CE040B2A97C0B1018639 /* NotificationRouter.swift */,
 				47C4A4133263A44F299CB321 /* CrashReporting.swift */,
+				C457FAAA157CB5650DFCA66A /* AppAnalytics.swift */,
 			);
 			name = Services;
 			path = Services;
@@ -602,6 +610,7 @@
 				FF289B64D2FBF516D3C544F1 /* GoogleUserMessagingPlatform */,
 				7B1C299BCFF75E5418CEEAC3 /* FirebaseCore */,
 				A34E50CB2C05F49B1E90950D /* FirebaseCrashlytics */,
+				E98CFD6C906678C56D414B93 /* FirebaseAnalytics */,
 			);
 			productName = EmojiWeather;
 			productReference = A1BBCD82E7C7112ECD8D599A /* EmojiWeather.app */;
@@ -672,6 +681,7 @@
 				D8EA47EEC30403EF197B96C1 /* InfoPlist.xcstrings in Resources */,
 				CD99E87C05E55C341FB8ADAF /* countries.tsv in Resources */,
 				EA8B8AC41231E03C5D0DDE54 /* PrivacyInfo.xcprivacy in Resources */,
+				7361CB5BD846158339CAB441 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -799,6 +809,7 @@
 				506EE2EBB9CDCD92122AC396 /* WatchSync.swift in Sources */,
 				5722191B12332DD5F071DA6E /* NotificationRouter.swift in Sources */,
 				E99EDF1E777F6B5DAC2B500C /* CrashReporting.swift in Sources */,
+				F77D75177D19B32BCC14C9E5 /* AppAnalytics.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1345,6 +1356,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C249ACA9FFD8B21E1FE76A45 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
+		};
+		E98CFD6C906678C56D414B93 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C249ACA9FFD8B21E1FE76A45 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
 		};
 		FF289B64D2FBF516D3C544F1 /* GoogleUserMessagingPlatform */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -181,6 +181,9 @@ struct CityPageView: View {
         .sheet(isPresented: $showingPaywall) {
             PaywallView()
         }
+        .onChange(of: showingDetails) { _, isShowing in
+            if isShowing { AppAnalytics.log(.forecastOpened) }
+        }
         .sheet(isPresented: $showingDetails) {
             if let snapshot {
                 DetailsView(placeName: placeName, snapshot: snapshot, timeZone: timeZone)

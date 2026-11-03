@@ -3,3 +3,6 @@ xcuserdata/
 DerivedData/
 *.xcuserstate
 build/
+
+# Firebase config: kept out of this public repo. Each Mac adds its own copy.
+GoogleService-Info.plist

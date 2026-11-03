@@ -77,6 +77,7 @@ struct ScenePackView: View {
     private func row(_ option: ScenePack, subtitle: Text?) -> some View {
         Button {
             pack = option
+            AppAnalytics.log(.scenePackChosen, ["pack": option.rawValue])
             UISelectionFeedbackGenerator().selectionChanged()
         } label: {
             HStack(spacing: 12) {
@@ -172,6 +173,10 @@ struct CustomEmojiView: View {
             updated[slot] = nil
         }
         SceneStyle.customEmoji = updated
+        if let value {
+            let kind = if case .genmoji = value { "genmoji" } else { "emoji" }
+            AppAnalytics.log(.customEmojiSet, ["slot": slot.rawValue, "kind": kind])
+        }
         // Re-read so every view watching the setting updates.
         customJSON = SharedStore.defaults.string(forKey: SceneStyle.customEmojiKey) ?? ""
     }

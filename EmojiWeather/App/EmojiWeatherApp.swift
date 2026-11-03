@@ -22,6 +22,7 @@ struct EmojiWeatherApp: App {
 
     init() {
         CrashReporting.start()
+        AppAnalytics.start()
         let quiz = QuizStore()
         _quiz = State(initialValue: quiz)
         // Tapping a morning reminder opens the quiz.
@@ -42,6 +43,9 @@ struct EmojiWeatherApp: App {
                 .environment(quiz)
                 // Normally the first weather starts ads; this covers no location and no cities.
                 .task { await ads.start(after: .seconds(15)) }
+                .task(id: purchases.hasPlus) {
+                    AppAnalytics.updateUserProperties(hasPlus: purchases.hasPlus)
+                }
                 .task(id: widgetKey) {
                     WidgetSync.updatePlaces(
                         cities: cityStore.cities,
