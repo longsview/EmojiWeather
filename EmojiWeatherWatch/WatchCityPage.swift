@@ -145,7 +145,12 @@ struct WatchCityPage: View {
         } catch {
             logger.error("WeatherKit failed: \(String(describing: error), privacy: .public)")
             if snapshot == nil {
+                #if DEBUG
+                // Usually WeatherKit isn't on for the watch App ID yet, or signing has no team.
+                errorMessage = "Couldn't load the weather.\n\(error.localizedDescription)"
+                #else
                 errorMessage = String(localized: "Couldn't load the weather.")
+                #endif
                 WKInterfaceDevice.current().play(.failure)
             }
         }
