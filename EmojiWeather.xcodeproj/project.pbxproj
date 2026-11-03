@@ -47,7 +47,10 @@
 		5554D75E69C3128489D653F1 /* SceneSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339DC36E5BCD059D864B17B /* SceneSpec.swift */; };
 		5722191B12332DD5F071DA6E /* NotificationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B7CE040B2A97C0B1018639 /* NotificationRouter.swift */; };
 		597B438C40A616E1C6CD12DF /* MapWeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBB3DDA73E1F7695D97B5E90 /* MapWeatherModel.swift */; };
+		5C6FDDC24EA8B13CEC33CF24 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 7B1C299BCFF75E5418CEEAC3 /* FirebaseCore */; };
+		5D98DE22112BDF1B821CCAAD /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = C3EA0C84BD030F0E896DC15A /* FirebaseCrashlytics */; };
 		5DE6E5EB732D11D9D6758630 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 799C3B21B453A195BD073AAA /* Assets.xcassets */; };
+		5E89B1773906D5B871423DA4 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = A34E50CB2C05F49B1E90950D /* FirebaseCrashlytics */; };
 		61048C3100AEB0FFEFF2CF61 /* AdsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9E51D6BB2E073C64E813C4B /* AdsManager.swift */; };
 		61D6DEF1C11A25E2019EACBD /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = DC3ACDA7ECB5D1B2CEC49747 /* InfoPlist.xcstrings */; };
 		62EF8E13C18A740D72CC5C6B /* DisplaySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007719C4B208E545100281A2 /* DisplaySettings.swift */; };
@@ -75,6 +78,7 @@
 		92BEDF52F667B73A39CC1F6F /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125B792FC16ED71D28407284 /* PurchaseManager.swift */; };
 		94A1F2931DA433BE18EDDF06 /* WeatherWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4617BAEB298C8C25EFD1B8 /* WeatherWidgetView.swift */; };
 		95D25B09E4D1E52109BBC590 /* EmojiSceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000E644B0103D5034C02B2EF /* EmojiSceneView.swift */; };
+		95E14D3A75BF904093DCCC5F /* CrashReporting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C4A4133263A44F299CB321 /* CrashReporting.swift */; };
 		A6526464901AB36B9D3FF714 /* EmojiParticleSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 534C33757F6286A4B367D015 /* EmojiParticleSystem.swift */; };
 		A9AEFCC4104337F285C0DA0A /* WeatherAttributionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19AD54FA797C2D57397162E4 /* WeatherAttributionView.swift */; };
 		AAC5C5B276BDCF6CFC8EFFB4 /* WatchCityPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 760E51E7D0BCC82A6EF98400 /* WatchCityPage.swift */; };
@@ -100,8 +104,10 @@
 		D92137B8F8168C8146098835 /* SceneStyleViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D05F6267C241D142CBDBCC6 /* SceneStyleViews.swift */; };
 		DC7CCE7DFF3D11ECC7174775 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0A2145E1FB41F53A80192F /* LocationService.swift */; };
 		DE80C4E1A254AF591058AAC8 /* AdViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1C8905A4E23B615054AAC7 /* AdViews.swift */; };
+		E4FCD96FF34FE5359B5939D2 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 107D507BBDAA6DA483A81F8A /* FirebaseCore */; };
 		E685D7DD230BB55883624759 /* DetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 360F13C610EAB233D22887AC /* DetailsView.swift */; };
 		E92A68E3AC5EF524D464D514 /* WeatherTimelineProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CAF47AD1AFD4446FB8B534B /* WeatherTimelineProvider.swift */; };
+		E99EDF1E777F6B5DAC2B500C /* CrashReporting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47C4A4133263A44F299CB321 /* CrashReporting.swift */; };
 		EA10561896CBCD2FF7C772AF /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = D40C9B91B7D0FC642A3660D2 /* Color+Hex.swift */; };
 		EA8B8AC41231E03C5D0DDE54 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 4DE4AD3FCAE5DA42E584A0F3 /* PrivacyInfo.xcprivacy */; };
 		ECF4F8998F9CD99341552948 /* CityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4139EE61E3977BBF03D05FF9 /* CityStore.swift */; };
@@ -197,6 +203,7 @@
 		36AFBD802926650F0D44B6F1 /* EmojiWeatherWidgets.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = EmojiWeatherWidgets.entitlements; sourceTree = "<group>"; };
 		4139EE61E3977BBF03D05FF9 /* CityStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CityStore.swift; sourceTree = "<group>"; };
 		4662654A96E407E13BFAC38E /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		47C4A4133263A44F299CB321 /* CrashReporting.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CrashReporting.swift; sourceTree = "<group>"; };
 		4A5B567B59B09993FFD3A79F /* SceneGalleryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SceneGalleryView.swift; sourceTree = "<group>"; };
 		4DE4AD3FCAE5DA42E584A0F3 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		4E1E437FC9FD55E1ED3DE6D3 /* RootView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -261,6 +268,8 @@
 			files = (
 				D13CA3A7498315F36A051793 /* GoogleMobileAds in Frameworks */,
 				B585D7ABCF90C4400E9039FB /* GoogleUserMessagingPlatform in Frameworks */,
+				5C6FDDC24EA8B13CEC33CF24 /* FirebaseCore in Frameworks */,
+				5E89B1773906D5B871423DA4 /* FirebaseCrashlytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -268,6 +277,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E4FCD96FF34FE5359B5939D2 /* FirebaseCore in Frameworks */,
+				5D98DE22112BDF1B821CCAAD /* FirebaseCrashlytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -422,6 +433,7 @@
 				BBB3DDA73E1F7695D97B5E90 /* MapWeatherModel.swift */,
 				24E7CD94D4B44A7B9E5C34F4 /* WatchSync.swift */,
 				22B7CE040B2A97C0B1018639 /* NotificationRouter.swift */,
+				47C4A4133263A44F299CB321 /* CrashReporting.swift */,
 			);
 			name = Services;
 			path = Services;
@@ -551,6 +563,7 @@
 				288F449504E054299A6C465F /* Frameworks */,
 				19B8B357A549F4B235E82747 /* Resources */,
 				E3B0C76148ECA2AC18A47DD1 /* Embed Foundation Extensions */,
+				4AAF1E9A2B76A47EF0377FA3 /* Upload dSYMs to Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -558,6 +571,10 @@
 				A128C4AC43CF67B3674569BD /* PBXTargetDependency */,
 			);
 			name = EmojiWeatherWatch;
+			packageProductDependencies = (
+				107D507BBDAA6DA483A81F8A /* FirebaseCore */,
+				C3EA0C84BD030F0E896DC15A /* FirebaseCrashlytics */,
+			);
 			productName = EmojiWeatherWatch;
 			productReference = 0FF368918CEA91C01B2AEA59 /* EmojiWeatherWatch.app */;
 			productType = "com.apple.product-type.application";
@@ -571,6 +588,7 @@
 				77F81DF9CE5251C54C5FA0B5 /* Resources */,
 				D358E69199535B8B5150D8A2 /* Embed Foundation Extensions */,
 				C51FF7D46234C978B5A4645D /* Embed Watch Content */,
+				7E304AB809F83AFFFE75DA13 /* Upload dSYMs to Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -582,6 +600,8 @@
 			packageProductDependencies = (
 				7878E0B6FA6F139FB3BE657B /* GoogleMobileAds */,
 				FF289B64D2FBF516D3C544F1 /* GoogleUserMessagingPlatform */,
+				7B1C299BCFF75E5418CEEAC3 /* FirebaseCore */,
+				A34E50CB2C05F49B1E90950D /* FirebaseCrashlytics */,
 			);
 			productName = EmojiWeather;
 			productReference = A1BBCD82E7C7112ECD8D599A /* EmojiWeather.app */;
@@ -615,6 +635,7 @@
 			packageReferences = (
 				227FC193C0ABE66960F6B2C7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
 				63E83AAFFEF721ED6E86EBFE /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */,
+				C249ACA9FFD8B21E1FE76A45 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 100;
 			productRefGroup = DC5D3D4723DE07D3D18876E4 /* Products */;
@@ -674,6 +695,57 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		4AAF1E9A2B76A47EF0377FA3 /* Upload dSYMs to Crashlytics */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+			);
+			name = "Upload dSYMs to Crashlytics";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Sends debug symbols to Crashlytics so crash reports show readable stack traces.\n# Skipped until GoogleService-Info.plist is in the target.\nif [ ! -f \"${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleService-Info.plist\" ]; then\n  echo \"warning: GoogleService-Info.plist missing, skipping Crashlytics dSYM upload\"\n  exit 0\nfi\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7E304AB809F83AFFFE75DA13 /* Upload dSYMs to Crashlytics */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+			);
+			name = "Upload dSYMs to Crashlytics";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Sends debug symbols to Crashlytics so crash reports show readable stack traces.\n# Skipped until GoogleService-Info.plist is in the target.\nif [ ! -f \"${BUILT_PRODUCTS_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleService-Info.plist\" ]; then\n  echo \"warning: GoogleService-Info.plist missing, skipping Crashlytics dSYM upload\"\n  exit 0\nfi\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		43824285E4F675E789987858 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -724,6 +796,7 @@
 				840533329E7236B9FC8B6A09 /* SceneStyleShared.swift in Sources */,
 				506EE2EBB9CDCD92122AC396 /* WatchSync.swift in Sources */,
 				5722191B12332DD5F071DA6E /* NotificationRouter.swift in Sources */,
+				E99EDF1E777F6B5DAC2B500C /* CrashReporting.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -769,6 +842,7 @@
 				25271E08039A500A456A5BB4 /* SceneStyle.swift in Sources */,
 				4186EE7409B75DE0A2ACAF28 /* SceneStyleShared.swift in Sources */,
 				CDCBD5BC8C00F7AF49916CEF /* PhoneSync.swift in Sources */,
+				95E14D3A75BF904093DCCC5F /* CrashReporting.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1234,13 +1308,41 @@
 				minimumVersion = 3.0.0;
 			};
 		};
+		C249ACA9FFD8B21E1FE76A45 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		107D507BBDAA6DA483A81F8A /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C249ACA9FFD8B21E1FE76A45 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
 		7878E0B6FA6F139FB3BE657B /* GoogleMobileAds */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 227FC193C0ABE66960F6B2C7 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
 			productName = GoogleMobileAds;
+		};
+		7B1C299BCFF75E5418CEEAC3 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C249ACA9FFD8B21E1FE76A45 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		A34E50CB2C05F49B1E90950D /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C249ACA9FFD8B21E1FE76A45 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		C3EA0C84BD030F0E896DC15A /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C249ACA9FFD8B21E1FE76A45 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 		FF289B64D2FBF516D3C544F1 /* GoogleUserMessagingPlatform */ = {
 			isa = XCSwiftPackageProductDependency;

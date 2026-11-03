@@ -21,6 +21,7 @@ struct EmojiWeatherApp: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
+        CrashReporting.start()
         let quiz = QuizStore()
         _quiz = State(initialValue: quiz)
         // Tapping a morning reminder opens the quiz.

@@ -16,6 +16,7 @@ struct EmojiWeatherWatchApp: App {
     @Environment(\.scenePhase) private var scenePhase
 
     init() {
+        CrashReporting.start()
         // Scene pack, your own emoji and Genmoji, units and clock come from the phone.
         PhoneSync.shared.start()
     }
