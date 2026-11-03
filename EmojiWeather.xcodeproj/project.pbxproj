@@ -103,6 +103,7 @@
 		D4FEEEDBF60326E4E721712C /* ForecastViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 013F11B758C7D5ABF0F4D967 /* ForecastViews.swift */; };
 		D8EA47EEC30403EF197B96C1 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = DC3ACDA7ECB5D1B2CEC49747 /* InfoPlist.xcstrings */; };
 		D92137B8F8168C8146098835 /* SceneStyleViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D05F6267C241D142CBDBCC6 /* SceneStyleViews.swift */; };
+		DA498BA2B6422612E325A5B1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = C00090CABD4FB16F01F54457 /* GoogleService-Info.plist */; };
 		DC7CCE7DFF3D11ECC7174775 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF0A2145E1FB41F53A80192F /* LocationService.swift */; };
 		DE80C4E1A254AF591058AAC8 /* AdViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1C8905A4E23B615054AAC7 /* AdViews.swift */; };
 		E4FCD96FF34FE5359B5939D2 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 107D507BBDAA6DA483A81F8A /* FirebaseCore */; };
@@ -239,6 +240,7 @@
 		B9FD55FCD2555E1BF0C62752 /* QuizStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QuizStore.swift; sourceTree = "<group>"; };
 		BBB3DDA73E1F7695D97B5E90 /* MapWeatherModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MapWeatherModel.swift; sourceTree = "<group>"; };
 		BD648976AA401F9F9EF6DFFE /* HomeView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		C00090CABD4FB16F01F54457 /* GoogleService-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C02B3A1B85C2E530D635ABFB /* WidgetSync.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WidgetSync.swift; sourceTree = "<group>"; };
 		C26B89FCD4DF6EF66F55B7B3 /* QuizStats.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = QuizStats.swift; sourceTree = "<group>"; };
 		C38E1BAAF710611E87F4C5CA /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -395,6 +397,7 @@
 				88E802199F8EB1172031604D /* Info.plist */,
 				D8F79F557A661A0073C6CDD5 /* PhoneSync.swift */,
 				245EE6E73C12F4DBC3475888 /* PrivacyInfo.xcprivacy */,
+				C00090CABD4FB16F01F54457 /* GoogleService-Info.plist */,
 			);
 			name = EmojiWeatherWatch;
 			path = EmojiWeatherWatch;
@@ -668,6 +671,7 @@
 				72A33D31C9E052D6505E6980 /* Localizable.xcstrings in Resources */,
 				61D6DEF1C11A25E2019EACBD /* InfoPlist.xcstrings in Resources */,
 				2974AAEAB0B88A0EE0CFA783 /* PrivacyInfo.xcprivacy in Resources */,
+				DA498BA2B6422612E325A5B1 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
