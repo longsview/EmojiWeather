@@ -942,6 +942,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = Skymoji;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.weather";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Skymoji uses your location to show the weather where you are.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your data is used to show you ads that are more relevant. It helps keep Skymoji free.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -1150,6 +1151,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = Skymoji;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.weather";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Skymoji uses your location to show the weather where you are.";
+				INFOPLIST_KEY_NSUserTrackingUsageDescription = "Your data is used to show you ads that are more relevant. It helps keep Skymoji free.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

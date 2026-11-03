@@ -2,6 +2,7 @@ import Foundation
 import GoogleMobileAds
 import Observation
 import os
+import AppTrackingTransparency
 import UIKit
 import UserMessagingPlatform
 
@@ -11,8 +12,8 @@ import UserMessagingPlatform
 @MainActor
 @Observable
 final class AdsManager: NSObject, FullScreenContentDelegate, BannerViewDelegate {
-    /// Debug builds use Google's public test IDs. Release builds use the real ad units from
-    /// AdMob (Apps > Skymoji > Ad units); until those are filled in, Release shows no ads at all.
+    /// Debug builds use Google's public test IDs, so testing never counts as real traffic.
+    /// Release builds use the real ad units from AdMob (Apps > Skymoji > Ad units).
     /// The App ID lives in Info.plist as GADApplicationIdentifier.
     enum AdUnit {
         #if DEBUG
@@ -20,9 +21,9 @@ final class AdsManager: NSObject, FullScreenContentDelegate, BannerViewDelegate 
         static let forecastCard = "ca-app-pub-3940256099942544/2934735716"
         static let citySwipe = "ca-app-pub-3940256099942544/4411468910"
         #else
-        static let homeBanner = ""
-        static let forecastCard = ""
-        static let citySwipe = ""
+        static let homeBanner = "ca-app-pub-3535864006125488/1066637172"
+        static let forecastCard = "ca-app-pub-3535864006125488/2204459022"
+        static let citySwipe = "ca-app-pub-3535864006125488/1445251983"
         #endif
 
         static var isConfigured: Bool {
@@ -89,6 +90,12 @@ final class AdsManager: NSObject, FullScreenContentDelegate, BannerViewDelegate 
             logger.error("Consent failed: \(error.localizedDescription, privacy: .public)")
         }
         guard ConsentInformation.shared.canRequestAds else { return }
+
+        // Apple's tracking prompt, once, after the consent form (Google's recommended order).
+        // Saying no is fine: ads are then non-personalized.
+        if ATTrackingManager.trackingAuthorizationStatus == .notDetermined {
+            _ = await ATTrackingManager.requestTrackingAuthorization()
+        }
 
         // Starting the SDK does a lot of synchronous setup, so keep it off the main thread.
         await Task.detached(priority: .utility) {

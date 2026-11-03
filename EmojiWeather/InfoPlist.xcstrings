@@ -60,6 +60,54 @@
           }
         }
       }
+    },
+    "NSUserTrackingUsageDescription" : {
+      "comment" : "Tracking permission prompt",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تُستخدم بياناتك لعرض إعلانات أكثر صلة بك، وهذا يساعد على إبقاء Skymoji مجانيًا."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Your data is used to show you ads that are more relevant. It helps keep Skymoji free."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus datos se usan para mostrarte anuncios más relevantes. Así Skymoji sigue siendo gratis."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vos données servent à vous montrer des publicités plus pertinentes. Cela aide à garder Skymoji gratuit."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "データは、より関連性の高い広告を表示するために使われます。Skymojiを無料で提供し続けるのに役立ちます。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seus dados são usados para mostrar anúncios mais relevantes. Isso ajuda a manter o Skymoji gratuito."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的数据用于向你展示更相关的广告，这有助于 Skymoji 保持免费。"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"
