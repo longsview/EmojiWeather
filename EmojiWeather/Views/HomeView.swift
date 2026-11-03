@@ -240,7 +240,10 @@ struct HomeView: View {
                 isActive: true,
                 isCovered: showingGallery || !isVisible,
                 previewScene: previewScene,
-                onSceneChange: { activeScene = $0 }
+                onSceneChange: { activeScene = $0 },
+                openDetailsToken: openDetailsToken,
+                shareToken: shareToken,
+                onHasWeatherChange: { activeHasWeather = $0 }
             )
             .id(currentID)
             // Extend under the status bar and home indicator, but not under the sidebar.

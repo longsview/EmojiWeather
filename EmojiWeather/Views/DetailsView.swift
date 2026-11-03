@@ -1,11 +1,9 @@
 import SwiftUI
-import WeatherKit
 
 /// The "swipe up" page: hourly and 10-day forecasts plus current conditions.
 struct DetailsView: View {
     let placeName: String
-    let snapshot: WeatherSnapshot
-    let timeZone: TimeZone
+    let forecast: ForecastContent
 
     var body: some View {
         ScrollView {
@@ -15,10 +13,10 @@ struct DetailsView: View {
                     .padding(.top, 8)
                     .accessibilityAddTraits(.isHeader)
 
-                HourlyForecastView(hours: snapshot.hourly, timeZone: timeZone)
+                HourlyForecastView(hours: forecast.hours)
                 ForecastAdCard()
-                ConditionsGrid(current: snapshot.current, today: snapshot.daily.first, timeZone: timeZone)
-                DailyForecastView(days: snapshot.daily, timeZone: timeZone)
+                ConditionsGrid(tiles: forecast.tiles)
+                DailyForecastView(days: forecast.days)
 
                 WeatherAttributionView()
                     .frame(maxWidth: .infinity)
@@ -31,46 +29,9 @@ struct DetailsView: View {
 
 /// Tiles for the conditions people check most, each with its own emoji.
 private struct ConditionsGrid: View {
-    let current: CurrentWeather
-    let today: DayWeather?
-    let timeZone: TimeZone
+    let tiles: [ForecastContent.Tile]
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
-
-    private struct Tile: Identifiable {
-        let emoji: String
-        let title: String
-        let value: String
-        var id: String { title }
-    }
-
-    private var tiles: [Tile] {
-        var tiles = [
-            Tile(emoji: "🌡️", title: String(localized: "Feels like"), value: current.apparentTemperature.shortTemperature),
-            Tile(emoji: "💦", title: String(localized: "Humidity"), value: current.humidity.formatted(.percent.precision(.fractionLength(0)))),
-            Tile(
-                emoji: "🌬️", title: String(localized: "Wind"),
-                value: current.wind.speed.formatted(.measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(0))))
-                    + " " + current.wind.compassDirection.abbreviation
-            ),
-            Tile(emoji: "🕶️", title: String(localized: "UV index"), value: "\(current.uvIndex.value) \(current.uvIndex.category.description)"),
-            Tile(
-                emoji: "👀", title: String(localized: "Visibility"),
-                value: current.visibility.formatted(.measurement(width: .abbreviated, usage: .road, numberFormatStyle: .number.precision(.fractionLength(0))))
-            ),
-        ]
-        if let today {
-            tiles.append(Tile(emoji: "☔️", title: String(localized: "Rain chance"), value: today.precipitationChance.formatted(.percent.precision(.fractionLength(0)))))
-            let timeStyle = DisplaySettings.timeStyle(timeZone)
-            if let sunrise = today.sun.sunrise {
-                tiles.append(Tile(emoji: "🌅", title: String(localized: "Sunrise"), value: sunrise.formatted(timeStyle)))
-            }
-            if let sunset = today.sun.sunset {
-                tiles.append(Tile(emoji: "🌇", title: String(localized: "Sunset"), value: sunset.formatted(timeStyle)))
-            }
-        }
-        return tiles
-    }
 
     var body: some View {
         // One column at the largest text sizes so values don't shrink or truncate.
@@ -78,12 +39,12 @@ private struct ConditionsGrid: View {
         LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: columnCount), spacing: 12) {
             ForEach(tiles) { tile in
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(tile.emoji).font(.title).accessibilityHidden(true)
+                    Text(verbatim: tile.emoji).font(.title).accessibilityHidden(true)
                     Text(tile.title)
                         .font(.caption.weight(.semibold))
                         .textCase(.uppercase)
                         .foregroundStyle(.secondary)
-                    Text(tile.value)
+                    Text(verbatim: tile.value)
                         .font(.system(.title3, design: .rounded, weight: .bold))
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)

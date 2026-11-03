@@ -25,24 +25,21 @@ struct ShareCardContent {
     /// The "Skymoji" mark at the bottom. Skymoji+ removes it.
     var showsWatermark: Bool
 
-    init(placeName: String, timeZone: TimeZone, conditions: SceneConditions, snapshot: WeatherSnapshot, showsWatermark: Bool) {
+    init(placeName: String, timeZone: TimeZone, conditions: SceneConditions, forecast: ForecastContent, showsWatermark: Bool) {
         self.placeName = placeName
         self.conditions = conditions
-        let now = Date.now
+        var now = Date.now
+        #if DEBUG
+        now = ScreenshotMode.fixedDate ?? now
+        #endif
         let day = now.formatted(Date.FormatStyle(timeZone: timeZone).weekday(.abbreviated).month(.abbreviated).day().locale(DisplaySettings.locale))
         dateLine = "\(day) · \(now.formatted(DisplaySettings.timeStyle(timeZone)))"
-        temperature = snapshot.current.temperature.shortTemperature
-        condition = snapshot.current.condition.description
-        high = snapshot.daily.first?.highTemperature.shortTemperature
-        low = snapshot.daily.first?.lowTemperature.shortTemperature
+        temperature = forecast.temperature
+        condition = forecast.condition
+        high = forecast.high
+        low = forecast.low
         tagline = conditions.scene.tagline(in: conditions.sky)
-        hours = snapshot.hourly.prefix(5).enumerated().map { index, hour in
-            Hour(
-                time: index == 0 ? String(localized: "Now") : hour.date.formatted(DisplaySettings.hourStyle(timeZone)),
-                emoji: WeatherScene.emoji(for: hour.condition, isDaylight: hour.isDaylight),
-                temperature: hour.temperature.shortTemperature
-            )
-        }
+        hours = forecast.hours.prefix(5).map { Hour(time: $0.time, emoji: $0.emoji, temperature: $0.temperature) }
         self.showsWatermark = showsWatermark
     }
 

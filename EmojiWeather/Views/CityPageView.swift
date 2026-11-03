@@ -88,6 +88,17 @@ struct CityPageView: View {
         return SceneConditions(scene: .cloudy)
     }
 
+    /// The forecast sheet and share card's text. Screenshot mode swaps in numbers that match the scene.
+    private var forecast: ForecastContent? {
+        guard let snapshot else { return nil }
+        #if DEBUG
+        if let scene = ScreenshotMode.scene, previewScene == scene {
+            return .sample(for: scene, sky: sceneConditions.sky, timeZone: timeZone)
+        }
+        #endif
+        return ForecastContent(snapshot: snapshot, timeZone: timeZone)
+    }
+
     /// Changes whenever the weather should be reloaded.
     private var loadKey: String {
         guard let target = targetLocation else { return "\(place.id)-none" }
@@ -167,12 +178,12 @@ struct CityPageView: View {
             }
         }
         .sheet(isPresented: $showingShare) {
-            if let snapshot {
+            if let forecast {
                 ShareCardSheet(content: ShareCardContent(
                     placeName: placeName,
                     timeZone: timeZone,
                     conditions: sceneConditions,
-                    snapshot: snapshot,
+                    forecast: forecast,
                     showsWatermark: !purchases.hasPlus
                 ))
             }
@@ -196,8 +207,8 @@ struct CityPageView: View {
             if isShowing { AppAnalytics.log(.forecastOpened) }
         }
         .sheet(isPresented: $showingDetails) {
-            if let snapshot {
-                DetailsView(placeName: placeName, snapshot: snapshot, timeZone: timeZone)
+            if let forecast {
+                DetailsView(placeName: placeName, forecast: forecast)
                 .presentationDetents([.medium, .large])
                 .presentationDragIndicator(.visible)
                 // The app forces light or dark to match the sky, so read the system setting
