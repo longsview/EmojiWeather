@@ -1,0 +1,26 @@
+{
+  "iphone": {
+    "size": [1320, 2868],
+    "frames": [
+      { "id": "01-hero",    "shot": "raw/iphone/sunny.png",       "theme": "sky",    "tilt": 0,  "headline": "The weather,<br>in emoji.",        "sub": "Live, animated skies for wherever you are.",            "stickers": ["☀️", "⛅️", "🌈"] },
+      { "id": "02-storm",   "shot": "raw/iphone/thunderstorm.png","theme": "storm",  "tilt": -4, "headline": "Feel the storm.",                    "sub": "Rain, snow and lightning that move with the real weather.", "stickers": ["⚡️", "🌧️", "💧"] },
+      { "id": "03-night",   "shot": "raw/iphone/clearNight.png",  "theme": "night",  "tilt": 4,  "headline": "Nights worth<br>looking up for.",    "sub": "The moon, the stars and the odd shooting star.",       "stickers": ["🌙", "🌠", "✨"] },
+      { "id": "04-map",     "shot": "raw/iphone/map.png",         "theme": "retro",  "tilt": 0,  "headline": "The retro<br>weather map.",          "sub": "Like the TV forecast, drawn in emoji.",                "stickers": ["📺", "🗺️", "⛈️"] },
+      { "id": "05-daily",   "shot": "raw/iphone/quiz.png",        "theme": "sun",    "tilt": -4, "headline": "A new geography<br>game every day.", "sub": "Five questions about where you are. Keep your streak.", "stickers": ["🧩", "🔥", "🌍"] },
+      { "id": "06-streak",  "shot": "raw/iphone/quizSummary.png", "theme": "sun2",   "tilt": 4,  "headline": "Brag about<br>your streak.",         "sub": "Share your score grid with friends, Wordle style.",    "stickers": ["🔥", "🏆", "☀️"] },
+      { "id": "07-packs",   "shot": "raw/iphone/scenePack.png",   "theme": "autumn", "tilt": 0,  "headline": "Dress up<br>your sky.",              "sub": "Seasonal packs, your own emoji, even Genmoji.",        "stickers": ["🦃", "🎃", "🎄"] },
+      { "id": "08-forecast","shot": "raw/iphone/forecast.png",    "theme": "sky2",   "tilt": -4, "headline": "Every detail,<br>one swipe up.",     "sub": "Hourly, 10-day, wind, UV, sunrise and more.",          "stickers": ["🌡️", "💨", "🌅"] },
+      { "id": "09-share",   "shot": "raw/iphone/share.png",       "theme": "pink",   "tilt": 4,  "headline": "Send your sky.",                     "sub": "Turn the weather into a video, GIF or photo.",         "stickers": ["🎬", "📸", "💌"] },
+      { "id": "10-snow",    "shot": "raw/iphone/snow.png",        "theme": "snow",   "tilt": 0,  "headline": "Widgets, Watch<br>and more.",        "sub": "Your sky on the Home Screen, Lock Screen and wrist.",  "stickers": ["⌚️", "❄️", "📱"] }
+    ]
+  },
+  "ipad": {
+    "size": [2064, 2752],
+    "frames": [
+      { "id": "01-hero",  "shot": "raw/ipad/split.png",  "theme": "sky",   "tilt": 0, "headline": "The weather, in emoji.",   "sub": "Big, beautiful animated skies on iPad.", "stickers": ["☀️", "⛅️", "🌈"] },
+      { "id": "02-map",   "shot": "raw/ipad/map.png",    "theme": "retro", "tilt": 0, "headline": "The retro weather map.",   "sub": "Like the TV forecast, drawn in emoji.",  "stickers": ["📺", "🗺️", "⛈️"] },
+      { "id": "03-daily", "shot": "raw/ipad/quiz.png",   "theme": "sun",   "tilt": 0, "headline": "A new geography game every day.", "sub": "Five questions about where you are.", "stickers": ["🧩", "🔥", "🌍"] },
+      { "id": "04-forecast", "shot": "raw/ipad/forecast.png", "theme": "sky2", "tilt": 0, "headline": "Every detail, one swipe up.", "sub": "Hourly, 10-day, wind, UV and more.", "stickers": ["🌡️", "💨", "🌅"] }
+    ]
+  }
+}
