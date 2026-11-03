@@ -93,7 +93,7 @@ extension SceneStyle {
             lookup[slot.original] = value.raw
             // Weather-specific cousins of the slot follow it too.
             switch slot {
-            case .star: lookup["☄️"] = value.raw
+            case .star: lookup["🌠"] = value.raw
             default: break
             }
         }

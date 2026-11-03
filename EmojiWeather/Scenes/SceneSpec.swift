@@ -201,11 +201,11 @@ extension SceneSpec {
                         emoji: ["⭐️", "⭐️", "✨"], rate: 7, size: 7...18, lifetime: 2.5...6,
                         origin: .scattered, band: 0.02...0.98, fades: true
                     ),
-                    // Now and then a comet streaks down-left, head first (the ☄️ glyph's tail
-                    // points up and right). 🌠 is drawn as a framed tile, so it looked like a box.
+                    // Now and then a shooting star falls from somewhere along the top,
+                    // each on its own slant.
                     EmitterSpec(
-                        emoji: ["☄️"], rate: 0.1, size: 24...32, speed: 380...480, angle: 145,
-                        lifetime: 3...3, band: 0...0, xRange: 0.4...1.2
+                        emoji: ["🌠"], rate: 0.12, size: 22...30, speed: 380...480, angle: 50,
+                        angleJitter: 28, lifetime: 3...3, band: 0...0, xRange: -0.2...0.9
                     ),
                     // A few clouds drift by, like the odd cloud on a sunny day (Mostly Clear).
                     EmitterSpec(
