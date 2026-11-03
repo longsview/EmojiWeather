@@ -6031,6 +6031,46 @@
         }
       }
     },
+    "Your weather as emoji." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "طقسك بالرموز التعبيرية."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu tiempo en emoji."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre météo en emoji."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "天気を絵文字で。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seu clima em emoji."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用表情符号看天气。"
+          }
+        }
+      }
+    },
     "Your weather as emoji. Tap the arrow to step through your places." : {
       "localizations" : {
         "ar" : {

@@ -135,14 +135,18 @@ struct WatchCityPage: View {
         guard let target = targetLocation else { return }
         if let cached = weather.cachedWeather(for: target) {
             snapshot = cached
+            WidgetSync.save(cached, for: place)
             if !forceRefresh { return }
         }
         isLoading = true
         defer { isLoading = false }
         do {
             let isFirstLoad = snapshot == nil
-            snapshot = try await weather.weather(for: target, forceRefresh: forceRefresh)
+            let fresh = try await weather.weather(for: target, forceRefresh: forceRefresh)
+            snapshot = fresh
             errorMessage = nil
+            // The complications reuse this weather instead of fetching their own.
+            WidgetSync.save(fresh, for: place)
             // A light tap when the weather first lands.
             if isFirstLoad { WKInterfaceDevice.current().play(.success) }
         } catch is CancellationError {

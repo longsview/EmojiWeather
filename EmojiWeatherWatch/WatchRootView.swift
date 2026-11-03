@@ -16,6 +16,11 @@ struct WatchRootView: View {
         return [.currentLocation] + cities
     }
 
+    private var complicationKey: [String] {
+        let coordinate = location.location.map { String(format: "%.2f,%.2f", $0.coordinate.latitude, $0.coordinate.longitude) }
+        return [coordinate ?? "", location.placeName ?? ""] + cityStore.cities.map(\.id.uuidString)
+    }
+
     var body: some View {
         TabView(selection: $selectedID) {
             ForEach(places, id: \.id) { place in
@@ -26,6 +31,15 @@ struct WatchRootView: View {
         .tabViewStyle(.page)
         .onChange(of: selectedID) { _, _ in
             WKInterfaceDevice.current().play(.click)
+        }
+        .onChange(of: complicationKey, initial: true) {
+            // Tell the complications which place to show: My Location, or the first city.
+            WidgetSync.updatePlaces(
+                cities: cityStore.cities,
+                currentLocation: location.location,
+                currentName: location.placeName,
+                hasPlus: true
+            )
         }
         .onChange(of: places.map(\.id), initial: true) { _, ids in
             // The selected city was deleted (maybe on the phone): go back to the first page.

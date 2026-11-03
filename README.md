@@ -44,7 +44,9 @@ EmojiWeather/
 - Scroll or turn the Digital Crown for hourly, conditions (feels like, UV, wind, humidity, rain, visibility, dew point, pressure, sunrise/sunset) and a 10-day forecast with temperature bars.
 - Scenes are simulated at phone size and drawn scaled down (`EmojiSceneView.canvasScale`), run at 30 fps, and pause in always-on mode.
 
-Portal setup: the App ID `com.longsview.EmojiWeather.watchkitapp` needs **WeatherKit** (Capabilities and App Services) and **iCloud** (key-value storage). Its key-value store identifier is the iPhone app's, so both see the same cities.
+Complications (`EmojiWeatherComplications/`, a WidgetKit extension inside the watch app) come in circular, corner, rectangular and inline. They show My Location (or the first city) using weather the watch app saves to the App Group, and fetch their own from WeatherKit when it's over 45 minutes old.
+
+Portal setup: the App ID `com.longsview.EmojiWeather.watchkitapp` needs **WeatherKit** (Capabilities and App Services) and **iCloud** (key-value storage) and **App Groups** (`group.com.longsview.EmojiWeather`). The complications ID `com.longsview.EmojiWeather.watchkitapp.Complications` needs **WeatherKit** and **App Groups**. The watch's key-value store identifier is the iPhone app's, so both see the same cities.
 
 ### Adding or tuning a scene
 
