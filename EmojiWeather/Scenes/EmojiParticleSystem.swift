@@ -347,15 +347,30 @@ enum EmojiImageCache {
 
     static func image(for emoji: String) -> UIImage {
         if let cached = images[emoji] { return cached }
+        let image = render(emoji)
+        images[emoji] = image
+        return image
+    }
+
+    #if os(watchOS)
+    // watchOS has no UIGraphicsImageRenderer, so let SwiftUI draw the emoji instead.
+    private static func render(_ emoji: String) -> UIImage {
+        MainActor.assumeIsolated {
+            let renderer = ImageRenderer(content: Text(verbatim: emoji).font(.system(size: pointSize)))
+            renderer.scale = 2
+            guard let cgImage = renderer.cgImage else { return UIImage() }
+            return UIImage(cgImage: cgImage, scale: 2, orientation: .up)
+        }
+    }
+    #else
+    private static func render(_ emoji: String) -> UIImage {
         let text = NSAttributedString(
             string: emoji,
             attributes: [.font: UIFont.systemFont(ofSize: pointSize)]
         )
-        let size = text.size()
-        let image = UIGraphicsImageRenderer(size: size).image { _ in
+        return UIGraphicsImageRenderer(size: text.size()).image { _ in
             text.draw(at: .zero)
         }
-        images[emoji] = image
-        return image
     }
+    #endif
 }

@@ -36,6 +36,16 @@ EmojiWeather/
   Views/      Home, forecast cards, places list, add city, paywall
 ```
 
+## Apple Watch app
+
+`EmojiWeatherWatch/` is a watchOS 26 app embedded in the iPhone app. It shares the scenes, WeatherKit cache, location service and the iCloud city list with the phone (the source files are members of both targets), fetches its own weather, and works without the phone nearby.
+
+- Swipe sideways between My Location and saved cities (with a click haptic). The scene is the page's container background, so it stays put and cross-fades between cities.
+- Scroll or turn the Digital Crown for hourly, conditions (feels like, UV, wind, humidity, rain, visibility, dew point, pressure, sunrise/sunset) and a 10-day forecast with temperature bars.
+- Scenes are simulated at phone size and drawn scaled down (`EmojiSceneView.canvasScale`), run at 30 fps, and pause in always-on mode.
+
+Portal setup: the App ID `com.longsview.EmojiWeather.watchkitapp` needs **WeatherKit** (Capabilities and App Services) and **iCloud** (key-value storage). Its key-value store identifier is the iPhone app's, so both see the same cities.
+
 ### Adding or tuning a scene
 
 Each scene is a `SceneSpec` in `Scenes/SceneSpec.swift`: a background gradient, one or more `EmitterSpec` particle streams (emoji, rate, size, speed, angle, landing behavior) and optional `HeroSpec` fixed emoji. Lightning is a `lightningInterval`. Change the numbers and watch the preview.

@@ -12,7 +12,12 @@ enum SharedStore {
     private static func weatherKey(_ placeID: String) -> String { "widget.weather.v1.\(placeID)" }
 
     /// One instance for the process; creating a suite per read makes cfprefsd noisy.
+    #if os(watchOS)
+    // The watch has no widgets to share with, so it keeps its settings to itself.
+    static let defaults: UserDefaults = .standard
+    #else
     static let defaults: UserDefaults = UserDefaults(suiteName: appGroup) ?? .standard
+    #endif
 
     static var places: [WidgetPlace] {
         get { decode([WidgetPlace].self, forKey: placesKey) ?? [] }
