@@ -31,7 +31,7 @@ struct EmojiSceneView: View {
                     size: size,
                     tilt: tilt.x
                 )
-                system.draw(in: &context, size: size)
+                system.draw(in: &context, size: size, parallax: CGVector(dx: tilt.x, dy: tilt.y))
             }
         }
         .accessibilityHidden(true)
@@ -59,6 +59,10 @@ struct EmojiSceneView: View {
 final class MotionTilt {
     private let manager = CMMotionManager()
     private(set) var x: Double = 0
+    /// Forward/back tilt relative to how the phone is usually held, -1...1.
+    private(set) var y: Double = 0
+    /// The usual holding angle, which slowly follows the hand so only changes register.
+    private var restingY: Double?
 
     func start() {
         guard manager.isDeviceMotionAvailable, !manager.isDeviceMotionActive else { return }
@@ -68,12 +72,19 @@ final class MotionTilt {
             // Smooth it so the scene leans gently instead of jittering.
             let target = max(-1, min(1, gravity.x))
             self.x = self.x * 0.85 + target * 0.15
+
+            let resting = (self.restingY ?? gravity.y) * 0.995 + gravity.y * 0.005
+            self.restingY = resting
+            let targetY = max(-1, min(1, (gravity.y - resting) * 2.5))
+            self.y = self.y * 0.85 + targetY * 0.15
         }
     }
 
     func stop() {
         manager.stopDeviceMotionUpdates()
         x = 0
+        y = 0
+        restingY = nil
     }
 }
 
