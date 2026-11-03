@@ -142,7 +142,7 @@ final class QuizStore {
     static let reminderID = "skymoji.daily.reminder"
     static let reminderEnabledKey = "quiz.reminder"
     /// Opened when a reminder is tapped.
-    static let quizURL = URL(string: "skymoji://daily")!
+    nonisolated static let quizURL = URL(string: "skymoji://daily")!
     /// Mornings scheduled ahead. Each has its own text, so they're one-off notifications that
     /// are scheduled again whenever the app goes to the background.
     private static let daysAhead = 14

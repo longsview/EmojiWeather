@@ -1,5 +1,6 @@
 import CoreLocation
 import Foundation
+import MapKit
 import Observation
 import os
 
@@ -20,7 +21,6 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
     @ObservationIgnored private let logger = Logger(subsystem: "EmojiWeather", category: "Location")
 
     @ObservationIgnored private let manager: CLLocationManager
-    @ObservationIgnored private let geocoder = CLGeocoder()
 
     override init() {
         let manager = CLLocationManager()
@@ -109,7 +109,8 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
         location = newLocation
         isLocating = false
         failureMessage = nil
-        let placemark = try? await geocoder.reverseGeocodeLocation(newLocation).first
-        placeName = placemark?.locality ?? placemark?.name
+        // MapKit's reverse geocoder (CLGeocoder is deprecated in iOS 26).
+        let item = try? await MKReverseGeocodingRequest(location: newLocation)?.mapItems.first
+        placeName = item?.addressRepresentations?.cityName ?? item?.name
     }
 }

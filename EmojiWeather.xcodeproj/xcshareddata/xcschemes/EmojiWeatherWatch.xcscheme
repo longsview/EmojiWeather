@@ -55,7 +55,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E70DDF128487E4055BB5C124"
             BuildableName = "EmojiWeatherWatch.app"
-            BlueprintName = "EmojiWeatherWatch"
             ReferencedContainer = "container:EmojiWeather.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -72,7 +71,6 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E70DDF128487E4055BB5C124"
             BuildableName = "EmojiWeatherWatch.app"
-            BlueprintName = "EmojiWeatherWatch"
             ReferencedContainer = "container:EmojiWeather.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
