@@ -9,12 +9,14 @@ struct HomeView: View {
     @Environment(CityStore.self) private var cityStore
     @Environment(PurchaseManager.self) private var purchases
     @Environment(AdsManager.self) private var ads
+    @Environment(QuizStore.self) private var quiz
     @Environment(\.horizontalSizeClass) private var sizeClass
 
     /// Per device on purpose: each device remembers which place it was last showing.
     @AppStorage("selectedPlaceID") private var selectedPlaceID = Place.currentLocationID
 
     @State private var showingPlaces = false
+    @State private var showingQuiz = false
     /// Height covered by the tab bar and home indicator, so the bottom controls sit above it.
     @State private var bottomInset: CGFloat = 0
     /// Bumped by the fixed Forecast hint to open the visible page's forecast.
@@ -63,6 +65,13 @@ struct HomeView: View {
             }
         }
         .preferredColorScheme(activeSky.isDark ? .dark : .light)
+        .sheet(isPresented: $showingQuiz) {
+            QuizView()
+        }
+        // The streak widget opens the quiz with skymoji://daily.
+        .onOpenURL { url in
+            if url.scheme == "skymoji", url.host == "daily" { showingQuiz = true }
+        }
         .sheet(isPresented: $showingPlaces) {
             PlacesView(selectedPlaceID: $selectedPlaceID)
         }
@@ -174,6 +183,7 @@ struct HomeView: View {
             #if DEBUG
             debugMenu
             #endif
+            quizButton
             Spacer()
             if activeHasWeather {
                 Button {
@@ -204,6 +214,9 @@ struct HomeView: View {
                     ToolbarItem(placement: .topBarTrailing) { debugMenu }
                 }
                 #endif
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) { quizButton }
+                }
         } detail: {
             CityPageView(
                 place: currentPlace,
@@ -221,6 +234,26 @@ struct HomeView: View {
     }
 
     // MARK: - Shared
+
+    /// Opens Skymoji Daily. Shows the streak, and a check once today's quiz is done.
+    private var quizButton: some View {
+        Button {
+            showingQuiz = true
+        } label: {
+            HStack(spacing: 4) {
+                Text(verbatim: quiz.hasPlayedToday ? "✅" : "🧩")
+                if quiz.currentStreak > 0 {
+                    Text(verbatim: "🔥\(quiz.currentStreak)")
+                        .font(.system(.subheadline, design: .rounded, weight: .heavy))
+                }
+            }
+            .padding(.horizontal, 14)
+            .frame(height: 44)
+            .background(activeSky.textColor.opacity(0.1), in: Capsule())
+        }
+        .accessibilityLabel(Text("Skymoji Daily quiz"))
+        .accessibilityValue(quiz.currentStreak > 0 ? Text("\(quiz.currentStreak)-day streak") : Text(verbatim: ""))
+    }
 
     /// Pause the scene while something covers it or another tab is showing.
     private var isSceneCovered: Bool {

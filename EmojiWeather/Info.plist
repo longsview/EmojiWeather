@@ -8,6 +8,18 @@
 	<!-- Skip Google Analytics measurement setup at launch; it isn't used. -->
 	<key>GADDelayAppMeasurementInit</key>
 	<true/>
+	<!-- skymoji://daily opens the daily quiz (streak widget, reminders). -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>com.longsview.EmojiWeather</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>skymoji</string>
+			</array>
+		</dict>
+	</array>
 	<key>SKAdNetworkItems</key>
 	<array>
 		<dict>

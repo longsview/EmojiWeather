@@ -7,6 +7,7 @@ struct EmojiWeatherApp: App {
     @State private var weather = WeatherProvider()
     @State private var purchases = PurchaseManager()
     @State private var ads = AdsManager()
+    @State private var quiz = QuizStore()
 
     /// Changes whenever the widgets' list of places or the Plus status changes.
     private var widgetKey: String {
@@ -27,6 +28,7 @@ struct EmojiWeatherApp: App {
                 .environment(weather)
                 .environment(purchases)
                 .environment(ads)
+                .environment(quiz)
                 // Normally the first weather starts ads; this covers no location and no cities.
                 .task { await ads.start(after: .seconds(15)) }
                 .task(id: widgetKey) {

@@ -115,7 +115,7 @@ final class MapWeatherModel {
 }
 
 /// About 60,000 towns and cities with 5,000+ people, biggest first, from GeoNames
-/// (CC BY 4.0, credited on the map). Bundled as cities.tsv: name, latitude, longitude, population.
+/// (CC BY 4.0, credited on the map). Bundled as cities.tsv: name, latitude, longitude, population, country code.
 struct CityIndex: Sendable {
     struct Place: Sendable {
         let id: Int

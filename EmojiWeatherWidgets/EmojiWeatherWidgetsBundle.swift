@@ -5,6 +5,7 @@ import WidgetKit
 struct EmojiWeatherWidgetsBundle: WidgetBundle {
     var body: some Widget {
         EmojiWeatherWidget()
+        DailyQuizWidget()
     }
 }
 

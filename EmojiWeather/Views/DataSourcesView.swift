@@ -21,11 +21,25 @@ struct DataSourcesView: View {
                 Link(destination: URL(string: "https://creativecommons.org/licenses/by/4.0/")!) {
                     Label("Creative Commons Attribution 4.0", systemImage: "doc.text")
                 }
-                Text("The towns and cities on the weather map come from GeoNames, used under CC BY 4.0. Only names, locations and populations are used.")
+                Text("The towns and cities on the weather map and in Skymoji Daily come from GeoNames, used under CC BY 4.0. Only names, locations, populations and countries are used.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             } header: {
                 Text("Cities")
+            }
+
+            Section {
+                Link(destination: URL(string: "https://github.com/mledoze/countries")!) {
+                    Label("mledoze/countries", systemImage: "flag")
+                }
+                Link(destination: URL(string: "https://opendatacommons.org/licenses/odbl/1-0/")!) {
+                    Label("Open Database License 1.0", systemImage: "doc.text")
+                }
+                Text("Countries, capitals and flags in Skymoji Daily come from mledoze/countries, used under the ODbL 1.0.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            } header: {
+                Text("Countries")
             }
 
             Section {
