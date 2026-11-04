@@ -30,7 +30,7 @@ struct QuizQuestion: Codable, Identifiable, Hashable {
         var kinds: [Kind] {
             switch self {
             case .easy: [.closestTown, .hotterColder, .flag, .capital, .continent]
-            case .medium: [.direction, .cityCountry, .northernmost, .biggestCity, .borders, .landlocked, .largestCountry]
+            case .medium: [.direction, .cityCountry, .biggestCity, .borders, .landlocked, .largestCountry]
             case .hard: [.whereWeather, .flag, .capital, .borders, .closestTown, .northernmost]
             }
         }
@@ -162,10 +162,10 @@ struct QuizBuilder {
         case .continent: return continent(rng: &rng)
         case .cityCountry: return cityCountry(rng: &rng)
         case .northernmost: return northernmost(level: level, rng: &rng)
-        case .biggestCity: return biggestCity(rng: &rng)
+        case .biggestCity: return biggestCity(level: level, rng: &rng)
         case .borders: return borders(level: level, rng: &rng)
         case .landlocked: return landlocked(rng: &rng)
-        case .largestCountry: return largestCountry(rng: &rng)
+        case .largestCountry: return largestCountry(level: level, rng: &rng)
         }
     }
 
@@ -291,7 +291,7 @@ struct QuizBuilder {
     /// "What's the capital of Portugal?" Easy ones ask about well-known countries; hard ones
     /// about the rest, with three capitals from the same part of the world.
     private func capital(level: QuizQuestion.Difficulty, rng: inout SeededGenerator) -> QuizQuestion? {
-        guard let country = pickCountry(level: level, rng: &rng) else { return nil }
+        guard let country = pickCountry(level: level, forCapital: true, rng: &rng) else { return nil }
         let others = sameArea(as: country, level: level, rng: &rng)
         let choices = (others + [country]).shuffled(using: &rng)
         return QuizQuestion(
@@ -319,7 +319,7 @@ struct QuizBuilder {
 
     /// "Which continent is Kenya in?"
     private func continent(rng: inout SeededGenerator) -> QuizQuestion? {
-        let pool = atlas.countries.filter { $0.isWellKnown && $0.continent != nil }
+        let pool = atlas.countries.filter { $0.isWellKnown && !$0.needsArticle && $0.continent != nil }
         guard let country = pool.randomElement(using: &rng), let answer = country.continent else { return nil }
         var choices = Array(QuizAtlas.Continent.allCases.filter { $0 != answer }.shuffled(using: &rng).prefix(3))
         choices.append(answer)
@@ -339,7 +339,7 @@ struct QuizBuilder {
     private func cityCountry(rng: inout SeededGenerator) -> QuizQuestion? {
         for city in atlas.bigCities.shuffled(using: &rng).prefix(20) {
             // Skip cities that share their country's name, like Mexico City or Singapore.
-            guard let country = atlas.country(city.countryCode),
+            guard let country = atlas.country(city.countryCode), !country.needsArticle,
                   !city.name.localizedCaseInsensitiveContains(country.englishName),
                   !country.englishName.localizedCaseInsensitiveContains(city.name) else { continue }
             let others = sameArea(as: country, level: .hard, rng: &rng)
@@ -357,9 +357,9 @@ struct QuizBuilder {
         return nil
     }
 
-    /// "Which of these cities is furthest north?" Medium picks cities far apart; hard ones close.
+    /// "Which of these cities is furthest north?" Hard days pick cities only a few degrees apart.
     private func northernmost(level: QuizQuestion.Difficulty, rng: inout SeededGenerator) -> QuizQuestion? {
-        let gap: ClosedRange<Double> = level == .hard ? 1.5...12 : 8...180
+        let gap: ClosedRange<Double> = level == .hard ? 1.5...6 : 4...15
         guard let picks = pickCities(from: atlas.bigCities, rng: &rng, apart: { abs($0.latitude - $1.latitude) }, in: gap)
         else { return nil }
         let answer = picks.max { $0.latitude < $1.latitude }!
@@ -377,12 +377,13 @@ struct QuizBuilder {
     }
 
     /// "Which of these cities has the most people?"
-    private func biggestCity(rng: inout SeededGenerator) -> QuizQuestion? {
-        let pool = atlas.cities.filter { $0.population >= 500_000 }
+    private func biggestCity(level: QuizQuestion.Difficulty, rng: inout SeededGenerator) -> QuizQuestion? {
+        // Close calls, but at least 25% apart so the answer is clear.
+        let ratio: ClosedRange<Double> = level == .hard ? 1.25...2 : 1.25...4
         guard let picks = pickCities(
-            from: pool, rng: &rng,
+            from: atlas.largeCities, rng: &rng,
             apart: { Double(max($0.population, $1.population)) / Double(max(min($0.population, $1.population), 1)) },
-            in: 1.4...50
+            in: ratio
         ) else { return nil }
         let answer = picks.max { $0.population < $1.population }!
         let summary = picks
@@ -400,9 +401,9 @@ struct QuizBuilder {
 
     /// "Which of these countries borders Brazil?" The others are nearby but don't.
     private func borders(level: QuizQuestion.Difficulty, rng: inout SeededGenerator) -> QuizQuestion? {
-        let pool = atlas.countries.filter { !$0.borders.isEmpty && (level == .hard) != $0.isWellKnown }
+        let pool = atlas.countries.filter { !$0.borders.isEmpty && !$0.needsArticle && (level == .hard) != $0.isWellKnown }
         for country in pool.shuffled(using: &rng).prefix(10) {
-            let neighbors = country.borders.compactMap { atlas.country($0) }
+            let neighbors = country.borders.compactMap { atlas.country($0) }.filter { !$0.needsArticle }
             guard let answer = neighbors.randomElement(using: &rng) else { continue }
             let notNeighbors = atlas.countries.filter {
                 $0.region == country.region && $0 != country && !country.borders.contains($0.code)
@@ -424,7 +425,7 @@ struct QuizBuilder {
 
     /// "Which of these countries has no coastline?"
     private func landlocked(rng: inout SeededGenerator) -> QuizQuestion? {
-        guard let answer = atlas.countries.filter(\.isLandlocked).randomElement(using: &rng) else { return nil }
+        guard let answer = atlas.countries.filter({ $0.isLandlocked && !$0.needsArticle }).randomElement(using: &rng) else { return nil }
         var pool = atlas.countries.filter { !$0.isLandlocked && $0.region == answer.region }
         if pool.count < 3 { pool = atlas.countries.filter { !$0.isLandlocked } }
         let choices = (Array(pool.shuffled(using: &rng).prefix(3)) + [answer]).shuffled(using: &rng)
@@ -438,14 +439,15 @@ struct QuizBuilder {
         )
     }
 
-    /// "Which of these countries is the largest?" Four from the same region.
-    private func largestCountry(rng: inout SeededGenerator) -> QuizQuestion? {
+    /// "Which of these countries is the largest?" Four from the same region, close in size.
+    private func largestCountry(level: QuizQuestion.Difficulty, rng: inout SeededGenerator) -> QuizQuestion? {
+        let ratio: ClosedRange<Double> = level == .hard ? 1.2...2 : 1.25...3.5
         let regions = Array(Set(atlas.countries.map(\.region))).sorted()
         for region in regions.shuffled(using: &rng) {
             let pool = atlas.countries.filter { $0.region == region && $0.area > 0 }
             var picks: [QuizAtlas.Country] = []
             for country in pool.shuffled(using: &rng) where picks.allSatisfy({
-                Double(max($0.area, country.area)) / Double(max(min($0.area, country.area), 1)) > 1.3
+                ratio.contains(Double(max($0.area, country.area)) / Double(max(min($0.area, country.area), 1)))
             }) {
                 picks.append(country)
                 if picks.count == 4 { break }
@@ -470,8 +472,10 @@ struct QuizBuilder {
     // MARK: - Picking
 
     /// A well-known country for easy and medium questions, any other for hard ones.
-    private func pickCountry(level: QuizQuestion.Difficulty, rng: inout SeededGenerator) -> QuizAtlas.Country? {
-        let pool = atlas.countries.filter { (level == .hard) != $0.isWellKnown }
+    private func pickCountry(level: QuizQuestion.Difficulty, forCapital: Bool = false, rng: inout SeededGenerator) -> QuizAtlas.Country? {
+        let pool = atlas.countries.filter {
+            (level == .hard) != $0.isWellKnown && !$0.needsArticle && !(forCapital && $0.capitalGivesAway)
+        }
         return pool.randomElement(using: &rng) ?? atlas.countries.randomElement(using: &rng)
     }
 

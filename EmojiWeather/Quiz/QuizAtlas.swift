@@ -32,6 +32,20 @@ struct QuizAtlas: Sendable {
         var borders: [String] = []
         var latitude: Double = 0
 
+        /// Names that need "the" in English ("the Gambia", "the United States"), which the
+        /// quiz keeps out of sentences and uses only as answer buttons.
+        var needsArticle: Bool { Self.articleNames.contains(code) }
+
+        static let articleNames: Set<String> = [
+            "US", "GB", "AE", "NL", "PH", "GM", "BS", "CF", "CD", "CG", "DO", "MV", "MH", "SB", "SC", "KM", "VA",
+        ]
+
+        /// The capital's name gives the country away (Guatemala City, Kuwait City).
+        var capitalGivesAway: Bool {
+            capital.localizedCaseInsensitiveContains(englishName) || englishName.localizedCaseInsensitiveContains(capital)
+                || ["MX", "VA", "DJ", "LU", "MC", "SG", "PA", "KW", "AD", "GT", "TN", "DZ", "BR"].contains(code)
+        }
+
         /// Countries most people can place, for the easy questions.
         var isWellKnown: Bool { Self.wellKnown.contains(code) }
 
@@ -88,12 +102,24 @@ struct QuizAtlas: Sendable {
     let cities: [City]
     /// Cities of a million or more, for the world questions. Small enough to scan anywhere.
     let bigCities: [City]
+    /// Cities of 500,000 or more, with the same filtering.
+    let largeCities: [City]
     let countries: [Country]
+    private static let unusualLetters: Set<Character> = ["ā", "ī", "ū", "ō", "ē", "ḩ", "ṭ", "ş", "‘", "’", "ʼ", "'"]
     private let countriesByCode: [String: Country]
 
     init(cities: [City], countries: [Country]) {
         self.cities = cities
-        bigCities = cities.filter { $0.population >= 1_000_000 }
+        // Leave out names two big cities share (Valencia, San José) and hard-to-read
+        // transliterations, so every question reads clearly.
+        var counts: [String: Int] = [:]
+        for city in cities where city.population >= 100_000 { counts[city.name, default: 0] += 1 }
+        let readable = cities.filter { city in
+            city.population >= 500_000 && counts[city.name, default: 0] <= 1
+                && !city.name.contains(where: { Self.unusualLetters.contains($0) })
+        }
+        largeCities = readable
+        bigCities = readable.filter { $0.population >= 1_000_000 }
         self.countries = countries
         countriesByCode = Dictionary(countries.map { ($0.code, $0) }, uniquingKeysWith: { first, _ in first })
     }
@@ -101,9 +127,9 @@ struct QuizAtlas: Sendable {
     /// The places near a point that the local questions need. Scanning 60,000 cities takes a
     /// noticeable moment (much longer in Debug builds), so it runs off the main thread.
     struct Nearby: Sendable {
-        /// Towns of 10,000+ between 12 and 250 km away, with their distance in meters.
+        /// Towns of 25,000+ between 12 and 250 km away, with their distance in meters.
         let towns: [(city: City, distance: Double)]
-        /// Cities of 200,000+ between 150 and 3,000 km away, with their distance in meters.
+        /// Cities of 500,000+ between 150 and 3,000 km away, with their distance in meters.
         let regional: [(city: City, distance: Double)]
     }
 
@@ -112,10 +138,10 @@ struct QuizAtlas: Sendable {
         return await Task.detached(priority: .userInitiated) {
             var towns: [(city: City, distance: Double)] = []
             var regional: [(city: City, distance: Double)] = []
-            for city in cities where city.population >= 10_000 {
+            for city in cities where city.population >= 25_000 {
                 let distance = Self.distance(latitude, longitude, city.latitude, city.longitude)
                 if distance > 12_000, distance < 250_000 { towns.append((city, distance)) }
-                if city.population >= 200_000, distance > 150_000, distance < 3_000_000 {
+                if city.population >= 500_000, distance > 150_000, distance < 3_000_000 {
                     regional.append((city, distance))
                 }
             }
