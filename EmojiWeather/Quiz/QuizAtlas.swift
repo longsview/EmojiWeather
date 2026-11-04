@@ -72,7 +72,9 @@ struct QuizAtlas: Sendable {
 
         /// The country's name in the user's language, e.g. "Allemagne" in French.
         var name: String {
-            Locale.current.localizedString(forRegionCode: code) ?? englishName
+            // iOS calls CN "China mainland" in some regions; the quiz means the country.
+            if code == "CN" { return String(localized: "China") }
+            return Locale.current.localizedString(forRegionCode: code) ?? englishName
         }
     }
 

@@ -1847,6 +1847,46 @@
         }
       }
     },
+    "China" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الصين"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "China"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chine"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中国"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "China"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中国"
+          }
+        }
+      }
+    },
     "Choose Place" : {
       "localizations" : {
         "ar" : {
@@ -10387,46 +10427,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "开启“减弱动态效果”后，场景会缓慢移动，闪电不会闪烁。关闭此项可显示静态场景。"
-          }
-        }
-      }
-    },
-    "Where is it %@ right now?" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "أين الطقس %@ الآن؟"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "¿Dónde está %@ ahora mismo?"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Où fait-il %@ en ce moment ?"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今、%@なのはどこ？"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Onde está %@ agora?"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "现在哪里是 %@？"
           }
         }
       }

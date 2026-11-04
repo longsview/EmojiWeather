@@ -122,10 +122,6 @@ struct QuizBuilder {
             if slot == 0, origin != nil {
                 kinds.sort { $0.needsLocation && !$1.needsLocation }
             }
-            // Make sure the weather shows up once.
-            if slot == Self.plan.count - 1, !used.contains(where: \.usesWeather) {
-                kinds.sort { $0.usesWeather && !$1.usesWeather }
-            }
             var question: QuizQuestion?
             for kind in kinds {
                 question = await make(kind, level: level, nearby: nearby, rng: &rng)
@@ -246,12 +242,15 @@ struct QuizBuilder {
 
     // MARK: - Around the world
 
-    /// "Where is it ⛈️ right now?" when one city's sky stands out, otherwise "Where is it warmest?"
+    /// "Where is it warmest right now?" Latitude, season and time of day are the clues.
     private func whereWeather(rng: inout SeededGenerator) async -> QuizQuestion? {
         let bigCities = atlas.bigCities.shuffled(using: &rng)
         var picks: [QuizAtlas.City] = []
         var countries = Set<String>()
-        for city in bigCities where countries.insert(city.countryCode).inserted {
+        // Cities at least 10° of latitude apart, so there's something to reason from.
+        for city in bigCities where !countries.contains(city.countryCode)
+            && picks.allSatisfy({ abs($0.latitude - city.latitude) >= 10 }) {
+            countries.insert(city.countryCode)
             picks.append(city)
             if picks.count == 4 { break }
         }
@@ -268,16 +267,6 @@ struct QuizBuilder {
             .joined(separator: " · ")
         let options = readings.map { QuizQuestion.Option(emoji: atlas.flag($0.city.countryCode), text: $0.city.name) }
 
-        let emojiCounts = Dictionary(grouping: readings, by: \.emoji)
-        if let standout = readings.first(where: { emojiCounts[$0.emoji]?.count == 1 }), emojiCounts.count > 1 {
-            return QuizQuestion(
-                id: 0, kind: .whereWeather, emoji: standout.emoji,
-                prompt: String(localized: "Where is it \(standout.emoji) right now?"),
-                options: options,
-                correctIndex: readings.firstIndex { $0.city == standout.city }!,
-                explanation: summary
-            )
-        }
         let warmest = readings.max { $0.temperature.converted(to: .celsius).value < $1.temperature.converted(to: .celsius).value }!
         return QuizQuestion(
             id: 0, kind: .whereWeather, emoji: "🔥",
@@ -340,6 +329,7 @@ struct QuizBuilder {
         for city in atlas.bigCities.shuffled(using: &rng).prefix(20) {
             // Skip cities that share their country's name, like Mexico City or Singapore.
             guard let country = atlas.country(city.countryCode), !country.needsArticle,
+                  city.name != country.capital,
                   !city.name.localizedCaseInsensitiveContains(country.englishName),
                   !country.englishName.localizedCaseInsensitiveContains(city.name) else { continue }
             let others = sameArea(as: country, level: .hard, rng: &rng)
