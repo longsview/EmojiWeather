@@ -222,7 +222,6 @@ struct HomeView: View {
             #if DEBUG
             if !ScreenshotMode.isActive { debugMenu }
             #endif
-            quizButton
             Spacer()
             if activeHasWeather {
                 Button {
@@ -255,9 +254,6 @@ struct HomeView: View {
                     }
                 }
                 #endif
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) { quizButton }
-                }
         } detail: {
             CityPageView(
                 place: currentPlace,
@@ -296,26 +292,6 @@ struct HomeView: View {
         lastNudgeDay = QuizStore.today
         AppAnalytics.log(.quizNudgeShown)
         showingQuizNudge = true
-    }
-
-    /// Opens Skymoji Daily. Shows the streak, and a check once today's quiz is done.
-    private var quizButton: some View {
-        Button {
-            showingQuiz = true
-        } label: {
-            HStack(spacing: 4) {
-                Text(verbatim: quiz.hasPlayedToday ? "✅" : "🧩")
-                if quiz.currentStreak > 0 {
-                    Text(verbatim: "🔥\(quiz.currentStreak)")
-                        .font(.system(.subheadline, design: .rounded, weight: .heavy))
-                }
-            }
-            .padding(.horizontal, 14)
-            .frame(height: 44)
-            .background(activeSky.textColor.opacity(0.1), in: Capsule())
-        }
-        .accessibilityLabel(Text("Skymoji Daily quiz"))
-        .accessibilityValue(quiz.currentStreak > 0 ? Text("\(quiz.currentStreak)-day streak") : Text(verbatim: ""))
     }
 
     /// Pause the scene while something covers it or another tab is showing.

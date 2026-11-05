@@ -2,9 +2,10 @@ import CoreLocation
 import SwiftUI
 import WidgetKit
 
-/// The app's two modes in a Liquid Glass tab bar: the emoji weather pages and the weather map.
+/// The app's modes in a Liquid Glass tab bar (weather pages, the weather map, settings), with
+/// Skymoji Daily as a separate round button beside it.
 struct RootView: View {
-    enum AppTab: Hashable { case weather, map, settings }
+    enum AppTab: Hashable { case weather, map, settings, daily }
 
     @State private var tab: AppTab = {
         #if DEBUG
@@ -31,13 +32,31 @@ struct RootView: View {
     @AppStorage(SceneStyle.customEmojiKey, store: SharedStore.defaults)
     private var customEmoji = ""
 
+    @Environment(QuizStore.self) private var quiz
+    /// Skymoji Daily opens as a sheet over whichever tab is showing.
+    @State private var showingQuiz = false
+
+    /// Picking the Daily button opens the quiz instead of switching tabs.
+    private var selection: Binding<AppTab> {
+        Binding(
+            get: { tab },
+            set: { newTab in
+                if newTab == .daily {
+                    showingQuiz = true
+                } else {
+                    tab = newTab
+                }
+            }
+        )
+    }
+
     private var displayKey: String {
         let style = SceneStyle.styleKey(pack: scenePack.rawValue, customJSON: customEmoji, plus: purchases.hasPlus)
         return "\(temperature.rawValue)-\(clock.rawValue)-\(style)"
     }
 
     var body: some View {
-        TabView(selection: $tab) {
+        TabView(selection: selection) {
             Tab("Weather", systemImage: "sun.max.fill", value: AppTab.weather) {
                 HomeView(isVisible: tab == .weather)
                     .id(displayKey)
@@ -49,6 +68,16 @@ struct RootView: View {
             Tab("Settings", systemImage: "gearshape.fill", value: AppTab.settings) {
                 SettingsView()
             }
+            // The search role puts it in its own glass button beside the tab bar, like a
+            // compose button: an action, not a place.
+            Tab(value: AppTab.daily, role: .search) {
+                Color.clear
+            } label: {
+                Label("Daily", systemImage: quiz.hasPlayedToday ? "checkmark.seal.fill" : "puzzlepiece.extension.fill")
+            }
+        }
+        .sheet(isPresented: $showingQuiz) {
+            QuizView()
         }
         .tabBarMinimizeBehavior(.never)
         .onChange(of: tab) { _, newTab in
