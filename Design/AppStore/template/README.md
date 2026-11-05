@@ -5,7 +5,20 @@
    launch arguments that set up each screen).
 2. From `Design/AppStore`: `npm install playwright && npx playwright install chromium` (once),
    then `node template/render.mjs` (or `node template/render.mjs iphone`).
-3. Finished frames land in `final/iphone/` (1320×2868) and `final/ipad/` (2064×2752).
+3. Finished frames land in `final/<device>/`, or `final/<lang>/<device>/` with
+   `node template/render.mjs all <lang>` (en, fr, es, pt-BR, zh-Hans, ja, ar; captions in
+   `frames-l10n.json`, localized captures read from `raw/<lang>/<device>/` when present).
+
+| Folder | Size | App Store Connect slot |
+| --- | --- | --- |
+| `iphone` | 1320×2868 | iPhone 6.9" (Dynamic Island, large) |
+| `iphone-6.3` | 1206×2622 | iPhone 6.3" (Dynamic Island, medium), **required** |
+| `ipad` | 2064×2752 | iPad 13" |
+| `duo-inner` | 2007×2853 | iPhone Duo, inner display (required from April 2027 for iOS 27.1 SDK builds) |
+| `duo-outer` | 1398×2034 | iPhone Duo, outer display |
+
+`iphone-6.3` and the Duo sizes reuse the iPhone frames. The Duo sizes use captures from
+`raw/duo-inner/` and `raw/duo-outer/` when present, otherwise the iPhone captures.
 
 Edit headlines, colors and stickers in `frames.json`. Themes are defined at the top of `frame.html`.
 

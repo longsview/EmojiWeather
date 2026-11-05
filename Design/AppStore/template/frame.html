@@ -70,7 +70,21 @@ bg.appendChild(glow);
 document.getElementById("h").innerHTML = f.headline;
 document.getElementById("p").textContent = f.sub;
 document.getElementById("stage").style.setProperty("--tilt", (f.tilt || 0) + "deg");
-document.getElementById("shot").src = f.shotURL;
+const shot = document.getElementById("shot");
+// Shape the device to the capture, so iPhone, iPad and iPhone Duo shots all fit uncropped.
+shot.onload = () => document.fonts.ready.then(() => {
+  document.querySelector(".phone").style.aspectRatio = `${shot.naturalWidth} / ${shot.naturalHeight}`;
+  // A tall phone capture on a wide canvas (an iPhone shot on iPhone Duo) would cover the headline,
+  // so narrow the device until it is at most 85% of the canvas height.
+  const stage = document.getElementById("stage");
+  const maxWidth = 0.85 * h * shot.naturalWidth / shot.naturalHeight;
+  if (stage.getBoundingClientRect().width > maxWidth) stage.style.width = maxWidth + "px";
+  // Long translated captions wrap to more lines; push the device down so it never covers them.
+  const gap = document.querySelector(".copy").getBoundingClientRect().bottom + w * 0.03 - stage.getBoundingClientRect().top;
+  if (gap > 0) stage.style.bottom = `${parseFloat(getComputedStyle(stage).bottom) - gap}px`;
+  document.body.dataset.ready = "1";
+});
+shot.src = f.shotURL;
 (f.stickers || []).forEach((s, i) => { const el = document.getElementById("k" + i); if (el) el.textContent = s; });
 </script>
 </body></html>
