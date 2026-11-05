@@ -36,14 +36,14 @@ struct RootView: View {
     /// Skymoji Daily opens as a sheet over whichever tab is showing.
     @State private var showingQuiz = false
 
-    /// A bright orange question bubble while today's quiz waits, a gray check once it's done.
-    /// Tab bars tint every icon the same, so the color is baked into the image.
+    /// An orange question bubble while today's quiz waits; once it's done, a check bubble in the
+    /// same color as the other tab icons. Tab bars tint every icon alike, so the orange is
+    /// baked into the image.
     private var dailyIcon: Image {
-        let done = quiz.hasPlayedToday
-        let name = done ? "checkmark.bubble.fill" : "questionmark.bubble.fill"
-        let color: UIColor = done ? .systemGray : .systemOrange
+        guard !quiz.hasPlayedToday else { return Image(systemName: "checkmark.bubble.fill") }
+        let name = "questionmark.bubble.fill"
         guard let symbol = UIImage(systemName: name) else { return Image(systemName: name) }
-        return Image(uiImage: symbol.withTintColor(color, renderingMode: .alwaysOriginal))
+        return Image(uiImage: symbol.withTintColor(.systemOrange, renderingMode: .alwaysOriginal))
     }
 
     /// Picking the Daily button opens the quiz instead of switching tabs.
