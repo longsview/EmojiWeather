@@ -1607,6 +1607,46 @@
         }
       }
     },
+    "Bring an umbrella, and give yourself extra time on wet roads." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "خذ مظلة، وامنح نفسك وقتًا إضافيًا على الطرق المبتلة."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lleva paraguas y date tiempo extra en carreteras mojadas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prenez un parapluie et prévoyez plus de temps sur les routes mouillées."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "傘を持って、濡れた道では時間に余裕をもちましょう。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leve guarda-chuva e reserve mais tempo nas ruas molhadas."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "带上雨伞，路面湿滑请预留更多时间。"
+          }
+        }
+      }
+    },
     "Building today's quiz…" : {
       "localizations" : {
         "ar" : {
@@ -2807,6 +2847,46 @@
         }
       }
     },
+    "Cover exposed skin and keep time outside short. Frostbite can start quickly in the wind." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "غطِّ الجلد المكشوف وقلّل وقتك في الخارج. قد تبدأ قضمة الصقيع سريعًا مع الرياح."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cubre la piel expuesta y limita el tiempo fuera. Con viento, la congelación puede llegar rápido."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Couvrez la peau exposée et limitez le temps dehors. Les gelures peuvent apparaître vite avec le vent."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "肌の露出を避け、外にいる時間を短くしましょう。風があると凍傷はすぐに起こります。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cubra a pele exposta e fique pouco tempo ao ar livre. Com vento, o congelamento pode começar rápido."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遮盖裸露的皮肤，减少在户外的时间。有风时很快就可能冻伤。"
+          }
+        }
+      }
+    },
     "Creative Commons Attribution 4.0" : {
       "localizations" : {
         "ar" : {
@@ -3127,6 +3207,46 @@
         }
       }
     },
+    "Dew point %@. Sweat dries slowly, so heat feels harder on the body. Pace yourself." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نقطة الندى %@. يجفّ العرق ببطء فيصبح الحر أثقل على الجسم. خذ الأمور بهدوء."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punto de rocío %@. El sudor se seca despacio y el calor cansa más. Tómatelo con calma."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Point de rosée %@. La transpiration sèche lentement, la chaleur pèse davantage. Ménagez-vous."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "露点 %@。汗が乾きにくく、暑さが体にこたえます。無理をしないで。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ponto de orvalho %@. O suor seca devagar e o calor pesa mais no corpo. Vá com calma."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "露点 %@。汗水蒸发慢，身体更难散热。注意节奏，别太勉强。"
+          }
+        }
+      }
+    },
     "Done" : {
       "localizations" : {
         "ar" : {
@@ -3207,6 +3327,46 @@
         }
       }
     },
+    "Down %@ over the next 12 hours, often ahead of a storm. Some people notice headaches or achy joints when pressure falls quickly." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سينخفض %@ خلال الساعات الـ12 القادمة، وغالبًا ما يسبق ذلك عاصفة. يشعر بعض الناس بصداع أو آلام في المفاصل عندما ينخفض الضغط بسرعة."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bajará %@ en las próximas 12 horas, a menudo antes de una tormenta. Algunas personas notan dolor de cabeza o de articulaciones cuando la presión baja rápido."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Baisse de %@ dans les 12 prochaines heures, souvent avant un orage. Certaines personnes ressentent des maux de tête ou des douleurs articulaires quand la pression chute vite."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今後12時間で%@低下します。嵐の前によく起こります。気圧が急に下がると、頭痛や関節の痛みを感じる人もいます。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Queda de %@ nas próximas 12 horas, muitas vezes antes de uma tempestade. Algumas pessoas sentem dor de cabeça ou nas articulações quando a pressão cai rápido."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未来 12 小时将下降 %@，通常预示着暴风雨。有些人在气压快速下降时会感到头痛或关节酸痛。"
+          }
+        }
+      }
+    },
     "Dress up every scene for the season, or swap the sun, moon, clouds and more for your own emoji or Genmoji." : {
       "localizations" : {
         "ar" : {
@@ -3243,6 +3403,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "为每个场景换上季节装扮，或把太阳、月亮、云朵等换成你自己的表情符号或 Genmoji。"
+          }
+        }
+      }
+    },
+    "Drink water, take breaks in the shade and check on people who feel the heat more." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اشرب الماء، واسترح في الظل، واطمئن على من يتأثرون بالحر أكثر."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bebe agua, descansa a la sombra y pendiente de quienes sufren más el calor."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buvez de l’eau, faites des pauses à l’ombre et prenez des nouvelles des personnes fragiles."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "水分をとり、日陰で休み、暑さに弱い人に気を配りましょう。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beba água, faça pausas na sombra e fique de olho em quem sente mais o calor."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "多喝水，在阴凉处休息，并多关照怕热的人。"
           }
         }
       }
@@ -3523,6 +3723,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "体感温度"
+          }
+        }
+      }
+    },
+    "Feels like %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الإحساس %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensación de %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ressenti %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "体感 %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sensação de %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "体感 %@"
           }
         }
       }
@@ -4007,6 +4247,46 @@
         }
       }
     },
+    "General tips, not medical advice." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نصائح عامة، وليست استشارة طبية."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Consejos generales, no consejo médico."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conseils généraux, pas un avis médical."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一般的なヒントであり、医学的な助言ではありません。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dicas gerais, não aconselhamento médico."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一般提示，不构成医疗建议。"
+          }
+        }
+      }
+    },
     "Genmoji" : {
       "localizations" : {
         "ar" : {
@@ -4127,6 +4407,46 @@
         }
       }
     },
+    "Good to know" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "معلومات مفيدة"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conviene saber"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bon à savoir"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "知っておきたいこと"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bom saber"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "温馨提示"
+          }
+        }
+      }
+    },
     "Got it" : {
       "localizations" : {
         "ar" : {
@@ -4203,6 +4523,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "猜猜明天%@的最高气温"
+          }
+        }
+      }
+    },
+    "Gusts up to %@" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "هبّات تصل إلى %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rachas de hasta %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rafales jusqu’à %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最大瞬間風速 %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rajadas de até %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "阵风可达 %@"
           }
         }
       }
@@ -4403,6 +4763,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最高 %@"
+          }
+        }
+      }
+    },
+    "High UV (%@)" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أشعة فوق بنفسجية مرتفعة (%@)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UV alto (%@)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UV élevé (%@)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UVが強い（%@）"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UV alto (%@)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "紫外线强（%@）"
           }
         }
       }
@@ -4683,6 +5083,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "湿度"
+          }
+        }
+      }
+    },
+    "If you're driving, slow down, leave extra space and use low beams." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إذا كنت تقود، فخفّف السرعة واترك مسافة أكبر واستخدم الأضواء المنخفضة."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si conduces, reduce la velocidad, deja más distancia y usa las luces cortas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Au volant, ralentissez, gardez vos distances et allumez les feux de croisement."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "運転するときは速度を落とし、車間距離をとり、ロービームを使いましょう。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se estiver dirigindo, reduza a velocidade, mantenha distância e use farol baixo."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开车时请减速、保持车距并使用近光灯。"
           }
         }
       }
@@ -5170,6 +5610,46 @@
         }
       }
     },
+    "Low visibility" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مدى رؤية منخفض"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Poca visibilidad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Visibilité réduite"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "視界が悪い"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pouca visibilidade"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "能见度低"
+          }
+        }
+      }
+    },
     "Low visibility. Take it slow." : {
       "localizations" : {
         "ar" : {
@@ -5566,6 +6046,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "动态效果"
+          }
+        }
+      }
+    },
+    "Muggy air" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "جو رطب خانق"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ambiente bochornoso"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Air lourd et humide"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "蒸し暑い"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ar abafado"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "空气闷热"
           }
         }
       }
@@ -6890,6 +7410,46 @@
         }
       }
     },
+    "Pressure dropping" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الضغط الجوي ينخفض"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La presión baja"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pression en baisse"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "気圧が低下中"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pressão em queda"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "气压正在下降"
+          }
+        }
+      }
+    },
     "Preview" : {
       "localizations" : {
         "ar" : {
@@ -7126,6 +7686,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "降雨概率"
+          }
+        }
+      }
+    },
+    "Rain likely (%@)" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مطر محتمل (%@)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lluvia probable (%@)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pluie probable (%@)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "雨の可能性大（%@）"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chuva provável (%@)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "可能下雨（%@）"
           }
         }
       }
@@ -7769,6 +8369,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "季节场景包"
+          }
+        }
+      }
+    },
+    "Secure loose things outside and watch for falling branches." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ثبّت الأشياء غير المثبتة في الخارج واحذر من تساقط الأغصان."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Asegura lo que tengas suelto fuera y cuidado con las ramas que caen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rangez ce qui traîne dehors et méfiez-vous des chutes de branches."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "屋外の飛ばされやすい物を固定し、落ちてくる枝に注意しましょう。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prenda o que estiver solto lá fora e cuidado com galhos caindo."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "固定好户外松散的物品，小心掉落的树枝。"
           }
         }
       }
@@ -8908,6 +9548,46 @@
         }
       }
     },
+    "Sunscreen, sunglasses and a hat, and shade around midday when the sun is strongest." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "استخدم واقي الشمس والنظارات الشمسية والقبعة، وابقَ في الظل وقت الظهيرة حين تكون الشمس في أقوى حالاتها."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protector solar, gafas de sol y gorra, y sombra hacia el mediodía, cuando el sol pega más."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Crème solaire, lunettes et chapeau, et de l’ombre vers midi, quand le soleil tape le plus."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "日焼け止め、サングラス、帽子を。日差しが最も強い正午前後は日陰へ。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Protetor solar, óculos de sol e chapéu, e sombra perto do meio-dia, quando o sol está mais forte."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "涂防晒霜、戴墨镜和帽子，中午阳光最强时待在阴凉处。"
+          }
+        }
+      }
+    },
     "Sunset" : {
       "localizations" : {
         "ar" : {
@@ -9987,6 +10667,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "版本"
+          }
+        }
+      }
+    },
+    "Very high UV (%@)" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أشعة فوق بنفسجية مرتفعة جدًا (%@)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UV muy alto (%@)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UV très élevé (%@)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UVが非常に強い（%@）"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UV muito alto (%@)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "紫外线很强（%@）"
           }
         }
       }

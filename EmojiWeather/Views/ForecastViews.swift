@@ -35,6 +35,15 @@ struct ForecastContent {
     let hours: [Hour]
     let days: [Day]
     let tiles: [Tile]
+    /// "Good to know": weather worth a precaution, most important first.
+    var notes: [Note] = []
+
+    struct Note: Identifiable, Hashable {
+        let emoji: String
+        let title: String
+        let advice: String
+        var id: String { title }
+    }
 }
 
 extension ForecastContent {
@@ -101,6 +110,90 @@ extension ForecastContent {
             }
         }
         self.tiles = tiles
+        notes = Self.notes(current: current, today: today, hourly: snapshot.hourly)
+    }
+
+    /// Precautions for today's weather, at most four, most important first. General tips, written
+    /// as information rather than health predictions.
+    static func notes(current: CurrentWeather, today: DayWeather?, hourly: [HourWeather]) -> [Note] {
+        var notes: [Note] = []
+        let feelsLike = current.apparentTemperature.converted(to: .celsius).value
+        let feelsLikeText = current.apparentTemperature.shortTemperature
+
+        if feelsLike >= 32 {
+            notes.append(Note(
+                emoji: "🥵", title: String(localized: "Feels like \(feelsLikeText)"),
+                advice: String(localized: "Drink water, take breaks in the shade and check on people who feel the heat more.")
+            ))
+        } else if feelsLike <= -10 {
+            notes.append(Note(
+                emoji: "🥶", title: String(localized: "Feels like \(feelsLikeText)"),
+                advice: String(localized: "Cover exposed skin and keep time outside short. Frostbite can start quickly in the wind.")
+            ))
+        }
+
+        let uv = max(current.uvIndex.value, today?.uvIndex.value ?? 0)
+        if uv >= 6 {
+            let uvText = "\(uv)"
+            notes.append(Note(
+                emoji: "🧴", title: uv >= 8 ? String(localized: "Very high UV (\(uvText))") : String(localized: "High UV (\(uvText))"),
+                advice: String(localized: "Sunscreen, sunglasses and a hat, and shade around midday when the sun is strongest.")
+            ))
+        }
+
+        // Pressure over the next 12 hours: a quick fall usually comes ahead of a storm.
+        if let first = hourly.first, hourly.count >= 13 {
+            let change = hourly[12].pressure.converted(to: .hectopascals).value - first.pressure.converted(to: .hectopascals).value
+            if change <= -5 {
+                let amount = Self.pressureChange(Measurement(value: -change, unit: UnitPressure.hectopascals))
+                notes.append(Note(
+                    emoji: "📉", title: String(localized: "Pressure dropping"),
+                    advice: String(localized: "Down \(amount) over the next 12 hours, often ahead of a storm. Some people notice headaches or achy joints when pressure falls quickly.")
+                ))
+            }
+        }
+
+        if let gust = current.wind.gust, gust.converted(to: .kilometersPerHour).value >= 60 {
+            let gustText = gust.formatted(.measurement(width: .abbreviated, usage: .general, numberFormatStyle: .number.precision(.fractionLength(0))))
+            notes.append(Note(
+                emoji: "💨", title: String(localized: "Gusts up to \(gustText)"),
+                advice: String(localized: "Secure loose things outside and watch for falling branches.")
+            ))
+        }
+
+        if current.visibility.converted(to: .meters).value < 1_000 {
+            notes.append(Note(
+                emoji: "🌫️", title: String(localized: "Low visibility"),
+                advice: String(localized: "If you're driving, slow down, leave extra space and use low beams.")
+            ))
+        }
+
+        if let today, today.precipitationChance >= 0.6 {
+            let chance = today.precipitationChance.formatted(.percent.precision(.fractionLength(0)))
+            notes.append(Note(
+                emoji: "☔️", title: String(localized: "Rain likely (\(chance))"),
+                advice: String(localized: "Bring an umbrella, and give yourself extra time on wet roads.")
+            ))
+        }
+
+        if current.dewPoint.converted(to: .celsius).value >= 21 {
+            let dewText = current.dewPoint.shortTemperature
+            notes.append(Note(
+                emoji: "💦", title: String(localized: "Muggy air"),
+                advice: String(localized: "Dew point \(dewText). Sweat dries slowly, so heat feels harder on the body. Pace yourself.")
+            ))
+        }
+
+        return Array(notes.prefix(4))
+    }
+
+    /// "0.21 inHg" in the US, "7 hPa" elsewhere.
+    static func pressureChange(_ value: Measurement<UnitPressure>) -> String {
+        let usesInches = DisplaySettings.locale.measurementSystem == .us
+        let unit: UnitPressure = usesInches ? .inchesOfMercury : .hectopascals
+        let number = value.converted(to: unit).value
+            .formatted(.number.precision(.fractionLength(usesInches ? 2 : 0)).locale(DisplaySettings.locale))
+        return "\(number) \(usesInches ? "inHg" : "hPa")"
     }
 
     /// "30.02 inHg ↑" in the US, "1017 hPa ↓" elsewhere, with which way it's heading.
@@ -202,8 +295,30 @@ extension ForecastContent {
         return ForecastContent(
             temperature: scene.sampleTemperature, condition: scene.title,
             high: scene.sampleHigh, low: scene.sampleLow,
-            hours: hours, days: days, tiles: tiles
+            hours: hours, days: days, tiles: tiles,
+            notes: Self.sampleNotes(for: scene, sky: sky)
         )
+    }
+
+    /// Screenshot mode: the notes that scene would bring.
+    static func sampleNotes(for scene: WeatherScene, sky: SkyMode) -> [Note] {
+        switch scene {
+        case .sunny, .hot, .partlyCloudy:
+            guard sky != .night else { return [] }
+            return [Note(
+                emoji: "🧴", title: String(localized: "High UV (\("7"))"),
+                advice: String(localized: "Sunscreen, sunglasses and a hat, and shade around midday when the sun is strongest.")
+            )]
+        case .thunderstorm, .rain:
+            return [
+                Note(emoji: "☔️", title: String(localized: "Rain likely (\("80%"))"),
+                     advice: String(localized: "Bring an umbrella, and give yourself extra time on wet roads.")),
+                Note(emoji: "📉", title: String(localized: "Pressure dropping"),
+                     advice: String(localized: "Down \("0.21 inHg") over the next 12 hours, often ahead of a storm. Some people notice headaches or achy joints when pressure falls quickly.")),
+            ]
+        default:
+            return []
+        }
     }
 
     /// 75 from "75°".
@@ -238,6 +353,37 @@ extension WeatherScene {
     }
 }
 #endif
+
+/// "Good to know": short precautions for today's weather.
+struct WeatherNotesView: View {
+    let notes: [ForecastContent.Note]
+
+    var body: some View {
+        ForecastCard(title: String(localized: "Good to know")) {
+            VStack(alignment: .leading, spacing: 14) {
+                ForEach(notes) { note in
+                    HStack(alignment: .top, spacing: 12) {
+                        Text(verbatim: note.emoji)
+                            .font(.title2)
+                            .accessibilityHidden(true)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(verbatim: note.title)
+                                .font(.system(.headline, design: .rounded))
+                            Text(verbatim: note.advice)
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                    }
+                    .accessibilityElement(children: .combine)
+                }
+                Text("General tips, not medical advice.")
+                    .font(.caption2)
+                    .foregroundStyle(.tertiary)
+            }
+        }
+    }
+}
 
 struct HourlyForecastView: View {
     let hours: [ForecastContent.Hour]

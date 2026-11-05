@@ -15,6 +15,9 @@ struct DetailsView: View {
 
                 HourlyForecastView(hours: forecast.hours)
                 ForecastAdCard()
+                if !forecast.notes.isEmpty {
+                    WeatherNotesView(notes: forecast.notes)
+                }
                 ConditionsGrid(tiles: forecast.tiles)
                 DailyForecastView(days: forecast.days)
 
