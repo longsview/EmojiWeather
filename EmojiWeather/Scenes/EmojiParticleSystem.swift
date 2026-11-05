@@ -34,6 +34,7 @@ final class EmojiParticleSystem {
 
     private(set) var spec: SceneSpec
     private var intensity: Double
+    private var sky: SkyMode
     var reduceMotion = false
     /// Called on each lightning strike, for a haptic.
     var onStrike: (() -> Void)?
@@ -49,12 +50,14 @@ final class EmojiParticleSystem {
     init(conditions: SceneConditions) {
         spec = SceneSpec.make(for: conditions)
         intensity = conditions.intensity
+        sky = conditions.sky
         reset()
     }
 
     func configure(_ conditions: SceneConditions) {
         spec = SceneSpec.make(for: conditions)
         intensity = conditions.intensity
+        sky = conditions.sky
         reset()
     }
 
@@ -321,8 +324,10 @@ final class EmojiParticleSystem {
         }
 
         if flash > 0 {
-            // On a white background a white flash is invisible, so flash a pale lightning yellow.
-            context.fill(Path(bounds), with: .color(Color(hex: 0xFFE45C).opacity(flash * 0.45)))
+            // On a white day sky a white flash is invisible, so flash a pale lightning yellow there.
+            // On the dark night sky yellow turns muddy olive, so flash a cool pale blue-white instead.
+            let color = sky == .night ? Color(hex: 0xDCE8FF) : Color(hex: 0xFFE45C)
+            context.fill(Path(bounds), with: .color(color.opacity(flash * (sky == .night ? 0.35 : 0.45))))
         }
     }
 

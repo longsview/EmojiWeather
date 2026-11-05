@@ -68,6 +68,14 @@ struct QuizView: View {
         .onAppear { AppAnalytics.log(.quizOpened) }
         .sensoryFeedback(.error, trigger: wrongAnswers)
         .preferredColorScheme(SystemAppearance.shared.colorScheme)
+        #if DEBUG
+        // Screenshot mode answers every question after the sheet opens; jump to the results.
+        .onChange(of: store.quiz?.questions.allSatisfy(\.isAnswered) ?? false) { _, done in
+            if done, ScreenshotMode.open == "quizSummary", let quiz = store.quiz {
+                currentIndex = quiz.questions.count
+            }
+        }
+        #endif
         .task {
             await store.prepare(origin: origin?.location, weather: weather)
             if let quiz = store.quiz {

@@ -107,6 +107,10 @@ final class MapWeatherModel {
 
     nonisolated private static func fetchMarker(for place: CityIndex.Place) async -> Marker? {
         let location = CLLocation(latitude: place.latitude, longitude: place.longitude)
+        #if DEBUG
+        // Screenshot mode shows a sunny-afternoon map whatever the real time or weather.
+        if ScreenshotMode.isActive { return sampleMarker(for: place, at: location) }
+        #endif
         guard let current = try? await WeatherService.shared.weather(for: location, including: .current) else {
             return nil
         }
@@ -119,6 +123,27 @@ final class MapWeatherModel {
             temperature: current.temperature
         )
     }
+
+    #if DEBUG
+    /// Daytime sample weather for screenshots: mostly sun, some clouds and a storm or two,
+    /// warmer toward the equator. Stable per place so every capture matches.
+    nonisolated private static func sampleMarker(for place: CityIndex.Place, at location: CLLocation) -> Marker {
+        let looks: [(String, String)] = [
+            ("☀️", "Sunny"), ("⛅️", "Partly Cloudy"), ("☀️", "Sunny"), ("🌤️", "Mostly Sunny"),
+            ("🌧️", "Rain"), ("☀️", "Sunny"), ("⛈️", "Thunderstorms"), ("☁️", "Cloudy")
+        ]
+        let look = looks[abs(place.id) % looks.count]
+        let celsius = (31 - abs(place.latitude) * 0.45 + Double(abs(place.id) % 5) - 2).rounded()
+        return Marker(
+            id: place.id,
+            name: place.name,
+            coordinate: location.coordinate,
+            emoji: look.0,
+            condition: look.1,
+            temperature: Measurement(value: celsius, unit: .celsius)
+        )
+    }
+    #endif
 }
 
 /// About 60,000 towns and cities with 5,000+ people, biggest first, from GeoNames
