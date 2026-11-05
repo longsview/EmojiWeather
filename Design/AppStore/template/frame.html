@@ -7,11 +7,11 @@
 :root { --w: 1320px; --h: 2868px; --u: calc(var(--w) / 100); }
 * { box-sizing: border-box; margin: 0; }
 html, body { width: var(--w); height: var(--h); overflow: hidden; }
-body { font-family: "Nunito", system-ui, sans-serif; color: #fff; position: relative; }
+body { font-family: "Nunito", "PingFang SC", "Hiragino Sans", "Geeza Pro", system-ui, sans-serif; color: #fff; position: relative; }
 .bg { position: absolute; inset: 0; }
 .glow { position: absolute; width: calc(var(--u) * 120); aspect-ratio: 1; border-radius: 50%; filter: blur(calc(var(--u) * 8)); opacity: .55; }
 .copy { position: absolute; top: calc(var(--u) * 11); left: calc(var(--u) * 8); right: calc(var(--u) * 8); text-align: center; z-index: 3; }
-h1 { font-family: "Baloo 2", system-ui, sans-serif; font-weight: 800; font-size: calc(var(--u) * 11.5); line-height: .98; letter-spacing: -.01em; text-wrap: balance; text-shadow: 0 calc(var(--u) * .5) calc(var(--u) * 2) rgba(0,0,0,.18); }
+h1 { font-family: "Baloo 2", "PingFang SC", "Hiragino Sans", "Geeza Pro", system-ui, sans-serif; font-weight: 800; font-size: calc(var(--u) * 11.5); line-height: .98; letter-spacing: -.01em; text-wrap: balance; text-shadow: 0 calc(var(--u) * .5) calc(var(--u) * 2) rgba(0,0,0,.18); }
 p { margin-top: calc(var(--u) * 3); font-size: calc(var(--u) * 4.4); line-height: 1.25; opacity: .92; text-wrap: balance; }
 .stage { position: absolute; left: 50%; bottom: calc(var(--u) * -14); width: calc(var(--u) * 82); transform: translateX(-50%) rotate(var(--tilt)); z-index: 2; }
 .phone { position: relative; width: 100%; aspect-ratio: 1320 / 2868; border-radius: calc(var(--u) * 11); background: #0b0b0f; padding: calc(var(--u) * 2.1); box-shadow: 0 calc(var(--u) * 4) calc(var(--u) * 10) rgba(0,0,0,.35), inset 0 0 0 calc(var(--u) * .45) #3a3a44; }
@@ -52,6 +52,10 @@ const THEMES = {
 };
 const q = new URLSearchParams(location.search);
 const f = JSON.parse(decodeURIComponent(q.get("f")));
+// The right glyphs for Chinese and Japanese, and right-to-left captions for Arabic.
+const lang = q.get("lang") || "en";
+document.documentElement.lang = lang;
+if (lang === "ar") document.getElementById("h").parentElement.dir = "rtl";
 const [w, h] = (q.get("size") || "1320x2868").split("x").map(Number);
 document.documentElement.style.setProperty("--w", w + "px");
 document.documentElement.style.setProperty("--h", h + "px");
