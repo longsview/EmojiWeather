@@ -3110,7 +3110,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "露点温度"
+            "value" : "露点"
           }
         },
         "pt-BR" : {
@@ -6855,7 +6855,7 @@
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "الضغط"
+            "value" : "الضغط الجوي"
           }
         },
         "es" : {

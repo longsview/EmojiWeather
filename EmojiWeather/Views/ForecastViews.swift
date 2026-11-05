@@ -87,6 +87,8 @@ extension ForecastContent {
                 emoji: "👀", title: String(localized: "Visibility"),
                 value: current.visibility.formatted(.measurement(width: .abbreviated, usage: .road, numberFormatStyle: measurement))
             ),
+            Tile(emoji: "⏲️", title: String(localized: "Pressure"), value: Self.pressure(current.pressure, trend: current.pressureTrend)),
+            Tile(emoji: "💧", title: String(localized: "Dew point"), value: current.dewPoint.shortTemperature),
         ]
         if let today {
             tiles.append(Tile(emoji: "☔️", title: String(localized: "Rain chance"), value: today.precipitationChance.formatted(.percent.precision(.fractionLength(0)))))
@@ -99,6 +101,20 @@ extension ForecastContent {
             }
         }
         self.tiles = tiles
+    }
+
+    /// "30.02 inHg ↑" in the US, "1017 hPa ↓" elsewhere, with which way it's heading.
+    static func pressure(_ value: Measurement<UnitPressure>, trend: PressureTrend) -> String {
+        let usesInches = DisplaySettings.locale.measurementSystem == .us
+        let unit: UnitPressure = usesInches ? .inchesOfMercury : .hectopascals
+        let number = value.converted(to: unit).value
+            .formatted(.number.precision(.fractionLength(usesInches ? 2 : 0)).locale(DisplaySettings.locale))
+        let arrow = switch trend {
+        case .rising: " ↑"
+        case .falling: " ↓"
+        default: ""
+        }
+        return "\(number) \(usesInches ? "inHg" : "hPa")\(arrow)"
     }
 
     fileprivate static func spokenDay(name: String, condition: String, high: String, low: String, chance: String?) -> String {
@@ -176,6 +192,8 @@ extension ForecastContent {
             Tile(emoji: "🌬️", title: String(localized: "Wind"), value: scene == .windy ? "24 mph W" : "6 mph W"),
             Tile(emoji: "🕶️", title: String(localized: "UV index"), value: isDaytime && scene.showsSunOrMoon ? "6 High" : "1 Low"),
             Tile(emoji: "👀", title: String(localized: "Visibility"), value: scene == .foggy ? "0.5 mi" : "10 mi"),
+            Tile(emoji: "⏲️", title: String(localized: "Pressure"), value: [.rain, .thunderstorm, .snow].contains(scene) ? "29.71 inHg ↓" : "30.02 inHg ↑"),
+            Tile(emoji: "💧", title: String(localized: "Dew point"), value: "\(base - (scene == .hot ? 40 : 14))°"),
             Tile(emoji: "☔️", title: String(localized: "Rain chance"), value: days[0].chance ?? "0%"),
             Tile(emoji: "🌅", title: String(localized: "Sunrise"), value: sunrise.formatted(timeStyle)),
             Tile(emoji: "🌇", title: String(localized: "Sunset"), value: sunset.formatted(timeStyle)),
