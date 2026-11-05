@@ -283,7 +283,7 @@ extension ForecastContent {
             Tile(emoji: "🌡️", title: String(localized: "Feels like"), value: "\(base + (scene == .snow ? -5 : 2))°"),
             Tile(emoji: "💦", title: String(localized: "Humidity"), value: "\(scene.sampleHumidity)%"),
             Tile(emoji: "🌬️", title: String(localized: "Wind"), value: scene == .windy ? "24 mph W" : "6 mph W"),
-            Tile(emoji: "🕶️", title: String(localized: "UV index"), value: isDaytime && scene.showsSunOrMoon ? "6 High" : "1 Low"),
+            Tile(emoji: "🕶️", title: String(localized: "UV index"), value: isDaytime && scene.showsSunOrMoon ? "7 High" : "1 Low"),
             Tile(emoji: "👀", title: String(localized: "Visibility"), value: scene == .foggy ? "0.5 mi" : "10 mi"),
             Tile(emoji: "⏲️", title: String(localized: "Pressure"), value: [.rain, .thunderstorm, .snow].contains(scene) ? "29.71 inHg ↓" : "30.02 inHg ↑"),
             Tile(emoji: "💧", title: String(localized: "Dew point"), value: "\(base - (scene == .hot ? 40 : 14))°"),
