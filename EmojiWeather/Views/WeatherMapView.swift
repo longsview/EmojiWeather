@@ -13,15 +13,48 @@ struct WeatherMapView: View {
 
     init(center: CLLocationCoordinate2D?) {
         self.center = center
+        // Always a fixed region: `.automatic` fits the camera to the markers, which loads markers
+        // for the new region, which refits... and the map zooms in until one marker is left.
+        var region = Self.defaultRegion
         if let center {
-            _position = State(initialValue: .region(MKCoordinateRegion(
-                center: center,
-                span: MKCoordinateSpan(latitudeDelta: 6, longitudeDelta: 6)
-            )))
-        } else {
-            _position = State(initialValue: .automatic)
+            region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 6, longitudeDelta: 6))
         }
+        #if DEBUG
+        if ScreenshotMode.isActive { region = Self.screenshotRegion }
+        #endif
+        _position = State(initialValue: .region(region))
     }
+
+    /// Without a location or a saved city: the reader's country when we know roughly where it
+    /// is, otherwise the continental US.
+    private static var defaultRegion: MKCoordinateRegion {
+        let regions: [String: (Double, Double, Double)] = [
+            "US": (39.5, -98.5, 28), "CA": (50, -96, 35), "GB": (54, -2.5, 10), "FR": (46.6, 2.4, 10),
+            "ES": (40.2, -3.7, 10), "MX": (23.6, -102.5, 18), "BR": (-14.2, -51.9, 30), "PT": (39.6, -8, 6),
+            "DE": (51.2, 10.4, 9), "IT": (42.5, 12.6, 10), "JP": (36.5, 138, 14), "CN": (35, 104, 32),
+            "AU": (-25.3, 133.8, 35), "IN": (21, 78, 28), "SA": (24, 45, 20), "AE": (24.4, 54.4, 6),
+            "EG": (26.8, 30.8, 14),
+        ]
+        let code = Locale.current.region?.identifier ?? "US"
+        let (lat, lon, span) = regions[code] ?? regions["US"]!
+        return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: lat, longitude: lon),
+                                  span: MKCoordinateSpan(latitudeDelta: span, longitudeDelta: span))
+    }
+
+    #if DEBUG
+    /// Screenshots show a country that fits each language: the US in English, France in French,
+    /// Spain, Brazil, China, Japan and Saudi Arabia, wide enough for a map full of big cities.
+    private static var screenshotRegion: MKCoordinateRegion {
+        let byLanguage: [String: (Double, Double, Double)] = [
+            "en": (39.5, -98.5, 28), "fr": (46.6, 2.4, 10), "es": (40.2, -3.7, 10), "pt": (-14.2, -51.9, 30),
+            "zh": (33, 110, 26), "ja": (36.5, 138, 14), "ar": (24, 45, 20),
+        ]
+        let code = Locale.current.language.languageCode?.identifier ?? "en"
+        let (lat, lon, span) = byLanguage[code] ?? byLanguage["en"]!
+        return MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: lat, longitude: lon),
+                                  span: MKCoordinateSpan(latitudeDelta: span, longitudeDelta: span))
+    }
+    #endif
 
     var body: some View {
         Map(position: $position) {
