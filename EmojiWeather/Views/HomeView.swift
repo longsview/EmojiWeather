@@ -309,7 +309,12 @@ struct HomeView: View {
         // The same sky as the scene beside it (white, grey, golden or night navy), so the two
         // halves read as one screen and the status bar and side tab bar, which switch with the
         // scene, stay readable. The cards are a light tint of the text colour, so they work on any sky.
-        .background(LinearGradient(colors: activeSky.background(for: activeScene.scene), startPoint: .top, endPoint: .bottom))
+        .background {
+            LinearGradient(colors: activeSky.background(for: activeScene.scene), startPoint: .top, endPoint: .bottom)
+                // The sunset gradient ends in a light orange that washes out the white card labels;
+                // a light shade keeps them readable while the colours still match the scene.
+                .overlay(Color.black.opacity(activeSky == .golden ? 0.28 : 0))
+        }
         .animation(.easeInOut(duration: 0.6), value: sceneKey)
         .onAppear { AppAnalytics.log(.forecastOpened) }
     }
