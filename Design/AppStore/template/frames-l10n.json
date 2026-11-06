@@ -50,7 +50,7 @@
     ],
     "duo-inner-01-hero": [
       "La météo, en emoji.",
-      "Toutes vos villes et le ciel du jour, côte à côte."
+      "Vos villes d’un côté, les prévisions complètes de l’autre."
     ]
   },
   "es": {
@@ -104,7 +104,7 @@
     ],
     "duo-inner-01-hero": [
       "El tiempo, en emoji.",
-      "Todas tus ciudades y el cielo de hoy, lado a lado."
+      "Tus ciudades a un lado y el pronóstico completo al otro."
     ]
   },
   "pt-BR": {
@@ -158,7 +158,7 @@
     ],
     "duo-inner-01-hero": [
       "O clima, em emoji.",
-      "Todas as suas cidades e o céu de hoje, lado a lado."
+      "Suas cidades de um lado, a previsão completa do outro."
     ]
   },
   "zh-Hans": {
@@ -212,7 +212,7 @@
     ],
     "duo-inner-01-hero": [
       "用表情符号看天气。",
-      "所有城市和今天的天空，并排显示。"
+      "一边滑动切换城市，一边查看完整预报。"
     ]
   },
   "ja": {
@@ -266,7 +266,7 @@
     ],
     "duo-inner-01-hero": [
       "天気を、絵文字で。",
-      "すべての都市と今日の空を、並べて表示。"
+      "片側で都市を切り替え、もう片側で詳しい予報。"
     ]
   },
   "ar": {
@@ -320,7 +320,7 @@
     ],
     "duo-inner-01-hero": [
       "الطقس، بالإيموجي.",
-      "كل مدنك وسماء اليوم جنبًا إلى جنب."
+      "مدنك في جانب، والتوقعات الكاملة في الجانب الآخر."
     ]
   }
 }

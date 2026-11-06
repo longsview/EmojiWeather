@@ -33,6 +33,11 @@ p { margin-top: calc(var(--u) * 3); font-size: calc(var(--u) * 4.4); line-height
 .ipad .copy { top: calc(var(--u) * 6); }
 .ipad .sticker { font-size: calc(var(--u) * 11); }
 .ipad .s0 { top: calc(var(--u) * 30); } .ipad .s1 { top: calc(var(--u) * 52); } .ipad .s2 { top: calc(var(--u) * 92); }
+/* Landscape (iPhone Duo open): a smaller caption leaves room for the whole device. */
+.landscape h1 { font-size: calc(var(--u) * 5.4); }
+.landscape p { font-size: calc(var(--u) * 2.1); margin-top: calc(var(--u) * 1.2); }
+.landscape .copy { top: calc(var(--u) * 3.2); }
+.landscape .sticker { font-size: calc(var(--u) * 8); }
 /* Retro: CRT scanlines over a teal TV-weather gradient. */
 .scan::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,.08) 0 3px, transparent 3px 7px); }
 </style></head>
@@ -64,6 +69,7 @@ const [w, h] = (q.get("size") || "1320x2868").split("x").map(Number);
 document.documentElement.style.setProperty("--w", w + "px");
 document.documentElement.style.setProperty("--h", h + "px");
 if (q.get("device") === "ipad") document.body.classList.add("ipad");
+if (w > h) document.body.classList.add("landscape");
 const [a, b, c] = THEMES[f.theme] || THEMES.sky;
 const bg = document.getElementById("bg");
 bg.style.background = `linear-gradient(165deg, ${a} 0%, ${b} 58%, ${c} 100%)`;
@@ -86,6 +92,16 @@ shot.onload = () => document.fonts.ready.then(() => {
   const stage = document.getElementById("stage");
   const maxWidth = 0.85 * h * aw / ah;
   if (stage.getBoundingClientRect().width > maxWidth) stage.style.width = maxWidth + "px";
+  if (w > h) {
+    // Landscape (iPhone Duo open): show the whole device between the caption and the bottom edge.
+    const margin = h * 0.05;
+    const top = document.querySelector(".copy").getBoundingClientRect().bottom + margin;
+    const width = Math.min(stage.getBoundingClientRect().width, (h - top - margin) * aw / ah);
+    stage.style.width = width + "px";
+    stage.style.bottom = margin + "px";
+    document.body.dataset.ready = "1";
+    return;
+  }
   // Long translated captions wrap to more lines; push the device down so it never covers them.
   const gap = document.querySelector(".copy").getBoundingClientRect().bottom + w * 0.03 - stage.getBoundingClientRect().top;
   if (gap > 0) stage.style.bottom = `${parseFloat(getComputedStyle(stage).bottom) - gap}px`;

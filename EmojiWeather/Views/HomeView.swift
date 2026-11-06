@@ -2,6 +2,8 @@ import SwiftUI
 
 /// iPhone: full-screen pages, one per place; swipe left and right between them.
 /// iPad (regular width): a split view with the places list on the left and the city on the right.
+/// iPhone Duo, open: the iPhone pager on the left half and the full forecast on the right half,
+/// so nothing important sits on the fold in the middle.
 struct HomeView: View {
     /// False while the Map tab is showing, so the scene can pause.
     var isVisible = true
@@ -24,6 +26,13 @@ struct HomeView: View {
     @Environment(\.scenePhase) private var scenePhase
     /// Height covered by the tab bar and home indicator, so the bottom controls sit above it.
     @State private var bottomInset: CGFloat = 0
+    /// The pager's safe area. On iPhone Duo the status bar moves into a vertical bar on the
+    /// right edge, so the top inset can be zero and the sides aren't equal.
+    @State private var pagerInsets = EdgeInsets()
+    /// iPhone Duo, open: the visible page's forecast, shown beside it.
+    @State private var inlineForecast: (name: String, forecast: ForecastContent?)?
+    /// The screen's safe area, measured outside any view that ignores it.
+    @State private var screenInsets = EdgeInsets()
     /// Bumped by the fixed Forecast hint to open the visible page's forecast.
     @State private var openDetailsToken = 0
     /// Bumped by the Share button to share the visible page.
@@ -69,12 +78,15 @@ struct HomeView: View {
 
     var body: some View {
         Group {
-            if sizeClass == .regular {
+            if isOpenDuo {
+                duoLayout
+            } else if sizeClass == .regular {
                 splitLayout
             } else {
                 pager
             }
         }
+        .onGeometryChange(for: EdgeInsets.self) { $0.safeAreaInsets } action: { screenInsets = $0 }
         .preferredColorScheme(activeSky.isDark ? .dark : .light)
         .sheet(isPresented: $showingQuiz) {
             QuizView()
@@ -124,7 +136,9 @@ struct HomeView: View {
 
     // MARK: - iPhone
 
-    private var pager: some View {
+    private var pager: some View { pager(showsForecastHint: true) }
+
+    private func pager(showsForecastHint: Bool) -> some View {
         ScrollView(.horizontal) {
             LazyHStack(spacing: 0) {
                 ForEach(places, id: \.id) { place in
@@ -138,7 +152,10 @@ struct HomeView: View {
                         onSceneChange: { activeScene = $0 },
                         openDetailsToken: openDetailsToken,
                         shareToken: shareToken,
-                        onHasWeatherChange: { activeHasWeather = $0 }
+                        onHasWeatherChange: { activeHasWeather = $0 },
+                        onForecastChange: showsForecastHint ? nil : { name, forecast in
+                            inlineForecast = (name, forecast)
+                        }
                     )
                     .containerRelativeFrame([.horizontal, .vertical])
                     .id(place.id)
@@ -166,8 +183,10 @@ struct HomeView: View {
         .overlay(alignment: .bottom) {
             // Fixed while the cities swipe; only each page's text moves.
             VStack(spacing: 8) {
-                ForecastHint(color: activeSky.textColor, isEnabled: activeHasWeather) {
-                    openDetailsToken += 1
+                if showsForecastHint {
+                    ForecastHint(color: activeSky.textColor, isEnabled: activeHasWeather) {
+                        openDetailsToken += 1
+                    }
                 }
                 PageDots(places: places, currentID: currentID, color: activeSky.textColor)
                     .accessibilityElement(children: .ignore)
@@ -185,6 +204,9 @@ struct HomeView: View {
                     }
             }
             .padding(.bottom, 6)
+            // Centred over the same area as the page's text, which keeps out of the side insets.
+            .padding(.leading, pagerInsets.leading)
+            .padding(.trailing, pagerInsets.trailing)
             .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
         }
         .overlay {
@@ -192,7 +214,10 @@ struct HomeView: View {
             // where the safe area still applies.
             Color.clear
                 .allowsHitTesting(false)
-                .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.bottom } action: { bottomInset = $0 }
+                .onGeometryChange(for: EdgeInsets.self) { $0.safeAreaInsets } action: { insets in
+                    pagerInsets = insets
+                    bottomInset = insets.bottom
+                }
         }
     }
 
@@ -240,6 +265,51 @@ struct HomeView: View {
         }
         .foregroundStyle(activeSky.textColor)
         .padding(.horizontal)
+        // iPhone Duo puts the status bar in the side bar, leaving no top inset; keep the
+        // buttons off the very edge of the screen.
+        .padding(.top, pagerInsets.top < 20 ? 12 : 0)
+    }
+
+    // MARK: - iPhone Duo
+
+    /// iPhone idiom with a regular width only happens on iPhone Duo's open inner display
+    /// (iPhone is portrait only, so a Pro Max never turns regular).
+    private var isOpenDuo: Bool {
+        sizeClass == .regular && UIDevice.current.userInterfaceIdiom == .phone
+    }
+
+    /// Two halves that meet at the fold: swipe through cities on the left, read the full
+    /// forecast for the visible city on the right.
+    private var duoLayout: some View {
+        GeometryReader { proxy in
+            HStack(spacing: 0) {
+                pager(showsForecastHint: false)
+                    .frame(width: proxy.size.width / 2)
+                    .clipped()
+                duoForecast
+                    .frame(width: proxy.size.width / 2)
+            }
+        }
+        .ignoresSafeArea()
+    }
+
+    private var duoForecast: some View {
+        Group {
+            if let inlineForecast, let forecast = inlineForecast.forecast {
+                DetailsView(placeName: inlineForecast.name, forecast: forecast)
+                    .id(inlineForecast.name)
+            } else {
+                ProgressView()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+        }
+        // The layout ignores the safe area so the halves meet at the fold; keep the forecast
+        // clear of the status bar and the vertical tab bar on the right edge.
+        .safeAreaPadding(EdgeInsets(top: screenInsets.top, leading: 0, bottom: screenInsets.bottom, trailing: screenInsets.trailing))
+        // The forecast keeps the reader's own Light or Dark setting, like the sheet it replaces.
+        .background(Color(.systemBackground))
+        .environment(\.colorScheme, SystemAppearance.shared.colorScheme)
+        .onAppear { AppAnalytics.log(.forecastOpened) }
     }
 
     // MARK: - iPad

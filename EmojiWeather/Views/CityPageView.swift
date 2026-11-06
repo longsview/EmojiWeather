@@ -29,6 +29,9 @@ struct CityPageView: View {
     var shareToken = 0
     /// Tells the container whether the visible page has weather, so its hint can show.
     var onHasWeatherChange: (Bool) -> Void = { _ in }
+    /// iPhone Duo, open: the forecast is always showing beside the page, so the page reports it
+    /// (with the place's name) instead of opening it in a sheet.
+    var onForecastChange: ((String, ForecastContent?) -> Void)?
 
     /// The container draws the hint when it reserves the bottom space (the iPhone pager).
     private var drawsOwnHint: Bool { bottomInset == nil }
@@ -99,6 +102,11 @@ struct CityPageView: View {
         return ForecastContent(snapshot: snapshot, timeZone: timeZone)
     }
 
+    /// Changes when the inline forecast (iPhone Duo) should be sent again.
+    private var forecastKey: String {
+        "\(isActive)-\(placeName)-\(snapshot?.current.date.timeIntervalSince1970 ?? 0)-\(sceneConditions.scene.rawValue)-\(sceneConditions.sky.rawValue)"
+    }
+
     /// Half height to start, like Apple Maps. Screenshots on iPad open it fully.
     private var detailsDetents: Set<PresentationDetent> {
         #if DEBUG
@@ -164,7 +172,10 @@ struct CityPageView: View {
             if isActive { onHasWeatherChange(hasWeather) }
         }
         .onChange(of: openDetailsToken) { _, _ in
-            if isActive, snapshot != nil { showingDetails = true }
+            if isActive, snapshot != nil, onForecastChange == nil { showingDetails = true }
+        }
+        .onChange(of: forecastKey, initial: true) { _, _ in
+            if isActive, let onForecastChange { onForecastChange(placeName, forecast) }
         }
         .onChange(of: shareToken) { _, _ in
             if isActive, snapshot != nil { showingShare = true }
@@ -200,7 +211,7 @@ struct CityPageView: View {
             DragGesture(minimumDistance: 24).onEnded { value in
                 let isUpward = value.translation.height < -60
                     && abs(value.translation.height) > abs(value.translation.width) * 1.5
-                if isUpward, snapshot != nil { showingDetails = true }
+                if isUpward, snapshot != nil, onForecastChange == nil { showingDetails = true }
             }
         )
         .task(id: loadKey) { await load() }

@@ -14,13 +14,14 @@
 | `iphone` | 1320×2868 | iPhone 6.9" (Dynamic Island, large) |
 | `iphone-6.3` | 1206×2622 | iPhone 6.3" (Dynamic Island, medium), **required** |
 | `ipad` | 2064×2752 | iPad 13" |
-| `duo-inner` | 2007×2853 | iPhone Duo, inner display (required from April 2027 for iOS 27.1 SDK builds) |
+| `duo-inner` | 2853×2007 | iPhone Duo, inner display (required from April 2027 for iOS 27.1 SDK builds) |
 | `duo-outer` | 1398×2034 | iPhone Duo, outer display |
 
-`iphone-6.3` and `duo-outer` reuse the iPhone frames. `duo-inner` reuses the iPad frames: the
-open Duo has a regular-width screen, so the app shows its two-pane split layout, drawn with
-the hinge down the middle. Both Duo sizes use `raw/duo-inner/` and `raw/duo-outer/` captures
-when present (no Duo simulator in Xcode 27.0), otherwise the iPad / iPhone captures.
+`iphone-6.3` and `duo-outer` reuse the iPhone frames; `duo-outer` reads real folded captures
+from `raw/duo-outer/` (same names as `raw/iphone/`). `duo-inner` is landscape (2853×2007, which
+App Store Connect accepts for the Duo inner display) with its own frames, from real open-Duo
+captures in `raw/duo-inner/`: sunny, storm, map, quiz, snow. On the open Duo the app shows the
+city pager on the left half and the full forecast on the right half, meeting at the fold.
 
 Edit headlines, colors and stickers in `frames.json`. Themes are defined at the top of `frame.html`.
 

@@ -207,20 +207,78 @@
   },
   "duo-inner": {
     "size": [
-      2007,
-      2853
+      2853,
+      2007
     ],
-    "frames": "ipad",
     "layout": "ipad",
-    "shots": "duo-inner",
-    "screenAspect": [
-      2007,
-      2853
-    ],
     "fold": true,
-    "subs": {
-      "01-hero": "All your cities and today's sky, side by side."
-    }
+    "frames": [
+      {
+        "id": "01-hero",
+        "shot": "raw/duo-inner/sunny.png",
+        "theme": "sky",
+        "tilt": 0,
+        "headline": "The weather, in emoji.",
+        "sub": "Swipe your cities on one side. Read the full forecast on the other.",
+        "stickers": [
+          "☀️",
+          "⛅️",
+          "🌈"
+        ]
+      },
+      {
+        "id": "02-storm",
+        "shot": "raw/duo-inner/storm.png",
+        "theme": "storm",
+        "tilt": 0,
+        "headline": "Feel the storm.",
+        "sub": "Rain, snow and lightning that move with the real weather.",
+        "stickers": [
+          "⚡️",
+          "🌧️",
+          "💧"
+        ]
+      },
+      {
+        "id": "03-map",
+        "shot": "raw/duo-inner/map.png",
+        "theme": "retro",
+        "tilt": 0,
+        "headline": "The retro weather map.",
+        "sub": "Like the TV forecast, drawn in emoji.",
+        "stickers": [
+          "📺",
+          "🗺️",
+          "⛈️"
+        ]
+      },
+      {
+        "id": "04-daily",
+        "shot": "raw/duo-inner/quiz.png",
+        "theme": "sun",
+        "tilt": 0,
+        "headline": "A new game every day.",
+        "sub": "Five geography questions about where you are. Keep your streak.",
+        "stickers": [
+          "🧩",
+          "🔥",
+          "🌍"
+        ]
+      },
+      {
+        "id": "05-snow",
+        "shot": "raw/duo-inner/snow.png",
+        "theme": "snow",
+        "tilt": 0,
+        "headline": "Snow days, in emoji.",
+        "sub": "Flurries to blizzards, drawn live from the forecast.",
+        "stickers": [
+          "⛄️",
+          "❄️",
+          "🧣"
+        ]
+      }
+    ]
   },
   "duo-outer": {
     "size": [
