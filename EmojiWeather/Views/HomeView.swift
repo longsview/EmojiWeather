@@ -306,9 +306,9 @@ struct HomeView: View {
         // The layout ignores the safe area so the halves meet at the fold; keep the forecast
         // clear of the status bar and the vertical tab bar on the right edge.
         .safeAreaPadding(EdgeInsets(top: screenInsets.top, leading: 0, bottom: screenInsets.bottom, trailing: screenInsets.trailing))
-        // The forecast keeps the reader's own Light or Dark setting, like the sheet it replaces.
+        // Follows the sky like the rest of the screen (dark at night), so the status bar and the
+        // vertical tab bar, which switch with the scene, stay readable over it.
         .background(Color(.systemBackground))
-        .environment(\.colorScheme, SystemAppearance.shared.colorScheme)
         .onAppear { AppAnalytics.log(.forecastOpened) }
     }
 
