@@ -113,7 +113,13 @@ final class EmojiParticleSystem {
             while emitCredit[index] >= 1 {
                 emitCredit[index] -= 1
                 if particles.count < maxParticles {
-                    particles.append(spawn(emitter, index: index, size: size, tilt: tilt, speedScale: speedScale))
+                    let particle = spawn(emitter, index: index, size: size, tilt: tilt, speedScale: speedScale)
+                    // Open iPhone Duo: the right half holds the forecast, so only about a third
+                    // as much rain, snow and sparkle starts over there.
+                    if heroRegion < 1, particle.position.x > size.width * heroRegion, Double.random(in: 0...1) > 0.35 {
+                        continue
+                    }
+                    particles.append(particle)
                 }
             }
         }
