@@ -13,6 +13,7 @@ import WeatherKit
 /// - `-SkymojiSky day|sunset|night`: the time of day.
 /// - `-SkymojiTab weather|map|settings`: the first tab.
 /// - `-SkymojiOpen forecast|quiz|quizSummary|share|paywall|scenePack`: opens that screen.
+///   On Apple Watch, `forecast` or `daily` (without `-SkymojiScene`) opens scrolled to that live section.
 /// - `-SkymojiPack thanksgiving|halloween|autumn|holidays|spring|summer|seasonal|classic`.
 /// - `-SkymojiCity Honolulu`: opens a saved city by name.
 /// - `-SkymojiPlace Cupertino`: the name shown for My Location (no waiting for geocoding).

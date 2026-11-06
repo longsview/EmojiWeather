@@ -19,6 +19,9 @@ struct WatchCityPage: View {
     @State private var errorMessage: String?
     @State private var isLoading = false
 
+    private static let forecastID = "forecast"
+    private static let dailyID = "daily"
+
     private let logger = Logger(subsystem: "EmojiWeatherWatch", category: "Weather")
 
     private var targetLocation: CLLocation? {
@@ -72,6 +75,7 @@ struct WatchCityPage: View {
     }
 
     var body: some View {
+        ScrollViewReader { proxy in
         ScrollView {
             VStack(spacing: 10) {
                 WatchHeroView(
@@ -88,14 +92,32 @@ struct WatchCityPage: View {
                     // Screenshot mode: only the hero, with sample weather.
                 } else if let snapshot {
                     WatchHourlySection(hours: snapshot.hourly, timeZone: timeZone)
+                        .id(Self.forecastID)
                     WatchConditionsSection(current: snapshot.current, today: snapshot.daily.first, timeZone: timeZone)
                     WatchDailySection(days: snapshot.daily, timeZone: timeZone)
+                        .id(Self.dailyID)
                     WatchAttributionView()
                 } else {
                     status
                 }
             }
             .padding(.horizontal, 4)
+        }
+        #if DEBUG
+        .onChange(of: snapshot != nil) { _, loaded in
+            // -SkymojiOpen forecast|daily: open scrolled to the hourly or the 10-day forecast.
+            let target = switch ScreenshotMode.open {
+            case "forecast": Self.forecastID
+            case "daily": Self.dailyID
+            default: String?.none
+            }
+            guard loaded, isActive, let target else { return }
+            Task {
+                try? await Task.sleep(for: .milliseconds(400))
+                proxy.scrollTo(target, anchor: .top)
+            }
+        }
+        #endif
         }
         .environment(\.skyMode, conditions.sky)
         .containerBackground(for: .tabView) {
