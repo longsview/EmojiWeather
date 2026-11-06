@@ -95,8 +95,12 @@ final class EmojiParticleSystem {
 
     private func step(dt: Double, size: CGSize, tilt: Double, allowLightning: Bool) {
         elapsed += dt
-        let rateScale = reduceMotion ? 0.25 : 1
+        // Wide landscape canvases (iPhone Duo open, iPad sideways) cover far more sky than a
+        // portrait phone, so they get proportionally more rain, snow and wind, up to double.
+        let widthScale = size.width > size.height * 1.2 ? min(2, max(1, size.width / 500)) : 1
+        let rateScale = (reduceMotion ? 0.25 : 1) * widthScale
         let speedScale = reduceMotion ? 0.35 : 1
+        let maxParticles = Int(Double(spec.maxParticles) * widthScale)
 
         // Emit new particles.
         for (index, emitter) in spec.emitters.enumerated() {
@@ -104,7 +108,7 @@ final class EmojiParticleSystem {
             emitCredit[index] += emitter.rate * intensityScale * rateScale * dt
             while emitCredit[index] >= 1 {
                 emitCredit[index] -= 1
-                if particles.count < spec.maxParticles {
+                if particles.count < maxParticles {
                     particles.append(spawn(emitter, index: index, size: size, tilt: tilt, speedScale: speedScale))
                 }
             }
