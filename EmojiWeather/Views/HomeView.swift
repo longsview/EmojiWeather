@@ -138,7 +138,8 @@ struct HomeView: View {
 
     private var pager: some View { pager(showsForecastHint: true) }
 
-    private func pager(showsForecastHint: Bool) -> some View {
+    /// `drawsScene` is false on the open Duo, where one scene runs behind the whole screen.
+    private func pager(showsForecastHint: Bool, drawsScene: Bool = true) -> some View {
         ScrollView(.horizontal) {
             LazyHStack(spacing: 0) {
                 ForEach(places, id: \.id) { place in
@@ -176,7 +177,7 @@ struct HomeView: View {
                 }
             }
         ))
-        .background { sharedScene }
+        .background { if drawsScene { sharedScene } }
         .ignoresSafeArea()
         .ignoresSafeArea(.keyboard)
         .overlay(alignment: .top) { topBar }
@@ -279,17 +280,19 @@ struct HomeView: View {
     }
 
     /// Two halves that meet at the fold: swipe through cities on the left, read the full
-    /// forecast for the visible city on the right.
+    /// forecast for the visible city on the right. One scene runs behind the whole screen, so
+    /// the sun, rain and wind cross the fold and drift behind the forecast.
     private var duoLayout: some View {
         GeometryReader { proxy in
             HStack(spacing: 0) {
-                pager(showsForecastHint: false)
+                pager(showsForecastHint: false, drawsScene: false)
                     .frame(width: proxy.size.width / 2)
                     .clipped()
                 duoForecast
                     .frame(width: proxy.size.width / 2)
             }
         }
+        .background { sharedScene }
         .ignoresSafeArea()
     }
 
@@ -310,10 +313,12 @@ struct HomeView: View {
         // halves read as one screen and the status bar and side tab bar, which switch with the
         // scene, stay readable. The cards are a light tint of the text colour, so they work on any sky.
         .background {
+            // A veil of the sky's own colours: the scene shows through, softened enough that the
+            // forecast stays easy to read. The sunset gradient ends in a light orange that washes
+            // out white labels, so it gets a light shade too.
             LinearGradient(colors: activeSky.background(for: activeScene.scene), startPoint: .top, endPoint: .bottom)
-                // The sunset gradient ends in a light orange that washes out the white card labels;
-                // a light shade keeps them readable while the colours still match the scene.
-                .overlay(Color.black.opacity(activeSky == .golden ? 0.28 : 0))
+                .opacity(0.55)
+                .overlay(Color.black.opacity(activeSky == .golden ? 0.22 : 0))
         }
         .animation(.easeInOut(duration: 0.6), value: sceneKey)
         .onAppear { AppAnalytics.log(.forecastOpened) }
