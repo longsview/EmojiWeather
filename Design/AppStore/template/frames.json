@@ -123,16 +123,16 @@
         ]
       },
       {
-        "id": "10-snow",
-        "shot": "raw/iphone/snow.png",
-        "theme": "snow",
+        "id": "10-widgets",
+        "shot": "raw/iphone/widgets.png",
+        "theme": "sky2",
         "tilt": 0,
-        "headline": "Snow days,<br>in emoji.",
-        "sub": "Flurries to blizzards, drawn live from the forecast.",
+        "headline": "Your sky,<br>on your Home Screen.",
+        "sub": "Widgets for your Home and Lock Screen, plus your quiz streak.",
         "stickers": [
-          "⛄️",
-          "❄️",
-          "🧣"
+          "☀️",
+          "📱",
+          "🔥"
         ]
       }
     ]

@@ -51,6 +51,10 @@
     "duo-inner-01-hero": [
       "La météo, en emoji.",
       "Vos villes d’un côté, les prévisions complètes de l’autre."
+    ],
+    "10-widgets": [
+      "Votre ciel,<br>sur l’écran d’accueil.",
+      "Des widgets pour l’écran d’accueil et verrouillé, et votre série du quiz."
     ]
   },
   "es": {
@@ -105,6 +109,10 @@
     "duo-inner-01-hero": [
       "El tiempo, en emoji.",
       "Tus ciudades a un lado y el pronóstico completo al otro."
+    ],
+    "10-widgets": [
+      "Tu cielo,<br>en tu pantalla de inicio.",
+      "Widgets para la pantalla de inicio y bloqueada, y tu racha del quiz."
     ]
   },
   "pt-BR": {
@@ -159,6 +167,10 @@
     "duo-inner-01-hero": [
       "O clima, em emoji.",
       "Suas cidades de um lado, a previsão completa do outro."
+    ],
+    "10-widgets": [
+      "Seu céu,<br>na Tela de Início.",
+      "Widgets para a Tela de Início e a Tela Bloqueada, e sua sequência no quiz."
     ]
   },
   "zh-Hans": {
@@ -213,6 +225,10 @@
     "duo-inner-01-hero": [
       "用表情符号看天气。",
       "一边滑动切换城市，一边查看完整预报。"
+    ],
+    "10-widgets": [
+      "你的天空，<br>就在主屏幕上。",
+      "主屏幕和锁定屏幕小组件，还有你的答题连续纪录。"
     ]
   },
   "ja": {
@@ -267,6 +283,10 @@
     "duo-inner-01-hero": [
       "天気を、絵文字で。",
       "片側で都市を切り替え、もう片側で詳しい予報。"
+    ],
+    "10-widgets": [
+      "あなたの空を、<br>ホーム画面に。",
+      "ホーム画面とロック画面のウィジェット、クイズの連続記録も。"
     ]
   },
   "ar": {
@@ -321,6 +341,10 @@
     "duo-inner-01-hero": [
       "الطقس، بالإيموجي.",
       "مدنك في جانب، والتوقعات الكاملة في الجانب الآخر."
+    ],
+    "10-widgets": [
+      "سماؤك،<br>على شاشتك الرئيسية.",
+      "أدوات للشاشة الرئيسية وشاشة القفل، وسلسلة الاختبار اليومي."
     ]
   }
 }
