@@ -1,5 +1,6 @@
 #if DEBUG
 import Foundation
+import WeatherKit
 
 /// Debug-only launch arguments for App Store screenshots, so each shot is one `simctl launch`:
 ///
@@ -60,5 +61,59 @@ enum ScreenshotMode {
     static var sunProgress: Double {
         sky == .golden ? 0.96 : 0.3
     }
+}
+
+/// Sample weather that matches a forced scene, shared by the iPhone, iPad and Watch screenshots.
+extension WeatherScene {
+    /// Sample temperatures, set in °F and shown in the reader's unit (a French screenshot says 24°, not 75°).
+    var sampleFahrenheit: Double {
+        switch self {
+        case .thunderstorm: 71
+        case .rain: 58
+        case .snow: 28
+        case .sunny: 75
+        case .clearNight: 62
+        case .partlyCloudy: 68
+        case .cloudy: 64
+        case .windy: 60
+        case .foggy: 55
+        case .hot: 103
+        }
+    }
+
+    var sampleHighFahrenheit: Double {
+        switch self {
+        case .hot: 106
+        case .snow: 31
+        default: 78
+        }
+    }
+
+    var sampleLowFahrenheit: Double {
+        switch self {
+        case .hot: 84
+        case .snow: 19
+        default: 52
+        }
+    }
+
+    var sampleTemperature: String { Measurement(value: sampleFahrenheit, unit: UnitTemperature.fahrenheit).shortTemperature }
+    var sampleHigh: String { Measurement(value: sampleHighFahrenheit, unit: UnitTemperature.fahrenheit).shortTemperature }
+    var sampleLow: String { Measurement(value: sampleLowFahrenheit, unit: UnitTemperature.fahrenheit).shortTemperature }
+
+    var sampleCondition: WeatherCondition {
+        switch self {
+        case .thunderstorm: .thunderstorms
+        case .rain: .rain
+        case .snow: .snow
+        case .sunny, .clearNight: .clear
+        case .partlyCloudy: .partlyCloudy
+        case .cloudy: .cloudy
+        case .windy: .windy
+        case .foggy: .foggy
+        case .hot: .hot
+        }
+    }
+
 }
 #endif

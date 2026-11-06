@@ -29,6 +29,9 @@ struct WatchCityPage: View {
     }
 
     private var placeName: String {
+        #if DEBUG
+        if place == .currentLocation, let name = ScreenshotMode.place { return name }
+        #endif
         switch place {
         case .currentLocation: location.placeName ?? String(localized: "My Location")
         case .city(let city): city.name
@@ -53,6 +56,21 @@ struct WatchCityPage: View {
         return SceneConditions(scene: .cloudy)
     }
 
+    /// Sample weather for a forced screenshot scene, in the reader's temperature unit.
+    private var sample: WatchHeroView.Sample? {
+        #if DEBUG
+        if let scene = ScreenshotMode.scene {
+            return .init(
+                temperature: scene.sampleTemperature,
+                condition: scene.sampleCondition.description,
+                high: scene.sampleHigh,
+                low: scene.sampleLow
+            )
+        }
+        #endif
+        return nil
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 10) {
@@ -61,11 +79,14 @@ struct WatchCityPage: View {
                     showsLocationIcon: place == .currentLocation,
                     timeZone: timeZone,
                     snapshot: snapshot,
+                    sample: sample,
                     tagline: conditions.scene.tagline(in: conditions.sky)
                 )
                 .containerRelativeFrame(.vertical, alignment: .bottom)
 
-                if let snapshot {
+                if sample != nil {
+                    // Screenshot mode: only the hero, with sample weather.
+                } else if let snapshot {
                     WatchHourlySection(hours: snapshot.hourly, timeZone: timeZone)
                     WatchConditionsSection(current: snapshot.current, today: snapshot.daily.first, timeZone: timeZone)
                     WatchDailySection(days: snapshot.daily, timeZone: timeZone)
@@ -97,7 +118,7 @@ struct WatchCityPage: View {
             if active, place == .currentLocation { location.refresh() }
         }
         .task(id: TaskKey(isActive: isActive, location: targetLocation)) {
-            guard isActive else { return }
+            guard isActive, sample == nil else { return }
             await load()
         }
     }
@@ -187,7 +208,27 @@ private struct WatchHeroView: View {
     let showsLocationIcon: Bool
     let timeZone: TimeZone
     let snapshot: WeatherSnapshot?
+    var sample: Sample? = nil
     let tagline: String
+
+    struct Sample {
+        let temperature: String
+        let condition: String
+        let high: String
+        let low: String
+    }
+
+    private var shown: Sample? {
+        if let sample { return sample }
+        guard let snapshot else { return nil }
+        let today = snapshot.daily.first
+        return Sample(
+            temperature: snapshot.current.temperature.shortTemperature,
+            condition: snapshot.current.condition.description,
+            high: today?.highTemperature.shortTemperature ?? "",
+            low: today?.lowTemperature.shortTemperature ?? ""
+        )
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -205,20 +246,19 @@ private struct WatchHeroView: View {
                 LocalTimeView(timeZone: timeZone, font: .system(.caption, design: .rounded, weight: .semibold))
             }
 
-            if let snapshot {
-                let today = snapshot.daily.first
-                Text(snapshot.current.temperature.shortTemperature)
+            if let shown {
+                Text(shown.temperature)
                     .font(.system(size: 54, weight: .heavy, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
                     .contentTransition(.numericText())
-                Text(snapshot.current.condition.description)
+                Text(shown.condition)
                     .font(.system(.footnote, design: .rounded, weight: .semibold))
                     .lineLimit(1)
-                if let today {
+                if !shown.high.isEmpty {
                     HStack(spacing: 8) {
-                        Text(verbatim: "↑\(today.highTemperature.shortTemperature)")
-                        Text(verbatim: "↓\(today.lowTemperature.shortTemperature)")
+                        Text(verbatim: "↑\(shown.high)")
+                        Text(verbatim: "↓\(shown.low)")
                     }
                     .font(.system(.footnote, design: .rounded, weight: .semibold))
                 }

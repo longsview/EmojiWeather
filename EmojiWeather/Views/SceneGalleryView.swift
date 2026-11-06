@@ -145,42 +145,6 @@ struct SceneGalleryView: View {
 }
 
 extension WeatherScene {
-    /// Sample temperatures, set in °F and shown in the reader's unit (a French screenshot says 24°, not 75°).
-    var sampleFahrenheit: Double {
-        switch self {
-        case .thunderstorm: 71
-        case .rain: 58
-        case .snow: 28
-        case .sunny: 75
-        case .clearNight: 62
-        case .partlyCloudy: 68
-        case .cloudy: 64
-        case .windy: 60
-        case .foggy: 55
-        case .hot: 103
-        }
-    }
-
-    var sampleHighFahrenheit: Double {
-        switch self {
-        case .hot: 106
-        case .snow: 31
-        default: 78
-        }
-    }
-
-    var sampleLowFahrenheit: Double {
-        switch self {
-        case .hot: 84
-        case .snow: 19
-        default: 52
-        }
-    }
-
-    var sampleTemperature: String { Measurement(value: sampleFahrenheit, unit: UnitTemperature.fahrenheit).shortTemperature }
-    var sampleHigh: String { Measurement(value: sampleHighFahrenheit, unit: UnitTemperature.fahrenheit).shortTemperature }
-    var sampleLow: String { Measurement(value: sampleLowFahrenheit, unit: UnitTemperature.fahrenheit).shortTemperature }
-
     /// Which WeatherKit conditions map to this scene (see `WeatherScene.init(condition:isDaylight:)`).
     var weatherKitConditions: String {
         switch self {

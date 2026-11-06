@@ -335,20 +335,6 @@ extension ForecastContent {
 }
 
 extension WeatherScene {
-    fileprivate var sampleCondition: WeatherCondition {
-        switch self {
-        case .thunderstorm: .thunderstorms
-        case .rain: .rain
-        case .snow: .snow
-        case .sunny, .clearNight: .clear
-        case .partlyCloudy: .partlyCloudy
-        case .cloudy: .cloudy
-        case .windy: .windy
-        case .foggy: .foggy
-        case .hot: .hot
-        }
-    }
-
     fileprivate var sampleHumidity: Int {
         switch self {
         case .rain, .thunderstorm, .foggy: 88
