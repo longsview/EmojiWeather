@@ -229,9 +229,14 @@ extension ForecastContent {
     /// Screenshot mode: a believable forecast for the forced scene, starting at the fixed clock time.
     static func sample(for scene: WeatherScene, sky: SkyMode, timeZone: TimeZone) -> ForecastContent {
         let start = ScreenshotMode.fixedDate ?? .now
-        let base = Self.number(scene.sampleTemperature)
-        let high = max(Self.number(scene.sampleHigh), base)
-        let low = min(Self.number(scene.sampleLow), base)
+        // Worked out in °F, then shown in the reader's unit.
+        let base = scene.sampleFahrenheit
+        let high = max(scene.sampleHighFahrenheit, base)
+        let low = min(scene.sampleLowFahrenheit, base)
+        func degrees(_ fahrenheit: Double) -> String {
+            Measurement(value: fahrenheit, unit: UnitTemperature.fahrenheit).shortTemperature
+        }
+        let measurement = FloatingPointFormatStyle<Double>.number.precision(.fractionLength(0))
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = timeZone
 
@@ -244,8 +249,8 @@ extension ForecastContent {
         let hours: [Hour] = (0..<24).map { index in
             let date = start.addingTimeInterval(Double(index) * 3_600)
             let hour = calendar.component(.hour, from: date)
-            let raw = Double(base) + (warmth(hour) - warmth(startHour)) * Double(high - low)
-            let temperature = "\(Int(min(Double(high), max(Double(low), raw)).rounded()))°"
+            let raw = base + (warmth(hour) - warmth(startHour)) * (high - low)
+            let temperature = degrees(min(high, max(low, raw)))
             // Wet weather clears up later on; other scenes keep their sky.
             let hourCondition: WeatherCondition = isWet && index >= 7 ? .mostlyCloudy : condition
             let time = index == 0 ? String(localized: "Now") : date.formatted(DisplaySettings.hourStyle(timeZone))
@@ -267,8 +272,8 @@ extension ForecastContent {
             case .thunderstorms: "80%"
             default: nil
             }
-            let dayHigh = "\(high + swings[index])°"
-            let dayLow = "\(low + swings[index] / 2)°"
+            let dayHigh = degrees(high + Double(swings[index]))
+            let dayLow = degrees(low + Double(swings[index] / 2))
             return Day(
                 name: name, emoji: WeatherScene.emoji(for: dayCondition), chance: chance, low: dayLow, high: dayHigh,
                 spoken: Self.spokenDay(name: name, condition: dayCondition.description, high: dayHigh, low: dayLow, chance: chance)
@@ -280,13 +285,17 @@ extension ForecastContent {
         let sunset = calendar.date(bySettingHour: 17, minute: 3, second: 0, of: start) ?? start
         let isDaytime = sky != .night
         let tiles = [
-            Tile(emoji: "🌡️", title: String(localized: "Feels like"), value: "\(base + (scene == .snow ? -5 : 2))°"),
+            Tile(emoji: "🌡️", title: String(localized: "Feels like"), value: degrees(base + (scene == .snow ? -5 : 2))),
             Tile(emoji: "💦", title: String(localized: "Humidity"), value: "\(scene.sampleHumidity)%"),
-            Tile(emoji: "🌬️", title: String(localized: "Wind"), value: scene == .windy ? "24 mph W" : "6 mph W"),
+            Tile(emoji: "🌬️", title: String(localized: "Wind"), value: Measurement(value: scene == .windy ? 24 : 6, unit: UnitSpeed.milesPerHour)
+                .formatted(.measurement(width: .abbreviated, usage: .general, numberFormatStyle: measurement)) + " W"),
             Tile(emoji: "🕶️", title: String(localized: "UV index"), value: isDaytime && scene.showsSunOrMoon ? "7 High" : "1 Low"),
-            Tile(emoji: "👀", title: String(localized: "Visibility"), value: scene == .foggy ? "0.5 mi" : "10 mi"),
-            Tile(emoji: "⏲️", title: String(localized: "Pressure"), value: [.rain, .thunderstorm, .snow].contains(scene) ? "29.71 inHg ↓" : "30.02 inHg ↑"),
-            Tile(emoji: "💧", title: String(localized: "Dew point"), value: "\(base - (scene == .hot ? 40 : 14))°"),
+            Tile(emoji: "👀", title: String(localized: "Visibility"), value: Measurement(value: scene == .foggy ? 0.5 : 10, unit: UnitLength.miles)
+                .formatted(.measurement(width: .abbreviated, usage: .road, numberFormatStyle: measurement))),
+            Tile(emoji: "⏲️", title: String(localized: "Pressure"), value: [.rain, .thunderstorm, .snow].contains(scene)
+                ? Self.pressure(Measurement(value: 29.71, unit: .inchesOfMercury), trend: .falling)
+                : Self.pressure(Measurement(value: 30.02, unit: .inchesOfMercury), trend: .rising)),
+            Tile(emoji: "💧", title: String(localized: "Dew point"), value: degrees(base - (scene == .hot ? 40 : 14))),
             Tile(emoji: "☔️", title: String(localized: "Rain chance"), value: days[0].chance ?? "0%"),
             Tile(emoji: "🌅", title: String(localized: "Sunrise"), value: sunrise.formatted(timeStyle)),
             Tile(emoji: "🌇", title: String(localized: "Sunset"), value: sunset.formatted(timeStyle)),
@@ -314,16 +323,11 @@ extension ForecastContent {
                 Note(emoji: "☔️", title: String(localized: "Rain likely (\("80%"))"),
                      advice: String(localized: "Bring an umbrella, and give yourself extra time on wet roads.")),
                 Note(emoji: "📉", title: String(localized: "Pressure dropping"),
-                     advice: String(localized: "Down \("0.21 inHg") over the next 12 hours, often ahead of a storm. Some people notice headaches or achy joints when pressure falls quickly.")),
+                     advice: String(localized: "Down \(Self.pressureChange(Measurement(value: 0.21, unit: .inchesOfMercury))) over the next 12 hours, often ahead of a storm. Some people notice headaches or achy joints when pressure falls quickly.")),
             ]
         default:
             return []
         }
-    }
-
-    /// 75 from "75°".
-    private static func number(_ text: String) -> Int {
-        Int(text.filter { $0.isNumber || $0 == "-" }) ?? 0
     }
 }
 
