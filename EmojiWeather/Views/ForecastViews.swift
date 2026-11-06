@@ -288,8 +288,11 @@ extension ForecastContent {
             Tile(emoji: "🌡️", title: String(localized: "Feels like"), value: degrees(base + (scene == .snow ? -5 : 2))),
             Tile(emoji: "💦", title: String(localized: "Humidity"), value: "\(scene.sampleHumidity)%"),
             Tile(emoji: "🌬️", title: String(localized: "Wind"), value: Measurement(value: scene == .windy ? 24 : 6, unit: UnitSpeed.milesPerHour)
-                .formatted(.measurement(width: .abbreviated, usage: .general, numberFormatStyle: measurement)) + " W"),
-            Tile(emoji: "🕶️", title: String(localized: "UV index"), value: isDaytime && scene.showsSunOrMoon ? "7 High" : "1 Low"),
+                .formatted(.measurement(width: .abbreviated, usage: .general, numberFormatStyle: measurement))
+                + " " + Wind.CompassDirection.west.abbreviation),
+            Tile(emoji: "🕶️", title: String(localized: "UV index"), value: isDaytime && scene.showsSunOrMoon
+                ? "7 \(UVIndex.ExposureCategory.high.description)"
+                : "1 \(UVIndex.ExposureCategory.low.description)"),
             Tile(emoji: "👀", title: String(localized: "Visibility"), value: Measurement(value: scene == .foggy ? 0.5 : 10, unit: UnitLength.miles)
                 .formatted(.measurement(width: .abbreviated, usage: .road, numberFormatStyle: measurement))),
             Tile(emoji: "🎈", title: String(localized: "Pressure"), value: [.rain, .thunderstorm, .snow].contains(scene)
