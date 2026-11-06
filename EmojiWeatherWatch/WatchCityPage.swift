@@ -32,7 +32,7 @@ struct WatchCityPage: View {
         #if DEBUG
         if place == .currentLocation, let name = ScreenshotMode.place { return name }
         #endif
-        switch place {
+        return switch place {
         case .currentLocation: location.placeName ?? String(localized: "My Location")
         case .city(let city): city.name
         }
