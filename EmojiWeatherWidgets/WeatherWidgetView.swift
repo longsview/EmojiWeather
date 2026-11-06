@@ -146,9 +146,12 @@ private struct HomeWidgetView: View {
                     .font(.system(size: 44, weight: .heavy, design: .rounded))
                     .minimumScaleFactor(0.6)
                     .contentTransition(.numericText())
-                HStack(spacing: 6) {
+                // The condition gets its own line so longer names ("Partly Cloudy", "Belles
+                // éclaircies") fit beside the hourly strip; high and low sit underneath.
+                VStack(alignment: .leading, spacing: 1) {
                     Text(weather.condition)
                         .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                     if layout != .small, let high = weather.high, let low = weather.low {
                         Text(verbatim: "↑\(high.shortTemperature) ↓\(low.shortTemperature)")
                             .opacity(0.7)
