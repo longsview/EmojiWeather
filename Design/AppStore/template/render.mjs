@@ -18,7 +18,8 @@ const browser = await chromium.launch();
 for (const device of devices) {
   // A device can reuse another's frames ("frames": "iphone"), take its layout from another
   // ("layout": "ipad") and read raw shots from its own folder ("shots": "duo-inner"), falling
-  // back to the frames' own shots when that folder has no capture.
+  // back to the frames' own shots when that folder has no capture. "stickers" overrides a
+  // frame's stickers by id when they would cover the capture on that device.
   const entry = config[device];
   const [w, h] = entry.size;
   const frames = typeof entry.frames === "string" ? config[entry.frames].frames : entry.frames;
@@ -41,7 +42,7 @@ for (const device of devices) {
     const name = frame.id.replace(/^\d+-/, "");
     const text = !captions ? null : captions[`${device}-${frame.id}`] ?? captions[`${captionDevice}-${frame.id}`] ?? (captionDevice === "iphone" ? captions[frame.id] : null)
       ?? Object.entries(captions).find(([key]) => /^\d/.test(key) && key.replace(/^\d+-/, "") === name)?.[1];
-    const f = { ...frame, ...(entry.subs?.[frame.id] ? { sub: entry.subs[frame.id] } : {}), screenAspect: entry.screenAspect, fold: entry.fold, shotURL: pathToFileURL(shotPath).href, ...(text ? { headline: text[0], sub: text[1] } : {}) };
+    const f = { ...frame, ...(entry.subs?.[frame.id] ? { sub: entry.subs[frame.id] } : {}), ...(entry.stickers?.[frame.id] ? { stickers: entry.stickers[frame.id] } : {}), screenAspect: entry.screenAspect, fold: entry.fold, shotURL: pathToFileURL(shotPath).href, ...(text ? { headline: text[0], sub: text[1] } : {}) };
     const url = pathToFileURL(path.join(root, "template/frame.html")).href +
       `?device=${layout}&size=${w}x${h}&lang=${lang || "en"}&f=${encodeURIComponent(JSON.stringify(f))}`;
     await page.goto(url);
