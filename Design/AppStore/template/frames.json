@@ -210,9 +210,17 @@
       2007,
       2853
     ],
-    "frames": "iphone",
+    "frames": "ipad",
     "layout": "ipad",
-    "shots": "duo-inner"
+    "shots": "duo-inner",
+    "screenAspect": [
+      2007,
+      2853
+    ],
+    "fold": true,
+    "subs": {
+      "01-hero": "All your cities and today's sky, side by side."
+    }
   },
   "duo-outer": {
     "size": [

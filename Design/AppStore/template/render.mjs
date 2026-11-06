@@ -39,9 +39,9 @@ for (const device of devices) {
     const shotPath = candidates.find(p => fs.existsSync(p)) ?? path.join(root, frame.shot);
     if (!fs.existsSync(shotPath)) { console.warn(`skip ${device}/${frame.id}: missing ${frame.shot}`); continue; }
     const name = frame.id.replace(/^\d+-/, "");
-    const text = !captions ? null : captions[`${captionDevice}-${frame.id}`] ?? (captionDevice === "iphone" ? captions[frame.id] : null)
+    const text = !captions ? null : captions[`${device}-${frame.id}`] ?? captions[`${captionDevice}-${frame.id}`] ?? (captionDevice === "iphone" ? captions[frame.id] : null)
       ?? Object.entries(captions).find(([key]) => /^\d/.test(key) && key.replace(/^\d+-/, "") === name)?.[1];
-    const f = { ...frame, shotURL: pathToFileURL(shotPath).href, ...(text ? { headline: text[0], sub: text[1] } : {}) };
+    const f = { ...frame, ...(entry.subs?.[frame.id] ? { sub: entry.subs[frame.id] } : {}), screenAspect: entry.screenAspect, fold: entry.fold, shotURL: pathToFileURL(shotPath).href, ...(text ? { headline: text[0], sub: text[1] } : {}) };
     const url = pathToFileURL(path.join(root, "template/frame.html")).href +
       `?device=${layout}&size=${w}x${h}&lang=${lang || "en"}&f=${encodeURIComponent(JSON.stringify(f))}`;
     await page.goto(url);

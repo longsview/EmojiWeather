@@ -17,8 +17,10 @@
 | `duo-inner` | 2007×2853 | iPhone Duo, inner display (required from April 2027 for iOS 27.1 SDK builds) |
 | `duo-outer` | 1398×2034 | iPhone Duo, outer display |
 
-`iphone-6.3` and the Duo sizes reuse the iPhone frames. The Duo sizes use captures from
-`raw/duo-inner/` and `raw/duo-outer/` when present, otherwise the iPhone captures.
+`iphone-6.3` and `duo-outer` reuse the iPhone frames. `duo-inner` reuses the iPad frames: the
+open Duo has a regular-width screen, so the app shows its two-pane split layout, drawn with
+the hinge down the middle. Both Duo sizes use `raw/duo-inner/` and `raw/duo-outer/` captures
+when present (no Duo simulator in Xcode 27.0), otherwise the iPad / iPhone captures.
 
 Edit headlines, colors and stickers in `frames.json`. Themes are defined at the top of `frame.html`.
 
