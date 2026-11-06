@@ -223,11 +223,14 @@ struct HomeView: View {
     }
 
     /// One scene for the whole pager. A new city's scene fades in over the old one.
-    private var sharedScene: some View {
+    private var sharedScene: some View { sharedScene(heroRegion: 1) }
+
+    private func sharedScene(heroRegion: Double) -> some View {
         ZStack {
             EmojiSceneView(
                 conditions: activeScene,
-                paused: isSceneCovered
+                paused: isSceneCovered,
+                heroRegion: heroRegion
             )
             .id(sceneKey)
             .transition(.opacity)
@@ -292,7 +295,8 @@ struct HomeView: View {
                     .frame(width: proxy.size.width / 2)
             }
         }
-        .background { sharedScene }
+        // The sun, moon and cloud groupings stay on the left half; rain, wind and rays cross.
+        .background { sharedScene(heroRegion: 0.5) }
         .ignoresSafeArea()
     }
 
@@ -321,7 +325,7 @@ struct HomeView: View {
                 .overlay(Color.black.opacity(activeSky == .golden ? 0.22 : 0))
                 // Fade in from the fold so a cloud crossing the middle isn't cut by a hard edge.
                 .mask {
-                    LinearGradient(stops: [.init(color: .clear, location: 0), .init(color: .black, location: 0.14)],
+                    LinearGradient(stops: [.init(color: .clear, location: 0), .init(color: .black, location: 0.06)],
                                    startPoint: .leading, endPoint: .trailing)
                 }
         }

@@ -36,6 +36,10 @@ final class EmojiParticleSystem {
     private var intensity: Double
     private var sky: SkyMode
     var reduceMotion = false
+    /// The share of the width, from the left, that holds the big pieces (sun, moon, cloud
+    /// groupings and lightning). 1 is the whole screen. The open iPhone Duo uses 0.5 so they
+    /// stay on the left half while rain, wind and rays still cross the whole screen.
+    var heroRegion: Double = 1
     /// Called on each lightning strike, for a haptic.
     var onStrike: (() -> Void)?
 
@@ -244,7 +248,7 @@ final class EmojiParticleSystem {
         nextStrike = elapsed + Double.random(in: interval)
 
         // A zig-zag chain of ⚡️ from under the storm clouds down toward the middle of the screen.
-        var x = Double.random(in: 0.25...0.75) * size.width
+        var x = Double.random(in: 0.25...0.75) * size.width * heroRegion
         var y = size.height * spec.lightningStart
         var points = [CGPoint(x: x, y: y)]
         let segments = Int.random(in: 7...10)
@@ -312,7 +316,7 @@ final class EmojiParticleSystem {
             let orbitAngle = (hero.phase + hero.orbitSpeed * elapsed) * .pi / 180
             let scale = 1 + sin(elapsed * 1.8 + phase) * hero.pulse
             let point = CGPoint(
-                x: hero.position.x * size.width + hero.offset.width + cos(orbitAngle) * hero.orbitRadius,
+                x: hero.position.x * size.width * heroRegion + hero.offset.width + cos(orbitAngle) * hero.orbitRadius,
                 y: hero.position.y * size.height + hero.offset.height + sin(orbitAngle) * hero.orbitRadius
                     + sin(elapsed * 1.3 + phase) * hero.bob
             )

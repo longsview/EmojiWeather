@@ -14,6 +14,8 @@ struct EmojiSceneView: View {
     /// Scenes are tuned for a phone-sized screen. On a smaller screen (the watch), the scene is
     /// simulated at phone size and drawn shrunk by this factor so it looks the same, just smaller.
     var canvasScale: Double = 1
+    /// See `EmojiParticleSystem.heroRegion`.
+    var heroRegion: Double = 1
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
@@ -22,10 +24,11 @@ struct EmojiSceneView: View {
     @State private var system: EmojiParticleSystem
     @State private var tilt = MotionTilt()
 
-    init(conditions: SceneConditions, paused: Bool = false, canvasScale: Double = 1) {
+    init(conditions: SceneConditions, paused: Bool = false, canvasScale: Double = 1, heroRegion: Double = 1) {
         self.conditions = conditions
         self.paused = paused
         self.canvasScale = canvasScale
+        self.heroRegion = heroRegion
         _system = State(initialValue: EmojiParticleSystem(conditions: conditions))
     }
 
@@ -41,6 +44,7 @@ struct EmojiSceneView: View {
                 let scale = max(canvasScale, 0.1)
                 let virtualSize = CGSize(width: size.width / scale, height: size.height / scale)
                 context.scaleBy(x: scale, y: scale)
+                system.heroRegion = heroRegion
                 system.update(
                     now: timeline.date.timeIntervalSinceReferenceDate,
                     size: virtualSize,
