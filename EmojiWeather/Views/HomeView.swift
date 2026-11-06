@@ -306,9 +306,11 @@ struct HomeView: View {
         // The layout ignores the safe area so the halves meet at the fold; keep the forecast
         // clear of the status bar and the vertical tab bar on the right edge.
         .safeAreaPadding(EdgeInsets(top: screenInsets.top, leading: 0, bottom: screenInsets.bottom, trailing: screenInsets.trailing))
-        // Follows the sky like the rest of the screen (dark at night), so the status bar and the
-        // vertical tab bar, which switch with the scene, stay readable over it.
-        .background(Color(.systemBackground))
+        // The same sky as the scene beside it (white, grey, golden or night navy), so the two
+        // halves read as one screen and the status bar and side tab bar, which switch with the
+        // scene, stay readable. The cards are a light tint of the text colour, so they work on any sky.
+        .background(LinearGradient(colors: activeSky.background(for: activeScene.scene), startPoint: .top, endPoint: .bottom))
+        .animation(.easeInOut(duration: 0.6), value: sceneKey)
         .onAppear { AppAnalytics.log(.forecastOpened) }
     }
 
