@@ -24,9 +24,17 @@ struct QuizStats: Codable, Hashable {
         SharedStore.defaults.set(try? JSONEncoder().encode(self), forKey: Self.key)
     }
 
-    /// "2026-11-03" in the user's calendar.
+    /// Quiz days follow the Gregorian calendar in the user's time zone, so every language gets the
+    /// same daily puzzle and number (Calendar.current can be Islamic, Japanese, Buddhist...).
+    static var calendar: Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = .current
+        return calendar
+    }
+
+    /// "2026-11-03" (Gregorian, local time zone).
     static func dayString(for date: Date) -> String {
-        let parts = Calendar.current.dateComponents([.year, .month, .day], from: date)
+        let parts = calendar.dateComponents([.year, .month, .day], from: date)
         return String(format: "%04d-%02d-%02d", parts.year ?? 0, parts.month ?? 0, parts.day ?? 0)
     }
 
@@ -34,7 +42,7 @@ struct QuizStats: Codable, Hashable {
     func activeStreak(asOf date: Date = .now) -> Int {
         guard let lastPlayedDay else { return 0 }
         let today = Self.dayString(for: date)
-        let yesterday = Self.dayString(for: Calendar.current.date(byAdding: .day, value: -1, to: date) ?? date)
+        let yesterday = Self.dayString(for: Self.calendar.date(byAdding: .day, value: -1, to: date) ?? date)
         return lastPlayedDay == today || lastPlayedDay == yesterday ? streak : 0
     }
 

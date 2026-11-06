@@ -25,7 +25,7 @@ final class QuizStore {
     private static let quizKey = "quiz.today.v1"
     private static let guessKey = "quiz.guess.v1"
     /// Day 1 of Skymoji Daily.
-    private static let firstDay = DateComponents(calendar: .current, year: 2026, month: 11, day: 1)
+    private static let firstDay = DateComponents(year: 2026, month: 11, day: 1)
 
     init() {
         stats = QuizStats.load()
@@ -42,8 +42,9 @@ final class QuizStore {
     static func dayString(for date: Date) -> String { QuizStats.dayString(for: date) }
 
     static var todayNumber: Int {
-        let start = Calendar.current.date(from: firstDay) ?? .now
-        let days = Calendar.current.dateComponents([.day], from: Calendar.current.startOfDay(for: start), to: Calendar.current.startOfDay(for: .now)).day ?? 0
+        let calendar = QuizStats.calendar
+        let start = calendar.date(from: firstDay) ?? .now
+        let days = calendar.dateComponents([.day], from: calendar.startOfDay(for: start), to: calendar.startOfDay(for: .now)).day ?? 0
         return max(days + 1, 1)
     }
 
@@ -92,7 +93,7 @@ final class QuizStore {
 
     private func finish(_ quiz: DailyQuiz) {
         guard stats.lastPlayedDay != quiz.day else { return }
-        let yesterday = Self.dayString(for: Calendar.current.date(byAdding: .day, value: -1, to: .now) ?? .now)
+        let yesterday = Self.dayString(for: QuizStats.calendar.date(byAdding: .day, value: -1, to: .now) ?? .now)
         stats.streak = stats.lastPlayedDay == yesterday ? stats.streak + 1 : 1
         stats.bestStreak = max(stats.bestStreak, stats.streak)
         stats.played += 1
@@ -116,7 +117,7 @@ final class QuizStore {
     // MARK: - Guess tomorrow's high
 
     func lockInGuess(_ guess: Measurement<UnitTemperature>, placeName: String, location: CLLocation) {
-        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: .now) ?? .now
+        let tomorrow = QuizStats.calendar.date(byAdding: .day, value: 1, to: .now) ?? .now
         let saved = HighGuess(
             targetDay: Self.dayString(for: tomorrow),
             celsius: guess.converted(to: .celsius).value,
