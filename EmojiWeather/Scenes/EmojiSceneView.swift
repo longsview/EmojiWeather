@@ -16,6 +16,7 @@ struct EmojiSceneView: View {
     var canvasScale: Double = 1
     /// See `EmojiParticleSystem.heroRegion`.
     var heroRegion: Double = 1
+    @Environment(\.layoutDirection) private var layoutDirection
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.scenePhase) private var scenePhase
@@ -45,6 +46,7 @@ struct EmojiSceneView: View {
                 let virtualSize = CGSize(width: size.width / scale, height: size.height / scale)
                 context.scaleBy(x: scale, y: scale)
                 system.heroRegion = heroRegion
+                system.heroOnRight = layoutDirection == .rightToLeft
                 system.update(
                     now: timeline.date.timeIntervalSinceReferenceDate,
                     size: virtualSize,

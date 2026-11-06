@@ -13,6 +13,7 @@ struct HomeView: View {
     @Environment(AdsManager.self) private var ads
     @Environment(QuizStore.self) private var quiz
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.layoutDirection) private var layoutDirection
 
     /// Per device on purpose: each device remembers which place it was last showing.
     @AppStorage("selectedPlaceID") private var selectedPlaceID = Place.currentLocationID
@@ -295,7 +296,8 @@ struct HomeView: View {
                     .frame(width: proxy.size.width / 2)
             }
         }
-        // The sun, moon and cloud groupings stay on the left half; rain, wind and rays cross.
+        // The sun, moon and cloud groupings stay on the cities' half (the left, or the right in
+        // right-to-left languages); rain, wind and rays cross, lighter over the forecast.
         .background { sharedScene(heroRegion: 0.5) }
         .ignoresSafeArea()
     }
@@ -324,9 +326,12 @@ struct HomeView: View {
                 .opacity(0.55)
                 .overlay(Color.black.opacity(activeSky == .golden ? 0.22 : 0))
                 // Fade in from the fold so a cloud crossing the middle isn't cut by a hard edge.
+                // The fold is on the forecast's left, or its right in right-to-left languages.
                 .mask {
                     LinearGradient(stops: [.init(color: .clear, location: 0), .init(color: .black, location: 0.06)],
-                                   startPoint: .leading, endPoint: .trailing)
+                                   startPoint: layoutDirection == .rightToLeft ? .trailing : .leading,
+                                   endPoint: layoutDirection == .rightToLeft ? .leading : .trailing)
+                        .environment(\.layoutDirection, .leftToRight)
                 }
         }
         .animation(.easeInOut(duration: 0.6), value: sceneKey)
