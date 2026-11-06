@@ -277,6 +277,19 @@
           "❄️",
           "🧣"
         ]
+      },
+      {
+        "id": "06-widgets",
+        "shot": "raw/duo-inner/widgets.png",
+        "theme": "sky2",
+        "tilt": 0,
+        "headline": "Your sky,<br>on your Home Screen.",
+        "sub": "Widgets for your Home and Lock Screen, plus your quiz streak.",
+        "stickers": [
+          "☀️",
+          "📱",
+          "🔥"
+        ]
       }
     ]
   },
