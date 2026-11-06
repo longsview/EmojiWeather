@@ -319,6 +319,11 @@ struct HomeView: View {
             LinearGradient(colors: activeSky.background(for: activeScene.scene), startPoint: .top, endPoint: .bottom)
                 .opacity(0.55)
                 .overlay(Color.black.opacity(activeSky == .golden ? 0.22 : 0))
+                // Fade in from the fold so a cloud crossing the middle isn't cut by a hard edge.
+                .mask {
+                    LinearGradient(stops: [.init(color: .clear, location: 0), .init(color: .black, location: 0.14)],
+                                   startPoint: .leading, endPoint: .trailing)
+                }
         }
         .animation(.easeInOut(duration: 0.6), value: sceneKey)
         .onAppear { AppAnalytics.log(.forecastOpened) }
