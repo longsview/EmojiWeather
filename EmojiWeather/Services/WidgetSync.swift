@@ -7,6 +7,10 @@ import WidgetKit
 @MainActor
 enum WidgetSync {
     static func updatePlaces(cities: [City], currentLocation: CLLocation?, currentName: String?, hasPlus: Bool) {
+        #if DEBUG && os(watchOS)
+        // The watch app seeds sample places for screenshot complications; keep them.
+        if ScreenshotMode.scene != nil { return }
+        #endif
         var places: [WidgetPlace] = []
         if let currentLocation {
             places.append(WidgetPlace(
