@@ -96,7 +96,7 @@ extension ForecastContent {
                 emoji: "👀", title: String(localized: "Visibility"),
                 value: current.visibility.formatted(.measurement(width: .abbreviated, usage: .road, numberFormatStyle: measurement))
             ),
-            Tile(emoji: "⏲️", title: String(localized: "Pressure"), value: Self.pressure(current.pressure, trend: current.pressureTrend)),
+            Tile(emoji: "🎈", title: String(localized: "Pressure"), value: Self.pressure(current.pressure, trend: current.pressureTrend)),
             Tile(emoji: "💧", title: String(localized: "Dew point"), value: current.dewPoint.shortTemperature),
         ]
         if let today {
@@ -292,7 +292,7 @@ extension ForecastContent {
             Tile(emoji: "🕶️", title: String(localized: "UV index"), value: isDaytime && scene.showsSunOrMoon ? "7 High" : "1 Low"),
             Tile(emoji: "👀", title: String(localized: "Visibility"), value: Measurement(value: scene == .foggy ? 0.5 : 10, unit: UnitLength.miles)
                 .formatted(.measurement(width: .abbreviated, usage: .road, numberFormatStyle: measurement))),
-            Tile(emoji: "⏲️", title: String(localized: "Pressure"), value: [.rain, .thunderstorm, .snow].contains(scene)
+            Tile(emoji: "🎈", title: String(localized: "Pressure"), value: [.rain, .thunderstorm, .snow].contains(scene)
                 ? Self.pressure(Measurement(value: 29.71, unit: .inchesOfMercury), trend: .falling)
                 : Self.pressure(Measurement(value: 30.02, unit: .inchesOfMercury), trend: .rising)),
             Tile(emoji: "💧", title: String(localized: "Dew point"), value: degrees(base - (scene == .hot ? 40 : 14))),
