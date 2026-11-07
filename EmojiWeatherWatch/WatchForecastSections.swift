@@ -25,9 +25,51 @@ struct WatchCard<Content: View>: View {
     }
 }
 
+/// One hour in the hourly card: from WeatherKit, or sample data for screenshots.
+struct WatchHour {
+    var date: Date
+    var condition: WeatherCondition
+    var isDaylight: Bool
+    var temperature: Measurement<UnitTemperature>
+    var precipitationChance: Double
+
+    init(date: Date, condition: WeatherCondition, isDaylight: Bool, temperature: Measurement<UnitTemperature>, precipitationChance: Double) {
+        self.date = date
+        self.condition = condition
+        self.isDaylight = isDaylight
+        self.temperature = temperature
+        self.precipitationChance = precipitationChance
+    }
+
+    init(_ hour: HourWeather) {
+        self.init(date: hour.date, condition: hour.condition, isDaylight: hour.isDaylight, temperature: hour.temperature, precipitationChance: hour.precipitationChance)
+    }
+}
+
+/// One day in the 10-day card: from WeatherKit, or sample data for screenshots.
+struct WatchDay {
+    var date: Date
+    var condition: WeatherCondition
+    var lowTemperature: Measurement<UnitTemperature>
+    var highTemperature: Measurement<UnitTemperature>
+    var precipitationChance: Double
+
+    init(date: Date, condition: WeatherCondition, lowTemperature: Measurement<UnitTemperature>, highTemperature: Measurement<UnitTemperature>, precipitationChance: Double) {
+        self.date = date
+        self.condition = condition
+        self.lowTemperature = lowTemperature
+        self.highTemperature = highTemperature
+        self.precipitationChance = precipitationChance
+    }
+
+    init(_ day: DayWeather) {
+        self.init(date: day.date, condition: day.condition, lowTemperature: day.lowTemperature, highTemperature: day.highTemperature, precipitationChance: day.precipitationChance)
+    }
+}
+
 /// The next 12 hours, scrolling sideways.
 struct WatchHourlySection: View {
-    let hours: [HourWeather]
+    let hours: [WatchHour]
     let timeZone: TimeZone
 
     var body: some View {
@@ -137,7 +179,7 @@ struct WatchConditionsSection: View {
 /// Ten days, each with a temperature bar like Apple Weather: the bar spans the day's low to high
 /// on the scale of the whole ten days.
 struct WatchDailySection: View {
-    let days: [DayWeather]
+    let days: [WatchDay]
     let timeZone: TimeZone
 
     var body: some View {
@@ -238,3 +280,46 @@ struct WatchAttributionView: View {
         .task { attribution = await weather.attribution() }
     }
 }
+
+#if DEBUG
+/// Sample hourly and 10-day forecasts for App Store screenshots, matching the scene's sample
+/// temperatures, so every language shows the same weather.
+extension WeatherScene {
+    private static let fahrenheit = { (value: Double) in Measurement(value: value, unit: UnitTemperature.fahrenheit) }
+
+    var sampleWatchHours: [WatchHour] {
+        let start = ScreenshotMode.fixedDate ?? .now
+        let isNight = ScreenshotMode.sky == .night || self == .clearNight
+        // Small, natural swings around the current sample temperature.
+        let offsets: [Double] = isNight
+            ? [0, -1, -2, -2, -3, -4, -4, -5, -5, -4, -2, 0]
+            : [0, 2, 3, 4, 4, 3, 2, 0, -2, -3, -4, -5]
+        let rainy: Set<WeatherScene> = [.rain, .thunderstorm, .snow]
+        return offsets.enumerated().map { index, offset in
+            WatchHour(
+                date: start.addingTimeInterval(Double(index) * 3600),
+                condition: index < 6 ? sampleCondition : (rainy.contains(self) ? .cloudy : sampleCondition),
+                isDaylight: !isNight && index < 9,
+                temperature: Self.fahrenheit(sampleFahrenheit + offset),
+                precipitationChance: rainy.contains(self) ? max(0, 0.8 - Double(index) * 0.07) : 0
+            )
+        }
+    }
+
+    var sampleWatchDays: [WatchDay] {
+        let start = ScreenshotMode.fixedDate ?? .now
+        let conditions: [WeatherCondition] = [sampleCondition, .partlyCloudy, .mostlyClear, .rain, .cloudy, .clear, .partlyCloudy, .thunderstorms, .mostlyClear, .clear]
+        let highShift: [Double] = [0, 2, 4, -3, -5, 1, 3, -2, 0, 2]
+        let chances: [Double] = [self == .rain || self == .thunderstorm || self == .snow ? 0.8 : 0, 0.1, 0, 0.6, 0.3, 0, 0.1, 0.5, 0, 0]
+        return (0..<10).map { index in
+            WatchDay(
+                date: Calendar.current.date(byAdding: .day, value: index, to: start) ?? start,
+                condition: index == 0 ? sampleCondition : (self == .snow && conditions[index] == .rain ? .snow : conditions[index]),
+                lowTemperature: Self.fahrenheit(sampleLowFahrenheit + highShift[index] * 0.6),
+                highTemperature: Self.fahrenheit(sampleHighFahrenheit + highShift[index]),
+                precipitationChance: chances[index]
+            )
+        }
+    }
+}
+#endif

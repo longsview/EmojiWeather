@@ -59,6 +59,25 @@ struct WatchCityPage: View {
         return SceneConditions(scene: .cloudy)
     }
 
+    /// The forced screenshot scene, if any.
+    private var screenshotScene: WeatherScene? {
+        #if DEBUG
+        return ScreenshotMode.scene
+        #else
+        return nil
+        #endif
+    }
+
+    /// With -SkymojiScene and -SkymojiOpen forecast|daily, the sample hourly and 10-day cards
+    /// follow the hero (otherwise the hero alone fills the screenshot).
+    private var showsSampleForecast: Bool {
+        #if DEBUG
+        return ["forecast", "daily"].contains(ScreenshotMode.open ?? "")
+        #else
+        return false
+        #endif
+    }
+
     /// Sample weather for a forced screenshot scene, in the reader's temperature unit.
     private var sample: WatchHeroView.Sample? {
         #if DEBUG
@@ -88,13 +107,19 @@ struct WatchCityPage: View {
                 )
                 .containerRelativeFrame(.vertical, alignment: .bottom)
 
-                if sample != nil {
-                    // Screenshot mode: only the hero, with sample weather.
+                if let scene = screenshotScene {
+                    // Screenshot mode: sample weather, so every language shows the same forecast.
+                    if showsSampleForecast {
+                        WatchHourlySection(hours: scene.sampleWatchHours, timeZone: timeZone)
+                            .id(Self.forecastID)
+                        WatchDailySection(days: scene.sampleWatchDays, timeZone: timeZone)
+                            .id(Self.dailyID)
+                    }
                 } else if let snapshot {
-                    WatchHourlySection(hours: snapshot.hourly, timeZone: timeZone)
+                    WatchHourlySection(hours: snapshot.hourly.map(WatchHour.init), timeZone: timeZone)
                         .id(Self.forecastID)
                     WatchConditionsSection(current: snapshot.current, today: snapshot.daily.first, timeZone: timeZone)
-                    WatchDailySection(days: snapshot.daily, timeZone: timeZone)
+                    WatchDailySection(days: snapshot.daily.map(WatchDay.init), timeZone: timeZone)
                         .id(Self.dailyID)
                     WatchAttributionView()
                 } else {
@@ -104,14 +129,14 @@ struct WatchCityPage: View {
             .padding(.horizontal, 4)
         }
         #if DEBUG
-        .onChange(of: snapshot != nil) { _, loaded in
+        .onChange(of: (snapshot != nil || screenshotScene != nil) && isActive, initial: true) { _, loaded in
             // -SkymojiOpen forecast|daily: open scrolled to the hourly or the 10-day forecast.
             let target = switch ScreenshotMode.open {
             case "forecast": Self.forecastID
             case "daily": Self.dailyID
             default: String?.none
             }
-            guard loaded, isActive, let target else { return }
+            guard loaded, let target else { return }
             Task {
                 try? await Task.sleep(for: .milliseconds(400))
                 proxy.scrollTo(target, anchor: .top)
