@@ -1,0 +1,114 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CFBundleDisplayName" : {
+      "comment" : "Bundle display name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Skymoji"
+          }
+        }
+      }
+    },
+    "NSLocationWhenInUseUsageDescription" : {
+      "comment" : "Location permission prompt",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "يستخدم Skymoji موقعك لعرض الطقس حيث أنت."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Skymoji uses your location to show the weather where you are."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skymoji usa tu ubicación para mostrar el tiempo donde estás."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skymoji utilise votre position pour afficher la météo là où vous êtes."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skymojiは現在地の天気を表示するために位置情報を使用します。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Skymoji usa sua localização para mostrar o clima onde você está."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skymoji 使用你的位置来显示你所在地的天气。"
+          }
+        }
+      }
+    },
+    "NSUserTrackingUsageDescription" : {
+      "comment" : "Tracking permission prompt",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تُستخدم بياناتك لعرض إعلانات أكثر صلة بك، وهذا يساعد على إبقاء Skymoji مجانيًا."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Your data is used to show you ads that are more relevant. It helps keep Skymoji free."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tus datos se usan para mostrarte anuncios más relevantes. Así Skymoji sigue siendo gratis."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vos données servent à vous montrer des publicités plus pertinentes. Cela aide à garder Skymoji gratuit."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "データは、より関連性の高い広告を表示するために使われます。Skymojiを無料で提供し続けるのに役立ちます。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seus dados são usados para mostrar anúncios mais relevantes. Isso ajuda a manter o Skymoji gratuito."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的数据用于向你展示更相关的广告，这有助于 Skymoji 保持免费。"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

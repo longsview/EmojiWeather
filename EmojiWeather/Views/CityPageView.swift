@@ -1,0 +1,437 @@
+import CoreLocation
+import os
+import SwiftUI
+import UIKit
+import WeatherKit
+
+private let logger = Logger(subsystem: "EmojiWeather", category: "Weather")
+
+/// One full-screen page: the emoji scene with the city, temperature and a few key details.
+/// Swiping up opens the full forecast.
+struct CityPageView: View {
+    let place: Place
+    /// Only the visible page animates.
+    let isActive: Bool
+    /// True while something covers the whole page (the Places sheet), so the scene can pause.
+    var isCovered = false
+    var previewScene: WeatherScene?
+    /// False when the container draws one shared scene behind all pages (the iPhone pager),
+    /// so the scene stays still and cross-fades while only the text slides.
+    var showsScene = true
+    /// Space the container's tab bar and home indicator take; nil uses this view's safe area.
+    var bottomInset: CGFloat?
+    /// Tells the container which scene and sky the visible page has.
+    var onSceneChange: (SceneConditions) -> Void = { _ in }
+    /// Pager mode: the container draws the Forecast hint (fixed, above the page dots) and
+    /// bumps this to open the visible page's forecast.
+    var openDetailsToken = 0
+    /// Pager mode: the container's Share button bumps this to share the visible page.
+    var shareToken = 0
+    /// Tells the container whether the visible page has weather, so its hint can show.
+    var onHasWeatherChange: (Bool) -> Void = { _ in }
+    /// iPhone Duo, open: the forecast is always showing beside the page, so the page reports it
+    /// (with the place's name) instead of opening it in a sheet.
+    var onForecastChange: ((String, ForecastContent?) -> Void)?
+
+    /// The container draws the hint when it reserves the bottom space (the iPhone pager).
+    private var drawsOwnHint: Bool { bottomInset == nil }
+
+    @Environment(LocationService.self) private var location
+    @Environment(WeatherProvider.self) private var weather
+    @Environment(AdsManager.self) private var ads
+    @Environment(PurchaseManager.self) private var purchases
+    @Environment(\.scenePhase) private var scenePhase
+
+    @State private var snapshot: WeatherSnapshot?
+    @State private var errorMessage: String?
+    @State private var isLoading = false
+    @State private var showingDetails = false
+    @State private var showingPaywall = false
+    @State private var showingShare = false
+
+    private var targetLocation: CLLocation? {
+        switch place {
+        case .currentLocation: location.location
+        case .city(let city): city.location
+        }
+    }
+
+    private var timeZone: TimeZone {
+        switch place {
+        case .currentLocation: .current
+        case .city(let city): city.timeZone
+        }
+    }
+
+    private var placeName: String {
+        switch place {
+        case .currentLocation:
+            #if DEBUG
+            if let name = ScreenshotMode.place { return name }
+            #endif
+            return location.placeName ?? String(localized: "My Location")
+        case .city(let city): return city.name
+        }
+    }
+
+    private var sceneConditions: SceneConditions {
+        if let previewScene {
+            let liveSky = snapshot.map { SkyMode(current: $0.current, today: $0.daily.first) }
+            var sky = liveSky ?? (previewScene == .clearNight ? .night : .day)
+            #if DEBUG
+            if let forced = ScreenshotMode.sky { sky = forced }
+            #endif
+            var sunProgress = 0.1
+            #if DEBUG
+            if ScreenshotMode.isActive { sunProgress = ScreenshotMode.sunProgress }
+            #endif
+            return SceneConditions(scene: previewScene, intensity: 0.8, windDrift: 0.3, sky: sky, sunProgress: sunProgress)
+        }
+        if let snapshot { return SceneConditions(current: snapshot.current, today: snapshot.daily.first) }
+        return SceneConditions(scene: .cloudy)
+    }
+
+    /// The forecast sheet and share card's text. Screenshot mode swaps in numbers that match the scene.
+    private var forecast: ForecastContent? {
+        guard let snapshot else { return nil }
+        #if DEBUG
+        if let scene = ScreenshotMode.scene, previewScene == scene {
+            return .sample(for: scene, sky: sceneConditions.sky, timeZone: timeZone)
+        }
+        #endif
+        return ForecastContent(snapshot: snapshot, timeZone: timeZone)
+    }
+
+    /// Changes when the inline forecast (iPhone Duo) should be sent again.
+    private var forecastKey: String {
+        "\(isActive)-\(placeName)-\(snapshot?.current.date.timeIntervalSince1970 ?? 0)-\(sceneConditions.scene.rawValue)-\(sceneConditions.sky.rawValue)"
+    }
+
+    /// Half height to start, like Apple Maps. Screenshots on iPad open it fully.
+    private var detailsDetents: Set<PresentationDetent> {
+        #if DEBUG
+        if ScreenshotMode.isActive, UIDevice.current.userInterfaceIdiom == .pad { return [.large] }
+        #endif
+        return [.medium, .large]
+    }
+
+    /// Changes whenever the weather should be reloaded.
+    private var loadKey: String {
+        guard let target = targetLocation else { return "\(place.id)-none" }
+        return String(format: "%@-%.2f,%.2f", place.id, target.coordinate.latitude, target.coordinate.longitude)
+    }
+
+    var body: some View {
+        GeometryReader { proxy in
+            ZStack(alignment: .top) {
+                if showsScene {
+                    EmojiSceneView(conditions: sceneConditions, paused: !isActive || isCovered)
+                }
+
+                VStack(spacing: 0) {
+                    Spacer()
+                        .frame(height: proxy.size.height * (bottomInset == nil ? 0.47 : 0.42))
+                    summary
+                    Spacer(minLength: 0)
+                }
+                .padding(.horizontal, 24)
+                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            }
+            // Pinned to the bottom on its own, so a tall summary can never push it off screen.
+            .overlay(alignment: .bottom) {
+                VStack(spacing: 14) {
+                    if showsBanner {
+                        // Free tier: a small banner just above the Forecast hint on the first page.
+                        BannerAdWithUpsell { showingPaywall = true }
+                    }
+                    if drawsOwnHint {
+                        swipeHint
+                    }
+                }
+                // In the pager, leave room for the container's fixed hint and page dots.
+                .padding(.bottom, bottomInset.map { $0 + 100 } ?? proxy.safeAreaInsets.bottom + 64)
+                .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+            }
+        }
+        .environment(\.skyMode, sceneConditions.sky)
+        .contentShape(Rectangle())
+        // VoiceOver can't swipe up, so offer the forecast as an action on the page.
+        .accessibilityAction(named: Text("Show forecast")) {
+            if snapshot != nil { showingDetails = true }
+        }
+        .onChange(of: sceneConditions, initial: true) { _, conditions in
+            if isActive { onSceneChange(conditions) }
+        }
+        .onChange(of: isActive) { _, active in
+            if active {
+                onSceneChange(sceneConditions)
+                onHasWeatherChange(snapshot != nil)
+            }
+        }
+        .onChange(of: snapshot != nil, initial: true) { _, hasWeather in
+            if isActive { onHasWeatherChange(hasWeather) }
+        }
+        .onChange(of: openDetailsToken) { _, _ in
+            if isActive, snapshot != nil, onForecastChange == nil { showingDetails = true }
+        }
+        .onChange(of: forecastKey, initial: true) { _, _ in
+            if isActive, let onForecastChange { onForecastChange(placeName, forecast) }
+        }
+        .onChange(of: shareToken) { _, _ in
+            if isActive, snapshot != nil { showingShare = true }
+        }
+        .overlay(alignment: .topTrailing) {
+            // iPad: the page has no container top bar, so it shows its own Share button.
+            if drawsOwnHint, snapshot != nil {
+                Button {
+                    showingShare = true
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                        .font(.body.weight(.semibold))
+                        .frame(width: 44, height: 44)
+                        .background(sceneConditions.sky.textColor.opacity(0.1), in: Circle())
+                }
+                .foregroundStyle(sceneConditions.sky.textColor)
+                .accessibilityLabel("Share")
+                .padding()
+            }
+        }
+        .sheet(isPresented: $showingShare) {
+            if let forecast {
+                ShareCardSheet(content: ShareCardContent(
+                    placeName: placeName,
+                    timeZone: timeZone,
+                    conditions: sceneConditions,
+                    forecast: forecast,
+                    showsWatermark: !purchases.hasPlus
+                ))
+            }
+        }
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 24).onEnded { value in
+                let isUpward = value.translation.height < -60
+                    && abs(value.translation.height) > abs(value.translation.width) * 1.5
+                if isUpward, snapshot != nil, onForecastChange == nil { showingDetails = true }
+            }
+        )
+        .task(id: loadKey) { await load() }
+        .onChange(of: scenePhase) { _, phase in
+            // Refresh when coming back to the app; the cache keeps this to one call per 30 minutes.
+            if phase == .active, isActive { Task { await load() } }
+        }
+        .sheet(isPresented: $showingPaywall) {
+            PaywallView()
+        }
+        .onChange(of: showingDetails) { _, isShowing in
+            if isShowing { AppAnalytics.log(.forecastOpened) }
+        }
+        .sheet(isPresented: $showingDetails) {
+            if let forecast {
+                DetailsView(placeName: placeName, forecast: forecast)
+                .presentationDetents(detailsDetents)
+                .presentationDragIndicator(.visible)
+                // The app forces light or dark to match the sky, so read the system setting
+                // from the screen and give the forecast sheet that instead.
+                .preferredColorScheme(SystemAppearance.shared.colorScheme)
+                .presentationCornerRadius(36)
+            }
+        }
+    }
+
+    // MARK: - First page
+
+    private var showsBanner: Bool {
+        isCurrentLocation && ads.isHomeBannerLoaded && !purchases.hasPlus
+    }
+
+    private var isCurrentLocation: Bool {
+        if case .currentLocation = place { return true }
+        return false
+    }
+
+    /// "68 degrees, Cloudy, High 72 degrees, Low 55 degrees" for VoiceOver.
+    private var spokenWeather: String? {
+        guard let current = snapshot?.current else { return nil }
+        var parts = [current.temperature.spokenTemperature, current.condition.description]
+        if let today = snapshot?.daily.first {
+            parts.append(String(localized: "High \(today.highTemperature.spokenTemperature)"))
+            parts.append(String(localized: "Low \(today.lowTemperature.spokenTemperature)"))
+        }
+        return parts.joined(separator: ", ")
+    }
+
+    @ViewBuilder
+    private var summary: some View {
+        #if DEBUG
+        if let scene = ScreenshotMode.scene, previewScene == scene {
+            // Screenshot mode: sample numbers that match the forced scene.
+            WeatherSummaryView(
+                placeName: placeName,
+                showsLocationIcon: isCurrentLocation,
+                timeZone: timeZone,
+                temperature: scene.sampleTemperature,
+                condition: scene.title,
+                high: scene.sampleHigh,
+                low: scene.sampleLow,
+                tagline: scene.tagline(in: sceneConditions.sky),
+                spokenWeather: spokenWeather
+            )
+        } else {
+            liveSummary
+        }
+        #else
+        liveSummary
+        #endif
+    }
+
+    @ViewBuilder
+    private var liveSummary: some View {
+        if let current = snapshot?.current {
+            WeatherSummaryView(
+                placeName: placeName,
+                showsLocationIcon: isCurrentLocation,
+                timeZone: timeZone,
+                temperature: current.temperature.shortTemperature,
+                condition: current.condition.description,
+                high: snapshot?.daily.first?.highTemperature.shortTemperature,
+                low: snapshot?.daily.first?.lowTemperature.shortTemperature,
+                tagline: sceneConditions.scene.tagline(in: sceneConditions.sky),
+                spokenWeather: spokenWeather
+            )
+        } else {
+            VStack(spacing: 16) {
+                PlaceNameRow(placeName: placeName, showsLocationIcon: isCurrentLocation)
+                status
+            }
+            .frame(maxWidth: .infinity)
+            .readableOverEmoji()
+        }
+    }
+
+    @ViewBuilder
+    private var status: some View {
+        if case .currentLocation = place, !location.isAuthorized {
+            LocationPermissionCard()
+        } else if case .currentLocation = place, location.location == nil {
+            if location.isLocating {
+                ProgressView("Finding your location…")
+            } else {
+                retryMessage(location.failureMessage ?? String(localized: "Waiting for your location…")) {
+                    location.refresh()
+                }
+            }
+        } else if let errorMessage {
+            retryMessage(errorMessage) {
+                Task { await load(forceRefresh: true) }
+            }
+        } else if isLoading {
+            ProgressView()
+        }
+    }
+
+    private func retryMessage(_ message: String, action: @escaping () -> Void) -> some View {
+        VStack(spacing: 10) {
+            Text(message)
+                .font(.subheadline)
+                .multilineTextAlignment(.center)
+            Button("Try Again", action: action)
+                .buttonStyle(.bordered)
+                .tint(sceneConditions.sky.textColor)
+        }
+    }
+
+    private var swipeHint: some View {
+        ForecastHint(color: sceneConditions.sky.textColor, isEnabled: snapshot != nil) {
+            showingDetails = true
+        }
+    }
+
+    // MARK: - Loading
+
+    private func load(forceRefresh: Bool = false) async {
+        guard let target = targetLocation else {
+            snapshot = nil
+            return
+        }
+        // Show cached weather right away, then fetch only if it's stale.
+        if let cached = weather.cachedWeather(for: target) {
+            snapshot = cached
+            WidgetSync.save(cached, for: place)
+            if !forceRefresh { return }
+        }
+
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            let fresh = try await weather.weather(for: target, forceRefresh: forceRefresh)
+            snapshot = fresh
+            errorMessage = nil
+            // Weather is on screen, so the ad SDK can start (it waits a few more seconds itself).
+            Task { await ads.start() }
+            WidgetSync.save(fresh, for: place)
+        } catch is CancellationError {
+            // The page went away or the place changed; the next load takes over.
+        } catch {
+            logger.error("WeatherKit failed: \(String(describing: error), privacy: .public)")
+            #if DEBUG
+            // Usually WeatherKit isn't enabled for the App ID yet, or signing has no team.
+            errorMessage = "Couldn't load the weather.\n\(error.localizedDescription)\nCheck that WeatherKit is enabled for this App ID (Capabilities and App Services)."
+            #else
+            errorMessage = String(localized: "Couldn't load the weather.")
+            #endif
+        }
+    }
+}
+
+/// The user's Light/Dark setting from Settings, which the app's own sky-based override hides.
+/// Updates live when the setting changes.
+@MainActor
+@Observable
+final class SystemAppearance {
+    static let shared = SystemAppearance()
+
+    private(set) var colorScheme: ColorScheme = .light
+    @ObservationIgnored private var registration: (any UITraitChangeRegistration)?
+
+    private init() {
+        refresh()
+    }
+
+    private func refresh() {
+        guard let scene = UIApplication.shared.connectedScenes.compactMap({ $0 as? UIWindowScene }).first else { return }
+        let style = scene.screen.traitCollection.userInterfaceStyle
+        let scheme: ColorScheme = style == .dark ? .dark : .light
+        if scheme != colorScheme { colorScheme = scheme }
+        if registration == nil {
+            registration = scene.registerForTraitChanges([UITraitUserInterfaceStyle.self]) { [weak self] (_: UIWindowScene, _: UITraitCollection) in
+                self?.refresh()
+            }
+        }
+    }
+}
+
+/// "Forecast" with an up chevron: tap (or swipe up) for the full forecast.
+struct ForecastHint: View {
+    let color: Color
+    let isEnabled: Bool
+    let action: () -> Void
+
+    @Environment(\.colorSchemeContrast) private var contrast
+
+    var body: some View {
+        Button(action: action) {
+            VStack(spacing: 2) {
+                Image(systemName: "chevron.compact.up")
+                    .font(.title2)
+                Text("Forecast")
+                    .font(.system(.footnote, design: .rounded, weight: .semibold))
+            }
+            .foregroundStyle(color.opacity(contrast == .increased ? 0.9 : 0.55))
+        }
+        .accessibilityLabel(Text("Show forecast"))
+        .accessibilityHint(Text("Hourly and 10-day forecast, and today's conditions."))
+        .opacity(isEnabled ? 1 : 0)
+        .disabled(!isEnabled)
+        .animation(.easeInOut(duration: 0.3), value: isEnabled)
+    }
+}

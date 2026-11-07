@@ -1,0 +1,14 @@
+.DS_Store
+xcuserdata/
+DerivedData/
+*.xcuserstate
+build/
+
+# Firebase config: kept out of this public repo. Each Mac adds its own copy.
+GoogleService-Info.plist
+
+# Screenshot captures and renders (large files)
+Design/AppStore/raw/
+Design/AppStore/final/
+Design/AppStore/node_modules/
+Design/AppStore/package*.json
