@@ -109,12 +109,16 @@ struct WatchCityPage: View {
 
                 if let scene = screenshotScene {
                     // Screenshot mode: sample weather, so every language shows the same forecast.
+                    #if DEBUG
                     if showsSampleForecast {
                         WatchHourlySection(hours: scene.sampleWatchHours, timeZone: timeZone)
                             .id(Self.forecastID)
                         WatchDailySection(days: scene.sampleWatchDays, timeZone: timeZone)
                             .id(Self.dailyID)
                     }
+                    #else
+                    let _ = scene
+                    #endif
                 } else if let snapshot {
                     WatchHourlySection(hours: snapshot.hourly.map(WatchHour.init), timeZone: timeZone)
                         .id(Self.forecastID)
