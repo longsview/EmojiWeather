@@ -137,10 +137,28 @@ final class PurchaseManager {
             logger.info("Purchase of \(product.id, privacy: .public) is pending approval")
             return .pending
         case .userCancelled:
-            return .cancelled
+            // "You're already subscribed" can come back as a cancel; pick up that subscription.
+            await refreshEntitlements()
+            return hasPlus ? .purchased : .cancelled
         @unknown default:
             return .cancelled
         }
+    }
+
+    /// What Restore Purchases found, for the alert in Settings. Test builds (Xcode and sandbox)
+    /// also list the raw entitlements so a TestFlight build can show why Plus is off.
+    var restoreSummary: String {
+        var text = hasPlus
+            ? String(localized: "Skymoji+ is active. Thank you!")
+            : String(localized: "No active Skymoji+ subscription was found for this Apple Account.")
+        let isTest = entitlementNotes.contains { $0.contains("Sandbox") || $0.contains("Xcode") || $0.contains("UNVERIFIED") }
+        #if DEBUG
+        let showDetails = true
+        #else
+        let showDetails = isTest
+        #endif
+        if showDetails { text += "\n\n" + entitlementNotes.joined(separator: "\n") }
+        return text
     }
 
     func restore() async {

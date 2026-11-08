@@ -21,6 +21,7 @@ struct SettingsView: View {
     @State private var showingPaywall = false
     @State private var showingScenePack = false
     @State private var showingManageSubscription = false
+    @State private var restoreMessage: String?
 
     private var regionUnitName: String {
         DisplaySettings.regionTemperatureUnit == .fahrenheit ? "°F" : "°C"
@@ -106,7 +107,10 @@ struct SettingsView: View {
                         }
                     }
                     Button("Restore Purchases") {
-                        Task { await purchases.restore() }
+                        Task {
+                            await purchases.restore()
+                            restoreMessage = purchases.restoreSummary
+                        }
                     }
                 } header: {
                     Text("Skymoji+")
@@ -145,6 +149,14 @@ struct SettingsView: View {
                 PaywallView()
             }
             .manageSubscriptionsSheet(isPresented: $showingManageSubscription)
+            .alert("Restore Purchases", isPresented: Binding(
+                get: { restoreMessage != nil },
+                set: { if !$0 { restoreMessage = nil } }
+            )) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text(verbatim: restoreMessage ?? "")
+            }
             .onChange(of: animateScenes) { WatchSync.shared.send() }
             .onChange(of: temperature) { WidgetCenter.shared.reloadAllTimelines() }
             .onChange(of: clock) { WidgetCenter.shared.reloadAllTimelines() }

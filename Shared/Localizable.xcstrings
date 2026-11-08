@@ -6506,6 +6506,46 @@
         }
       }
     },
+    "No active Skymoji+ subscription was found for this Apple Account." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun abonnement Skymoji+ actif n’a été trouvé pour ce compte Apple."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontró ninguna suscripción activa a Skymoji+ para esta cuenta de Apple."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhuma assinatura ativa do Skymoji+ foi encontrada para esta Conta Apple."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未找到此 Apple 账户的有效 Skymoji+ 订阅。"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この Apple アカウントで有効な Skymoji+ のサブスクリプションが見つかりませんでした。"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "لم يتم العثور على اشتراك Skymoji+ نشط لحساب Apple هذا."
+          }
+        }
+      }
+    },
     "No ads, ever" : {
       "localizations" : {
         "ar" : {
