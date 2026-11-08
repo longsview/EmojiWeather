@@ -69,7 +69,10 @@ struct EmojiWeatherApp: App {
         // time it comes back, so the current-location page follows you when you travel.
         .onChange(of: scenePhase, initial: true) { _, phase in
             switch phase {
-            case .active: location.startUpdating()
+            case .active:
+                location.startUpdating()
+                // Pick up renewals, expiries and purchases made elsewhere while we were away.
+                Task { await purchases.refreshEntitlements() }
             case .background:
                 location.stopUpdating()
                 // Refresh the next mornings' reminders with the latest forecast.
