@@ -128,6 +128,8 @@ final class PurchaseManager {
             // Unlock straight from the transaction: Transaction.currentEntitlements can lag
             // a moment behind a new purchase, and reading it first left Plus locked.
             apply(transaction)
+            // Only a purchase made here starts the short grace window, not renewals or restores.
+            lastPurchaseAt = .now
             await transaction.finish()
             await refreshEntitlements()
             AppAnalytics.log(.purchaseCompleted, ["plan": product.id])
@@ -177,9 +179,10 @@ final class PurchaseManager {
     private func apply(_ transaction: Transaction) {
         if Self.isActive(transaction) {
             purchasedProductIDs.insert(transaction.productID)
-            lastPurchaseAt = .now
         } else {
             purchasedProductIDs.remove(transaction.productID)
+            // A refund or revocation takes effect right away.
+            if transaction.revocationDate != nil { lastPurchaseAt = nil }
         }
     }
 
