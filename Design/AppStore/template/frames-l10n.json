@@ -1,0 +1,350 @@
+{
+  "fr": {
+    "01-hero": [
+      "La météo,<br>en emoji.",
+      "Des ciels animés, en direct, où que vous soyez."
+    ],
+    "02-storm": [
+      "Sentez<br>l’orage.",
+      "Pluie, neige et éclairs qui suivent la vraie météo."
+    ],
+    "03-night": [
+      "Des nuits à<br>contempler.",
+      "La lune, les étoiles et parfois une étoile filante."
+    ],
+    "04-map": [
+      "La carte<br>météo rétro.",
+      "Comme la météo télé, dessinée en emoji."
+    ],
+    "05-daily": [
+      "Un nouveau jeu<br>chaque jour.",
+      "Cinq questions de géographie sur l’endroit où vous êtes. Gardez votre série."
+    ],
+    "06-streak": [
+      "Montrez<br>votre série.",
+      "Partagez votre grille de score avec vos amis."
+    ],
+    "07-packs": [
+      "Habillez<br>votre ciel.",
+      "Packs de saison, vos propres emoji, même des Genmoji."
+    ],
+    "08-forecast": [
+      "Tous les détails,<br>d’un geste.",
+      "Heure par heure, 10 jours, vent, UV, lever du soleil et plus."
+    ],
+    "09-share": [
+      "Partagez<br>votre ciel.",
+      "Transformez la météo en vidéo, GIF ou photo."
+    ],
+    "10-snow": [
+      "Jours de neige,<br>en emoji.",
+      "Des flocons au blizzard, en direct d’après les prévisions."
+    ],
+    "ipad-01-hero": [
+      "La météo, en emoji.",
+      "De grands ciels animés, superbes sur iPad."
+    ],
+    "ipad-03-daily": [
+      "Un nouveau jeu de géographie chaque jour.",
+      "Cinq questions sur l’endroit où vous êtes."
+    ],
+    "duo-inner-01-hero": [
+      "La météo, en emoji.",
+      "Vos villes d’un côté, les prévisions complètes de l’autre."
+    ],
+    "10-widgets": [
+      "Votre ciel,<br>sur l’écran d’accueil.",
+      "Des widgets pour l’écran d’accueil et verrouillé, et votre série du quiz."
+    ]
+  },
+  "es": {
+    "01-hero": [
+      "El tiempo,<br>en emoji.",
+      "Cielos animados en directo, estés donde estés."
+    ],
+    "02-storm": [
+      "Siente<br>la tormenta.",
+      "Lluvia, nieve y rayos que siguen el tiempo real."
+    ],
+    "03-night": [
+      "Noches para<br>mirar arriba.",
+      "La luna, las estrellas y alguna estrella fugaz."
+    ],
+    "04-map": [
+      "El mapa del<br>tiempo retro.",
+      "Como el tiempo de la tele, dibujado con emoji."
+    ],
+    "05-daily": [
+      "Un juego nuevo<br>cada día.",
+      "Cinco preguntas de geografía sobre dónde estás. Mantén tu racha."
+    ],
+    "06-streak": [
+      "Presume<br>de racha.",
+      "Comparte tu cuadrícula de resultados con tus amigos."
+    ],
+    "07-packs": [
+      "Viste<br>tu cielo.",
+      "Paquetes de temporada, tus propios emoji, incluso Genmoji."
+    ],
+    "08-forecast": [
+      "Cada detalle,<br>deslizando arriba.",
+      "Por horas, 10 días, viento, UV, amanecer y más."
+    ],
+    "09-share": [
+      "Envía<br>tu cielo.",
+      "Convierte el tiempo en un vídeo, GIF o foto."
+    ],
+    "10-snow": [
+      "Días de nieve,<br>en emoji.",
+      "De copos a ventiscas, en directo según el pronóstico."
+    ],
+    "ipad-01-hero": [
+      "El tiempo, en emoji.",
+      "Cielos animados grandes y preciosos en el iPad."
+    ],
+    "ipad-03-daily": [
+      "Un nuevo juego de geografía cada día.",
+      "Cinco preguntas sobre dónde estás."
+    ],
+    "duo-inner-01-hero": [
+      "El tiempo, en emoji.",
+      "Tus ciudades a un lado y el pronóstico completo al otro."
+    ],
+    "10-widgets": [
+      "Tu cielo,<br>en tu pantalla de inicio.",
+      "Widgets para la pantalla de inicio y bloqueada, y tu racha del quiz."
+    ]
+  },
+  "pt-BR": {
+    "01-hero": [
+      "O clima,<br>em emoji.",
+      "Céus animados ao vivo, onde você estiver."
+    ],
+    "02-storm": [
+      "Sinta a<br>tempestade.",
+      "Chuva, neve e raios que seguem o clima de verdade."
+    ],
+    "03-night": [
+      "Noites para<br>olhar o céu.",
+      "A lua, as estrelas e, às vezes, uma estrela cadente."
+    ],
+    "04-map": [
+      "O mapa do<br>tempo retrô.",
+      "Como a previsão da TV, desenhada em emoji."
+    ],
+    "05-daily": [
+      "Um jogo novo<br>todo dia.",
+      "Cinco perguntas de geografia sobre onde você está. Mantenha a sequência."
+    ],
+    "06-streak": [
+      "Mostre sua<br>sequência.",
+      "Compartilhe sua grade de pontos com os amigos."
+    ],
+    "07-packs": [
+      "Enfeite<br>seu céu.",
+      "Pacotes sazonais, seus próprios emojis e até Genmojis."
+    ],
+    "08-forecast": [
+      "Todos os detalhes,<br>num deslize.",
+      "Hora a hora, 10 dias, vento, UV, nascer do sol e mais."
+    ],
+    "09-share": [
+      "Envie<br>seu céu.",
+      "Transforme o clima em vídeo, GIF ou foto."
+    ],
+    "10-snow": [
+      "Dias de neve,<br>em emoji.",
+      "De flocos a nevascas, ao vivo pela previsão."
+    ],
+    "ipad-01-hero": [
+      "O clima, em emoji.",
+      "Céus animados grandes e lindos no iPad."
+    ],
+    "ipad-03-daily": [
+      "Um novo jogo de geografia todo dia.",
+      "Cinco perguntas sobre onde você está."
+    ],
+    "duo-inner-01-hero": [
+      "O clima, em emoji.",
+      "Suas cidades de um lado, a previsão completa do outro."
+    ],
+    "10-widgets": [
+      "Seu céu,<br>na Tela de Início.",
+      "Widgets para a Tela de Início e a Tela Bloqueada, e sua sequência no quiz."
+    ]
+  },
+  "zh-Hans": {
+    "01-hero": [
+      "用表情符号<br>看天气。",
+      "无论你在哪里，都有实时的动态天空。"
+    ],
+    "02-storm": [
+      "感受<br>暴风雨。",
+      "雨、雪和闪电，随真实天气而动。"
+    ],
+    "03-night": [
+      "值得仰望的<br>夜晚。",
+      "月亮、星星，偶尔还有流星。"
+    ],
+    "04-map": [
+      "复古<br>天气地图。",
+      "像电视天气预报，用表情符号画出来。"
+    ],
+    "05-daily": [
+      "每天一个<br>新游戏。",
+      "五道关于你所在地的地理题。保持连续纪录。"
+    ],
+    "06-streak": [
+      "晒出你的<br>连续纪录。",
+      "和朋友分享你的得分格子。"
+    ],
+    "07-packs": [
+      "装扮<br>你的天空。",
+      "季节场景包、你自己的表情符号，甚至 Genmoji。"
+    ],
+    "08-forecast": [
+      "向上一滑，<br>细节尽现。",
+      "逐小时、10 天、风、紫外线、日出等。"
+    ],
+    "09-share": [
+      "分享<br>你的天空。",
+      "把天气做成视频、GIF 或照片。"
+    ],
+    "10-snow": [
+      "下雪天，<br>表情满天。",
+      "从小雪到暴风雪，根据预报实时呈现。"
+    ],
+    "ipad-01-hero": [
+      "用表情符号看天气。",
+      "在 iPad 上欣赏又大又美的动态天空。"
+    ],
+    "ipad-03-daily": [
+      "每天一个新的地理游戏。",
+      "五道关于你所在地的题目。"
+    ],
+    "duo-inner-01-hero": [
+      "用表情符号看天气。",
+      "一边滑动切换城市，一边查看完整预报。"
+    ],
+    "10-widgets": [
+      "你的天空，<br>就在主屏幕上。",
+      "主屏幕和锁定屏幕小组件，还有你的答题连续纪录。"
+    ]
+  },
+  "ja": {
+    "01-hero": [
+      "天気を、<br>絵文字で。",
+      "どこにいても、ライブで動く空。"
+    ],
+    "02-storm": [
+      "嵐を<br>感じよう。",
+      "本物の天気に合わせて動く雨、雪、稲妻。"
+    ],
+    "03-night": [
+      "見上げたくなる<br>夜空。",
+      "月と星、ときどき流れ星。"
+    ],
+    "04-map": [
+      "レトロな<br>天気マップ。",
+      "テレビの天気予報のように、絵文字で。"
+    ],
+    "05-daily": [
+      "毎日、新しい<br>ゲーム。",
+      "今いる場所についての地理クイズ5問。連続記録をキープ。"
+    ],
+    "06-streak": [
+      "連続記録を<br>自慢しよう。",
+      "スコアのマス目を友だちとシェア。"
+    ],
+    "07-packs": [
+      "空を<br>着せ替え。",
+      "季節のパック、自分の絵文字、Genmojiも。"
+    ],
+    "08-forecast": [
+      "上にスワイプで<br>すべての詳細。",
+      "1時間ごと、10日間、風、UV、日の出など。"
+    ],
+    "09-share": [
+      "空を<br>シェア。",
+      "天気をビデオ、GIF、写真に。"
+    ],
+    "10-snow": [
+      "雪の日も、<br>絵文字で。",
+      "小雪から吹雪まで、予報からライブで描写。"
+    ],
+    "ipad-01-hero": [
+      "天気を、絵文字で。",
+      "iPadで大きく美しく動く空。"
+    ],
+    "ipad-03-daily": [
+      "毎日、新しい地理クイズ。",
+      "今いる場所についての5問。"
+    ],
+    "duo-inner-01-hero": [
+      "天気を、絵文字で。",
+      "片側で都市を切り替え、もう片側で詳しい予報。"
+    ],
+    "10-widgets": [
+      "あなたの空を、<br>ホーム画面に。",
+      "ホーム画面とロック画面のウィジェット、クイズの連続記録も。"
+    ]
+  },
+  "ar": {
+    "01-hero": [
+      "الطقس،<br>بالإيموجي.",
+      "سماء متحركة مباشرةً أينما كنت."
+    ],
+    "02-storm": [
+      "اشعر<br>بالعاصفة.",
+      "مطر وثلج وبرق تتحرك مع الطقس الحقيقي."
+    ],
+    "03-night": [
+      "ليالٍ تستحق<br>التأمل.",
+      "القمر والنجوم وشهاب بين الحين والآخر."
+    ],
+    "04-map": [
+      "خريطة الطقس<br>الكلاسيكية.",
+      "كنشرة الطقس على التلفاز، مرسومة بالإيموجي."
+    ],
+    "05-daily": [
+      "لعبة جديدة<br>كل يوم.",
+      "خمسة أسئلة جغرافيا عن مكانك. حافظ على سلسلتك."
+    ],
+    "06-streak": [
+      "تباهَ<br>بسلسلتك.",
+      "شارك شبكة نتائجك مع أصدقائك."
+    ],
+    "07-packs": [
+      "زيّن<br>سماءك.",
+      "حزم موسمية وإيموجي من اختيارك وحتى Genmoji."
+    ],
+    "08-forecast": [
+      "كل التفاصيل<br>بسحبة لأعلى.",
+      "كل ساعة، و10 أيام، والرياح، والأشعة فوق البنفسجية، والشروق وأكثر."
+    ],
+    "09-share": [
+      "أرسل<br>سماءك.",
+      "حوّل الطقس إلى فيديو أو GIF أو صورة."
+    ],
+    "10-snow": [
+      "أيام الثلج،<br>بالإيموجي.",
+      "من الندف إلى العواصف الثلجية، مباشرةً من التوقعات."
+    ],
+    "ipad-01-hero": [
+      "الطقس، بالإيموجي.",
+      "سماء متحركة كبيرة وجميلة على iPad."
+    ],
+    "ipad-03-daily": [
+      "لعبة جغرافيا جديدة كل يوم.",
+      "خمسة أسئلة عن مكانك."
+    ],
+    "duo-inner-01-hero": [
+      "الطقس، بالإيموجي.",
+      "مدنك في جانب، والتوقعات الكاملة في الجانب الآخر."
+    ],
+    "10-widgets": [
+      "سماؤك،<br>على شاشتك الرئيسية.",
+      "أدوات للشاشة الرئيسية وشاشة القفل، وسلسلة الاختبار اليومي."
+    ]
+  }
+}

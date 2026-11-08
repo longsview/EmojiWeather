@@ -1,0 +1,113 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@800&family=Nunito:wght@700&display=swap">
+<style>
+/* One App Store frame. Loud, sky-colored gradient, a chunky rounded headline, the phone
+   slightly tilted, and big emoji stickers bursting out from behind it. */
+:root { --w: 1320px; --h: 2868px; --u: calc(var(--w) / 100); }
+* { box-sizing: border-box; margin: 0; }
+html, body { width: var(--w); height: var(--h); overflow: hidden; }
+body { font-family: "Nunito", "PingFang SC", "Hiragino Sans", "Geeza Pro", system-ui, sans-serif; color: #fff; position: relative; }
+.bg { position: absolute; inset: 0; }
+.glow { position: absolute; width: calc(var(--u) * 120); aspect-ratio: 1; border-radius: 50%; filter: blur(calc(var(--u) * 8)); opacity: .55; }
+.copy { position: absolute; top: calc(var(--u) * 11); left: calc(var(--u) * 8); right: calc(var(--u) * 8); text-align: center; z-index: 3; }
+h1 { font-family: "Baloo 2", "PingFang SC", "Hiragino Sans", "Geeza Pro", system-ui, sans-serif; font-weight: 800; font-size: calc(var(--u) * 11.5); line-height: .98; letter-spacing: -.01em; text-wrap: balance; text-shadow: 0 calc(var(--u) * .5) calc(var(--u) * 2) rgba(0,0,0,.18); }
+p { margin-top: calc(var(--u) * 3); font-size: calc(var(--u) * 4.4); line-height: 1.25; opacity: .92; text-wrap: balance; }
+.stage { position: absolute; left: 50%; bottom: calc(var(--u) * -14); width: calc(var(--u) * 82); transform: translateX(-50%) rotate(var(--tilt)); z-index: 2; }
+.phone { position: relative; width: 100%; aspect-ratio: 1320 / 2868; border-radius: calc(var(--u) * 11); background: #0b0b0f; padding: calc(var(--u) * 2.1); box-shadow: 0 calc(var(--u) * 4) calc(var(--u) * 10) rgba(0,0,0,.35), inset 0 0 0 calc(var(--u) * .45) #3a3a44; }
+.screen { width: 100%; height: 100%; border-radius: calc(var(--u) * 9); overflow: hidden; background: #fff; }
+.screen { position: relative; }
+.screen img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+/* iPhone Duo: the hinge down the middle of the open inner display. */
+.screen.fold::after { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: calc(var(--u) * 1.6); transform: translateX(-50%);
+  background: linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.10) 35%, rgba(255,255,255,.18) 50%, rgba(0,0,0,.10) 65%, rgba(0,0,0,0) 100%); }
+.sticker { position: absolute; font-size: calc(var(--u) * 17); line-height: 1; filter: drop-shadow(0 calc(var(--u) * 1.2) calc(var(--u) * 1.5) rgba(0,0,0,.25)); z-index: 4; }
+.s0 { left: calc(var(--u) * 1); top: calc(var(--u) * 58); transform: rotate(-14deg); }
+.s1 { right: calc(var(--u) * 0); top: calc(var(--u) * 82); transform: rotate(12deg); font-size: calc(var(--u) * 15); }
+.s2 { left: calc(var(--u) * 4); top: calc(var(--u) * 128); transform: rotate(8deg); font-size: calc(var(--u) * 13); }
+.ipad .stage { width: calc(var(--u) * 84); bottom: calc(var(--u) * -10); }
+.ipad .phone { aspect-ratio: 2064 / 2752; border-radius: calc(var(--u) * 5); padding: calc(var(--u) * 1.6); }
+.ipad .screen { border-radius: calc(var(--u) * 3.6); }
+.ipad h1 { font-size: calc(var(--u) * 8); }
+.ipad p { font-size: calc(var(--u) * 3); }
+.ipad .copy { top: calc(var(--u) * 6); }
+.ipad .sticker { font-size: calc(var(--u) * 11); }
+.ipad .s0 { top: calc(var(--u) * 30); } .ipad .s1 { top: calc(var(--u) * 52); } .ipad .s2 { top: calc(var(--u) * 92); }
+/* Landscape (iPhone Duo open): a smaller caption leaves room for the whole device. */
+.landscape h1 { font-size: calc(var(--u) * 5.4); }
+.landscape p { font-size: calc(var(--u) * 2.1); margin-top: calc(var(--u) * 1.2); }
+.landscape .copy { top: calc(var(--u) * 3.2); }
+.landscape .sticker { font-size: calc(var(--u) * 8); }
+/* Retro: CRT scanlines over a teal TV-weather gradient. */
+.scan::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0,0,0,.08) 0 3px, transparent 3px 7px); }
+</style></head>
+<body>
+<div class="bg" id="bg"></div>
+<div class="copy"><h1 id="h"></h1><p id="p"></p></div>
+<div class="stage" id="stage"><div class="phone"><div class="screen"><img id="shot" alt=""></div></div></div>
+<div class="sticker s0" id="k0"></div><div class="sticker s1" id="k1"></div><div class="sticker s2" id="k2"></div>
+<script>
+const THEMES = {
+  sky:    ["#2f8cff", "#62c6ff", "#ffe36b"],
+  sky2:   ["#3a6df0", "#7fb2ff", "#c9e6ff"],
+  storm:  ["#2a1b5e", "#5b3fc4", "#9b7bff"],
+  night:  ["#060b2a", "#1d2d78", "#7d6bff"],
+  retro:  ["#06464f", "#0f8c8c", "#5ff2c8"],
+  sun:    ["#ff9f1c", "#ffcd3c", "#fff1a8"],
+  sun2:   ["#ff6b3d", "#ffb02e", "#ffe27a"],
+  autumn: ["#9c3d12", "#e46a1f", "#ffc15e"],
+  pink:   ["#ff4f8b", "#ff8fb3", "#ffd2a8"],
+  snow:   ["#5a7fb8", "#9cc3ee", "#eef6ff"],
+};
+const q = new URLSearchParams(location.search);
+const f = JSON.parse(decodeURIComponent(q.get("f")));
+// The right glyphs for Chinese and Japanese, and right-to-left captions for Arabic.
+const lang = q.get("lang") || "en";
+document.documentElement.lang = lang;
+if (lang === "ar") document.getElementById("h").parentElement.dir = "rtl";
+const [w, h] = (q.get("size") || "1320x2868").split("x").map(Number);
+document.documentElement.style.setProperty("--w", w + "px");
+document.documentElement.style.setProperty("--h", h + "px");
+if (q.get("device") === "ipad") document.body.classList.add("ipad");
+if (w > h) document.body.classList.add("landscape");
+const [a, b, c] = THEMES[f.theme] || THEMES.sky;
+const bg = document.getElementById("bg");
+bg.style.background = `linear-gradient(165deg, ${a} 0%, ${b} 58%, ${c} 100%)`;
+if (f.theme === "retro") bg.classList.add("scan");
+const glow = document.createElement("div");
+glow.className = "glow"; glow.style.background = c; glow.style.left = "-30%"; glow.style.top = "35%";
+bg.appendChild(glow);
+document.getElementById("h").innerHTML = f.headline;
+document.getElementById("p").textContent = f.sub;
+document.getElementById("stage").style.setProperty("--tilt", (f.tilt || 0) + "deg");
+const shot = document.getElementById("shot");
+// Shape the device to the capture, so iPhone, iPad and iPhone Duo shots all fit uncropped.
+shot.onload = () => document.fonts.ready.then(() => {
+  // A foldable's inner screen has its own shape; the capture fills it (cropped at the edges).
+  const [aw, ah] = f.screenAspect || [shot.naturalWidth, shot.naturalHeight];
+  document.querySelector(".phone").style.aspectRatio = `${aw} / ${ah}`;
+  if (f.fold) document.querySelector(".screen").classList.add("fold");
+  // A tall phone capture on a wide canvas (an iPhone shot on iPhone Duo) would cover the headline,
+  // so narrow the device until it is at most 85% of the canvas height.
+  const stage = document.getElementById("stage");
+  const maxWidth = 0.85 * h * aw / ah;
+  if (stage.getBoundingClientRect().width > maxWidth) stage.style.width = maxWidth + "px";
+  if (w > h) {
+    // Landscape (iPhone Duo open): show the whole device between the caption and the bottom edge.
+    const margin = h * 0.05;
+    const top = document.querySelector(".copy").getBoundingClientRect().bottom + margin;
+    const width = Math.min(stage.getBoundingClientRect().width, (h - top - margin) * aw / ah);
+    stage.style.width = width + "px";
+    stage.style.bottom = margin + "px";
+    document.body.dataset.ready = "1";
+    return;
+  }
+  // Long translated captions wrap to more lines; push the device down so it never covers them.
+  const gap = document.querySelector(".copy").getBoundingClientRect().bottom + w * 0.03 - stage.getBoundingClientRect().top;
+  if (gap > 0) stage.style.bottom = `${parseFloat(getComputedStyle(stage).bottom) - gap}px`;
+  document.body.dataset.ready = "1";
+});
+shot.src = f.shotURL;
+(f.stickers || []).forEach((s, i) => { const el = document.getElementById("k" + i); if (el) el.textContent = s; });
+</script>
+</body></html>

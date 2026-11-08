@@ -1,0 +1,76 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@800&family=Nunito:wght@700&display=swap">
+<style>
+/* App Store header and search results art. One sky runs left to right from a sunny day,
+   through a storm and golden hour, to a starry night. The icon, name and tagline sit in the
+   middle, which is the part every crop (21:9 header, 3:2 search card, 16:9 universal) keeps. */
+:root { --w: 3840px; --h: 1646px; --u: 16.46px; }
+* { box-sizing: border-box; margin: 0; }
+html, body { width: var(--w); height: var(--h); overflow: hidden; }
+body { position: relative; color: #fff; font-family: "Nunito", "PingFang SC", "Hiragino Sans", "Geeza Pro", system-ui, sans-serif;
+  background: linear-gradient(100deg, #3f9bff 0%, #6fb6f5 16%, #7f86c4 34%, #f39a6c 50%, #c0578f 64%, #2e3a78 80%, #10163f 100%); }
+.e { position: absolute; line-height: 1; transform: translate(-50%, -50%) rotate(var(--r, 0deg)); filter: drop-shadow(0 calc(var(--u) * .6) calc(var(--u) * .9) rgba(0,0,0,.22)); }
+.copy { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; display: flex; flex-direction: column; align-items: center; z-index: 5; }
+.icon { width: calc(var(--u) * 24); aspect-ratio: 1; border-radius: 22.5%; box-shadow: 0 calc(var(--u) * 1.4) calc(var(--u) * 4) rgba(0,0,0,.35); }
+h1 { font-family: "Baloo 2", system-ui, sans-serif; font-weight: 800; font-size: calc(var(--u) * 15); line-height: 1; margin-top: calc(var(--u) * 3); text-shadow: 0 calc(var(--u) * .5) calc(var(--u) * 2) rgba(0,0,0,.25); }
+p { font-size: calc(var(--u) * 5.6); margin-top: calc(var(--u) * 1); white-space: nowrap; text-shadow: 0 calc(var(--u) * .3) calc(var(--u) * 1.4) rgba(0,0,0,.3); }
+.halo { position: absolute; left: 50%; top: 50%; width: calc(var(--u) * 120); height: calc(var(--u) * 90); transform: translate(-50%, -50%); background: radial-gradient(closest-side, rgba(20,20,60,.35), rgba(20,20,60,0)); z-index: 4; }
+</style></head>
+<body>
+<div class="halo"></div>
+<div id="scene"></div>
+<div class="copy"><img class="icon" id="icon" alt=""><h1 id="h"></h1><p id="p"></p></div>
+<script>
+const q = new URLSearchParams(location.search);
+const [w, h] = q.get("size").split("x").map(Number);
+const root = document.documentElement.style;
+root.setProperty("--w", w + "px"); root.setProperty("--h", h + "px");
+const lang = q.get("lang") || "en";
+document.documentElement.lang = lang;
+if (lang === "ar") document.querySelector(".copy").dir = "rtl";
+const [title, tagline] = JSON.parse(decodeURIComponent(q.get("t")));
+document.getElementById("h").textContent = title;
+document.getElementById("p").textContent = tagline;
+document.getElementById("icon").src = q.get("icon");
+
+// x is a fraction of the width, y of the height, s is the size in units (1 unit = 1% of a
+// 21:9 canvas's height). The universal 16:9 art gets cropped by the App Store to 21:9 for the
+// header and 3:2 for search, so its emoji stay inside a margin that both crops keep.
+const unit = Math.min(h / 100, w / 233.3);
+root.setProperty("--u", unit + "px");
+const universal = Math.abs(w / h - 16 / 9) < .01;
+const [mx, my] = universal ? [.09, .13] : [.02, .04];
+const X = x => mx + x * (1 - 2 * mx), Y = y => my + y * (1 - 2 * my);
+const E = [
+  // Sunny day, far left: the sun (rays added below) and puffy clouds.
+  ["☀️", .09, .26, 28], ["☁️", .22, .2, 12], ["🌤️", .12, .76, 17], ["☁️", .21, .5, 9],
+  // Storm, left of centre: thunder cloud, lightning, rain.
+  ["⛈️", .33, .18, 17], ["⚡️", .29, .5, 10, -12], ["💧", .25, .9, 6], ["💧", .3, .78, 5], ["💧", .33, .9, 5],
+  // Golden hour into snow, right of centre.
+  ["🌥️", .68, .2, 13], ["❄️", .72, .68, 8, 10], ["❄️", .67, .88, 6, -8], ["⛄️", .78, .55, 0],
+  // Night, far right: the moon and stars.
+  ["🌙", .9, .27, 24, -10], ["⭐️", .79, .2, 6], ["✨", .95, .62, 9], ["⭐️", .84, .48, 5], ["✨", .8, .82, 7], ["⭐️", .97, .9, 5], ["💫", .89, .8, 10]
+];
+const scene = document.getElementById("scene");
+for (const [g, x, y, s, r] of E) {
+  if (!s) continue;
+  const el = document.createElement("div");
+  el.className = "e"; el.textContent = g;
+  el.style.left = (X(x) * 100) + "%"; el.style.top = (Y(y) * 100) + "%";
+  el.style.fontSize = `calc(var(--u) * ${s})`;
+  if (r) el.style.setProperty("--r", r + "deg");
+  scene.appendChild(el);
+}
+// Rays around the sun.
+const [sx, sy] = [X(.09) * w, Y(.26) * h];
+for (let i = 0; i < 9; i++) {
+  const a = (i / 9) * Math.PI * 2 + .2, d = unit * 24;
+  const el = document.createElement("div");
+  el.className = "e"; el.textContent = "✨";
+  el.style.left = (sx + Math.cos(a) * d) + "px"; el.style.top = (sy + Math.sin(a) * d) + "px";
+  el.style.fontSize = `calc(var(--u) * 4.5)`;
+  scene.appendChild(el);
+}
+</script>
+</body></html>

@@ -1,0 +1,16 @@
+{
+  "sizes": {
+    "header": [3840, 1646],
+    "search": [3840, 2560],
+    "universal": [5244, 2950]
+  },
+  "taglines": {
+    "en": ["Skymoji", "Weather told in animated emoji"],
+    "fr": ["Skymoji", "La météo en emoji animés"],
+    "es": ["Skymoji", "El tiempo en emoji animados"],
+    "pt-BR": ["Skymoji", "O clima em emojis animados"],
+    "zh-Hans": ["Skymoji", "用动态表情符号看天气"],
+    "ja": ["Skymoji", "動く絵文字で天気がわかる"],
+    "ar": ["Skymoji", "الطقس برموز تعبيرية متحركة"]
+  }
+}
