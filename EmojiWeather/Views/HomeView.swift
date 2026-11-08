@@ -407,6 +407,10 @@ struct HomeView: View {
         Menu {
             Toggle("Show ads", isOn: $debugAdsEnabled)
             Toggle("Skymoji+ unlocked", isOn: Bindable(purchases).debugUnlock)
+            Section("Purchases: \(purchases.hasPlus ? "Plus" : "Free")") {
+                ForEach(purchases.entitlementNotes, id: \.self) { Text(verbatim: $0) }
+                Button("Check again") { Task { await purchases.refreshEntitlements() } }
+            }
             Button {
                 showingGallery = true
             } label: {

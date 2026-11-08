@@ -57,6 +57,8 @@ final class PurchaseManager {
     }
 
     private(set) var products: [Product] = []
+    /// What the last entitlement check saw, for the debug menu.
+    private(set) var entitlementNotes: [String] = []
     private(set) var purchasedProductIDs: Set<String> = [] {
         didSet { syncPlusStatus() }
     }
@@ -169,11 +171,19 @@ final class PurchaseManager {
 
     func refreshEntitlements() async {
         var owned = Set<String>()
+        var notes: [String] = []
         for await result in Transaction.currentEntitlements {
-            if case .verified(let transaction) = result, Self.isActive(transaction) {
-                owned.insert(transaction.productID)
+            switch result {
+            case .verified(let transaction):
+                let active = Self.isActive(transaction)
+                notes.append("\(transaction.productID) verified, expires \(transaction.expirationDate?.formatted() ?? "never"), revoked \(transaction.revocationDate != nil), active \(active), env \(transaction.environment.rawValue)")
+                if active { owned.insert(transaction.productID) }
+            case .unverified(let transaction, let error):
+                notes.append("\(transaction.productID) UNVERIFIED: \(error)")
             }
         }
+        logger.info("Entitlements: \(notes.isEmpty ? "none" : notes.joined(separator: " | "), privacy: .public)")
+        entitlementNotes = notes.isEmpty ? ["No entitlements"] : notes
         if owned.isEmpty, let lastPurchaseAt, Date.now.timeIntervalSince(lastPurchaseAt) < 120 {
             // Just bought: keep Plus and check again shortly.
             logger.info("Entitlements empty right after a purchase; keeping Plus and retrying")
