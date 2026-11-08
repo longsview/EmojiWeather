@@ -63,12 +63,8 @@ struct WeatherTimelineProvider: AppIntentTimelineProvider {
     }
 
     private func entry(for configuration: SelectPlaceIntent, allowFetch: Bool) async -> WeatherEntry {
-        #if DEBUG
-        // Debug builds unlock widgets for everyone, for testing.
-        let isUnlocked = true
-        #else
+        // Plus only, in Debug too, so builds behave the same as the App Store.
         let isUnlocked = SharedStore.hasPlus
-        #endif
 
         let places = SharedStore.places
         let pinned = configuration.place.flatMap { pinned in places.first { $0.id == pinned.id } }

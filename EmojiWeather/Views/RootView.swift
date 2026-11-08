@@ -107,7 +107,7 @@ struct RootView: View {
     }
 }
 
-/// The map, or a Skymoji+ teaser for free users in Release builds.
+/// The map, or a Skymoji+ teaser for free users.
 private struct MapTab: View {
     @Environment(PurchaseManager.self) private var purchases
     @Environment(CityStore.self) private var cityStore
@@ -116,14 +116,9 @@ private struct MapTab: View {
     @AppStorage("selectedPlaceID") private var selectedPlaceID = Place.currentLocationID
     @State private var showingPaywall = false
 
-    /// Plus only in Release; open to everyone in Debug for testing.
-    private var isUnlocked: Bool {
-        #if DEBUG
-        true
-        #else
-        purchases.hasPlus
-        #endif
-    }
+    /// Plus only, in Debug too, so the paywall can be tested. The debug menu's unlock and
+    /// -SkymojiPlus open it without buying.
+    private var isUnlocked: Bool { purchases.hasPlus }
 
     /// Starts the map on the place the Weather tab is showing.
     private var center: CLLocationCoordinate2D? {

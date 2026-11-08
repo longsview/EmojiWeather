@@ -232,7 +232,14 @@ struct PaywallView: View {
         isPurchasing = true
         defer { isPurchasing = false }
         do {
-            if try await purchases.purchase(product) { dismiss() }
+            switch try await purchases.purchase(product) {
+            case .purchased: dismiss()
+            case .pending:
+                errorMessage = String(localized: "Your purchase is waiting for approval. Skymoji+ unlocks as soon as it's approved.")
+            case .unverified:
+                errorMessage = String(localized: "The App Store couldn't verify this purchase. Try Restore Purchases, or try again in a moment.")
+            case .cancelled: break
+            }
         } catch {
             errorMessage = error.localizedDescription
         }

@@ -75,6 +75,7 @@ final class PurchaseManager {
         updatesTask = Task { [weak self] in
             for await update in Transaction.updates {
                 if case .verified(let transaction) = update {
+                    await self?.apply(transaction)
                     await transaction.finish()
                 }
                 await self?.refreshEntitlements()
@@ -112,20 +113,31 @@ final class PurchaseManager {
         await refreshEntitlements()
     }
 
-    /// Returns true when the purchase went through.
-    func purchase(_ product: Product) async throws -> Bool {
+    enum PurchaseOutcome { case purchased, cancelled, pending, unverified }
+
+    func purchase(_ product: Product) async throws -> PurchaseOutcome {
         AppAnalytics.log(.purchaseStarted, ["plan": product.id])
         switch try await product.purchase() {
         case .success(let verification):
-            guard case .verified(let transaction) = verification else { return false }
+            guard case .verified(let transaction) = verification else {
+                logger.error("Purchase of \(product.id, privacy: .public) failed verification")
+                return .unverified
+            }
+            // Unlock straight from the transaction: Transaction.currentEntitlements can lag
+            // a moment behind a new purchase, and reading it first left Plus locked.
+            apply(transaction)
             await transaction.finish()
             await refreshEntitlements()
             AppAnalytics.log(.purchaseCompleted, ["plan": product.id])
-            return true
-        case .userCancelled, .pending:
-            return false
+            return .purchased
+        case .pending:
+            // Ask to Buy or a payment that needs approval: Transaction.updates unlocks it later.
+            logger.info("Purchase of \(product.id, privacy: .public) is pending approval")
+            return .pending
+        case .userCancelled:
+            return .cancelled
         @unknown default:
-            return false
+            return .cancelled
         }
     }
 
@@ -134,12 +146,42 @@ final class PurchaseManager {
         await refreshEntitlements()
     }
 
+    /// Whether a transaction still grants Plus: not refunded and not expired.
+    private static func isActive(_ transaction: Transaction) -> Bool {
+        guard ProductID.all.contains(transaction.productID), transaction.revocationDate == nil else { return false }
+        if let expiration = transaction.expirationDate { return expiration > .now }
+        return true
+    }
+
+    /// Adds or removes one transaction's product right away.
+    private func apply(_ transaction: Transaction) {
+        if Self.isActive(transaction) {
+            purchasedProductIDs.insert(transaction.productID)
+            lastPurchaseAt = .now
+        } else {
+            purchasedProductIDs.remove(transaction.productID)
+        }
+    }
+
+    /// When a purchase last unlocked Plus here, so a lagging entitlements read right after it
+    /// can't lock the app again.
+    @ObservationIgnored private var lastPurchaseAt: Date?
+
     func refreshEntitlements() async {
         var owned = Set<String>()
         for await result in Transaction.currentEntitlements {
-            if case .verified(let transaction) = result, transaction.revocationDate == nil {
+            if case .verified(let transaction) = result, Self.isActive(transaction) {
                 owned.insert(transaction.productID)
             }
+        }
+        if owned.isEmpty, let lastPurchaseAt, Date.now.timeIntervalSince(lastPurchaseAt) < 120 {
+            // Just bought: keep Plus and check again shortly.
+            logger.info("Entitlements empty right after a purchase; keeping Plus and retrying")
+            Task { [weak self] in
+                try? await Task.sleep(for: .seconds(10))
+                await self?.refreshEntitlements()
+            }
+            return
         }
         purchasedProductIDs = owned
     }

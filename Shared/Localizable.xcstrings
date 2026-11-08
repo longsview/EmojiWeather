@@ -1,9 +1,7 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    " Weather" : {
-
-    },
+    " Weather" : {},
     "%@" : {
       "shouldTranslate" : false
     },
@@ -5467,9 +5465,7 @@
         }
       }
     },
-    "Live weather" : {
-
-    },
+    "Live weather" : {},
     "Loading weather…" : {
       "localizations" : {
         "ar" : {
@@ -8350,9 +8346,7 @@
         }
       }
     },
-    "Scene Gallery" : {
-
-    },
+    "Scene Gallery" : {},
     "Scene pack" : {
       "localizations" : {
         "ar" : {
@@ -8793,9 +8787,7 @@
         }
       }
     },
-    "Show ads" : {
-
-    },
+    "Show ads" : {},
     "Show forecast" : {
       "localizations" : {
         "ar" : {
@@ -8876,9 +8868,7 @@
         }
       }
     },
-    "Show scene on every page" : {
-
-    },
+    "Show scene on every page" : {},
     "Shows your next place" : {
       "localizations" : {
         "ar" : {
@@ -8919,9 +8909,7 @@
         }
       }
     },
-    "Skymoji" : {
-
-    },
+    "Skymoji" : {},
     "Skymoji Daily" : {
       "localizations" : {
         "ar" : {
@@ -9042,9 +9030,7 @@
         }
       }
     },
-    "Skymoji+" : {
-
-    },
+    "Skymoji+" : {},
     "Skymoji+ is active. Thank you!" : {
       "localizations" : {
         "ar" : {
@@ -9085,9 +9071,7 @@
         }
       }
     },
-    "Skymoji+ unlocked" : {
-
-    },
+    "Skymoji+ unlocked" : {},
     "Snow" : {
       "localizations" : {
         "ar" : {
@@ -10008,6 +9992,46 @@
         }
       }
     },
+    "The App Store couldn't verify this purchase. Try Restore Purchases, or try again in a moment." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’App Store n’a pas pu vérifier cet achat. Essayez Restaurer les achats, ou réessayez dans un instant."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El App Store no pudo verificar esta compra. Prueba Restaurar compras o inténtalo de nuevo en un momento."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A App Store não conseguiu verificar esta compra. Tente Restaurar Compras ou tente novamente em instantes."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Store 无法验证此购买。请尝试恢复购买，或稍后再试。"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Store でこの購入を確認できませんでした。「購入を復元」を試すか、しばらくしてからもう一度お試しください。"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تعذّر على App Store التحقق من عملية الشراء هذه. جرّب استعادة المشتريات، أو حاول مرة أخرى بعد قليل."
+          }
+        }
+      }
+    },
     "The App Store isn't available right now. Try again in a moment." : {
       "localizations" : {
         "ar" : {
@@ -10128,9 +10152,7 @@
         }
       }
     },
-    "The simulator has no location set. In the Simulator menu, choose Features > Location > Apple, then pull down to refresh." : {
-
-    },
+    "The simulator has no location set. In the Simulator menu, choose Features > Location > Apple, then pull down to refresh." : {},
     "The towns and cities on the weather map and in Skymoji Daily come from GeoNames, used under CC BY 4.0. Only names, locations, populations and countries are used." : {
       "localizations" : {
         "ar" : {
@@ -12131,6 +12153,46 @@
         }
       }
     },
+    "Your purchase is waiting for approval. Skymoji+ unlocks as soon as it's approved." : {
+      "localizations" : {
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre achat est en attente d’approbation. Skymoji+ se débloquera dès qu’il sera approuvé."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tu compra está pendiente de aprobación. Skymoji+ se desbloqueará en cuanto se apruebe."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sua compra está aguardando aprovação. O Skymoji+ será liberado assim que for aprovada."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的购买正在等待批准。批准后即可解锁 Skymoji+。"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "購入は承認待ちです。承認されるとすぐに Skymoji+ が利用できるようになります。"
+          }
+        },
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "عملية الشراء بانتظار الموافقة. سيُفتح Skymoji+ فور الموافقة عليها."
+          }
+        }
+      }
+    },
     "Your quiz streak, and whether today's quiz is done." : {
       "localizations" : {
         "ar" : {
@@ -12523,9 +12585,7 @@
         }
       }
     },
-    "🗺️⛈️☀️" : {
-
-    }
+    "🗺️⛈️☀️" : {}
   },
   "version" : "1.0"
 }
