@@ -6,6 +6,7 @@ struct PaywallView: View {
     var reason: String?
 
     @Environment(PurchaseManager.self) private var purchases
+    @State private var restoreMessage: String?
     @Environment(\.dismiss) private var dismiss
 
     @State private var selectedPlan: Plan = .yearly
@@ -79,6 +80,14 @@ struct PaywallView: View {
             Button("OK", role: .cancel) {}
         } message: {
             Text(errorMessage ?? "")
+        }
+        .alert("Restore Purchases", isPresented: Binding(
+            get: { restoreMessage != nil },
+            set: { if !$0 { restoreMessage = nil } }
+        )) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text(verbatim: restoreMessage ?? "")
         }
         .onChange(of: purchases.hasPlus) { _, hasPlus in
             if hasPlus { dismiss() }
@@ -162,7 +171,10 @@ struct PaywallView: View {
 
             HStack(spacing: 20) {
                 Button("Restore Purchases") {
-                    Task { await purchases.restore() }
+                    Task {
+                        await purchases.restore()
+                        if purchases.hasPlus { dismiss() } else { restoreMessage = purchases.restoreSummary }
+                    }
                 }
                 Link("Terms", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
             }
