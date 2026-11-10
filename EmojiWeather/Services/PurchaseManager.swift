@@ -57,6 +57,8 @@ final class PurchaseManager {
     }
 
     private(set) var products: [Product] = []
+    /// What the last product load returned, shown in test builds when the plans are missing.
+    private(set) var productLoadNote = "Products not loaded yet"
     /// What the last entitlement check saw, for the debug menu.
     private(set) var entitlementNotes: [String] = []
     private(set) var purchasedProductIDs: Set<String> = [] {
@@ -109,8 +111,12 @@ final class PurchaseManager {
     func loadProducts() async {
         do {
             products = try await Product.products(for: ProductID.all)
+            let missing = ProductID.all.filter { id in !products.contains { $0.id == id } }
+            productLoadNote = "Loaded \(products.count) of \(ProductID.all.count) products"
+                + (missing.isEmpty ? "" : ". Missing: \(missing.joined(separator: ", "))")
         } catch {
             logger.error("Loading products failed: \(error.localizedDescription, privacy: .public)")
+            productLoadNote = "Loading products failed: \(error.localizedDescription) [\(String(describing: error))]"
         }
         await refreshEntitlements()
     }
@@ -149,6 +155,15 @@ final class PurchaseManager {
 
     /// What Restore Purchases found, for the alert in Settings. Test builds (Xcode and sandbox)
     /// also list the raw entitlements so a TestFlight build can show why Plus is off.
+    /// True for Debug, TestFlight and sandbox builds, where showing raw StoreKit details helps.
+    static var isTestBuild: Bool {
+        #if DEBUG
+        true
+        #else
+        Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+        #endif
+    }
+
     var restoreSummary: String {
         var text = hasPlus
             ? String(localized: "Skymoji+ is active. Thank you!")
@@ -157,9 +172,9 @@ final class PurchaseManager {
         #if DEBUG
         let showDetails = true
         #else
-        let showDetails = isTest
+        let showDetails = isTest || Self.isTestBuild
         #endif
-        if showDetails { text += "\n\n" + entitlementNotes.joined(separator: "\n") }
+        if showDetails { text += "\n\n" + (entitlementNotes + [productLoadNote]).joined(separator: "\n") }
         return text
     }
 

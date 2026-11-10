@@ -237,8 +237,11 @@ struct PaywallView: View {
 
     private func buy() async {
         guard let product = purchases.product(selectedPlan.productID) else {
-            errorMessage = String(localized: "The App Store isn't available right now. Try again in a moment.")
             await purchases.loadProducts()
+            if purchases.product(selectedPlan.productID) != nil { return await buy() }
+            var message = String(localized: "The App Store isn't available right now. Try again in a moment.")
+            if PurchaseManager.isTestBuild { message += "\n\n" + purchases.productLoadNote }
+            errorMessage = message
             return
         }
         isPurchasing = true
