@@ -1,7 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    " Weather" : {},
+    " Weather" : {
+
+    },
     "%@" : {
       "shouldTranslate" : false
     },
@@ -713,6 +715,161 @@
         }
       }
     },
+    "📍 Weather where you are" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📍 الطقس حيث أنت"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📍 El tiempo donde estés"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📍 La météo là où vous êtes"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📍 現在地の天気"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📍 O clima onde você está"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "📍 你所在地的天气"
+          }
+        }
+      }
+    },
+    "🔥 %lld-day streak" : {
+      "localizations" : {
+        "ar" : {
+          "variations" : {
+            "plural" : {
+              "few" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "🔥 سلسلة %lld أيام"
+                }
+              },
+              "many" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "🔥 سلسلة %lld يومًا"
+                }
+              },
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "🔥 سلسلة يوم واحد"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "🔥 سلسلة %lld يوم"
+                }
+              },
+              "two" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "🔥 سلسلة يومين"
+                }
+              },
+              "zero" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "🔥 سلسلة %lld يوم"
+                }
+              }
+            }
+          }
+        },
+        "es" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "🔥 Racha de %lld día"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "🔥 Racha de %lld días"
+                }
+              }
+            }
+          }
+        },
+        "fr" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "🔥 Série de %lld jour"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "🔥 Série de %lld jours"
+                }
+              }
+            }
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔥 %lld日連続"
+          }
+        },
+        "pt-BR" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "🔥 Sequência de %lld dia"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "🔥 Sequência de %lld dias"
+                }
+              }
+            }
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🔥 连续 %lld 天"
+          }
+        }
+      }
+    },
+    "🗺️⛈️☀️" : {
+
+    },
     "10-day forecast" : {
       "localizations" : {
         "ar" : {
@@ -913,6 +1070,46 @@
         }
       }
     },
+    "a month" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "شهريًا"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "al mes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "par mois"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "/月"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "por mês"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每月"
+          }
+        }
+      }
+    },
     "A soft, gray kind of day." : {
       "localizations" : {
         "ar" : {
@@ -1029,6 +1226,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "一张静态图片，哪里都能用。"
+          }
+        }
+      }
+    },
+    "a year" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سنويًا"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "al año"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "par an"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "/年"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "por ano"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每年"
           }
         }
       }
@@ -3033,46 +3270,6 @@
         }
       }
     },
-    "Current Location" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "الموقع الحالي"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ubicación actual"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Position actuelle"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "現在地"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Localização Atual"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "当前位置"
-          }
-        }
-      }
-    },
     "Current location" : {
       "localizations" : {
         "ar" : {
@@ -3103,6 +3300,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Localização atual"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "当前位置"
+          }
+        }
+      }
+    },
+    "Current Location" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الموقع الحالي"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ubicación actual"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Position actuelle"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "現在地"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Localização Atual"
           }
         },
         "zh-Hans" : {
@@ -4313,46 +4550,6 @@
         }
       }
     },
-    "GIF" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "GIF"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "GIF"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "GIF"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "GIF"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "GIF"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "GIF"
-          }
-        }
-      }
-    },
     "General tips, not medical advice." : {
       "localizations" : {
         "ar" : {
@@ -4509,6 +4706,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "获取 Skymoji+"
+          }
+        }
+      }
+    },
+    "GIF" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GIF"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GIF"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GIF"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GIF"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GIF"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "GIF"
           }
         }
       }
@@ -5465,7 +5702,6 @@
         }
       }
     },
-    "Live weather" : {},
     "Loading weather…" : {
       "localizations" : {
         "ar" : {
@@ -6106,6 +6342,46 @@
         }
       }
     },
+    "mledoze/countries" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mledoze/countries"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mledoze/countries"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mledoze/countries"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mledoze/countries"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mledoze/countries"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "mledoze/countries"
+          }
+        }
+      }
+    },
     "Monthly" : {
       "localizations" : {
         "ar" : {
@@ -6508,16 +6784,28 @@
     },
     "No active Skymoji+ subscription was found for this Apple Account." : {
       "localizations" : {
-        "fr" : {
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucun abonnement Skymoji+ actif n’a été trouvé pour ce compte Apple."
+            "value" : "لم يتم العثور على اشتراك Skymoji+ نشط لحساب Apple هذا."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No se encontró ninguna suscripción activa a Skymoji+ para esta cuenta de Apple."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucun abonnement Skymoji+ actif n’a été trouvé pour ce compte Apple."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この Apple アカウントで有効な Skymoji+ のサブスクリプションが見つかりませんでした。"
           }
         },
         "pt-BR" : {
@@ -6530,18 +6818,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未找到此 Apple 账户的有效 Skymoji+ 订阅。"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "この Apple アカウントで有効な Skymoji+ のサブスクリプションが見つかりませんでした。"
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "لم يتم العثور على اشتراك Skymoji+ نشط لحساب Apple هذا."
           }
         }
       }
@@ -6906,46 +7182,6 @@
         }
       }
     },
-    "OK" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "حسنًا"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OK"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OK"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OK"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "OK"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "好"
-          }
-        }
-      }
-    },
     "Oceania" : {
       "localizations" : {
         "ar" : {
@@ -6982,6 +7218,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "大洋洲"
+          }
+        }
+      }
+    },
+    "OK" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "حسنًا"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好"
           }
         }
       }
@@ -8386,7 +8662,6 @@
         }
       }
     },
-    "Scene Gallery" : {},
     "Scene pack" : {
       "localizations" : {
         "ar" : {
@@ -8827,7 +9102,6 @@
         }
       }
     },
-    "Show ads" : {},
     "Show forecast" : {
       "localizations" : {
         "ar" : {
@@ -8908,7 +9182,6 @@
         }
       }
     },
-    "Show scene on every page" : {},
     "Shows your next place" : {
       "localizations" : {
         "ar" : {
@@ -8949,7 +9222,9 @@
         }
       }
     },
-    "Skymoji" : {},
+    "Skymoji" : {
+
+    },
     "Skymoji Daily" : {
       "localizations" : {
         "ar" : {
@@ -9070,7 +9345,9 @@
         }
       }
     },
-    "Skymoji+" : {},
+    "Skymoji+" : {
+
+    },
     "Skymoji+ is active. Thank you!" : {
       "localizations" : {
         "ar" : {
@@ -9111,7 +9388,6 @@
         }
       }
     },
-    "Skymoji+ unlocked" : {},
     "Snow" : {
       "localizations" : {
         "ar" : {
@@ -10034,16 +10310,28 @@
     },
     "The App Store couldn't verify this purchase. Try Restore Purchases, or try again in a moment." : {
       "localizations" : {
-        "fr" : {
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "L’App Store n’a pas pu vérifier cet achat. Essayez Restaurer les achats, ou réessayez dans un instant."
+            "value" : "تعذّر على App Store التحقق من عملية الشراء هذه. جرّب استعادة المشتريات، أو حاول مرة أخرى بعد قليل."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "El App Store no pudo verificar esta compra. Prueba Restaurar compras o inténtalo de nuevo en un momento."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L’App Store n’a pas pu vérifier cet achat. Essayez Restaurer les achats, ou réessayez dans un instant."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Store でこの購入を確認できませんでした。「購入を復元」を試すか、しばらくしてからもう一度お試しください。"
           }
         },
         "pt-BR" : {
@@ -10056,18 +10344,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "App Store 无法验证此购买。请尝试恢复购买，或稍后再试。"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "App Store でこの購入を確認できませんでした。「購入を復元」を試すか、しばらくしてからもう一度お試しください。"
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "تعذّر على App Store التحقق من عملية الشراء هذه. جرّب استعادة المشتريات، أو حاول مرة أخرى بعد قليل."
           }
         }
       }
@@ -10192,7 +10468,6 @@
         }
       }
     },
-    "The simulator has no location set. In the Simulator menu, choose Features > Location > Apple, then pull down to refresh." : {},
     "The towns and cities on the weather map and in Skymoji Daily come from GeoNames, used under CC BY 4.0. Only names, locations, populations and countries are used." : {
       "localizations" : {
         "ar" : {
@@ -10313,46 +10588,6 @@
         }
       }
     },
-    "Today's Skymoji Daily is ready" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "تحدي Skymoji Daily لليوم جاهز"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "El Skymoji Daily de hoy está listo"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Le Skymoji Daily du jour est prêt"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今日のSkymoji Dailyができました"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Skymoji Daily de hoje está pronto"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "今日的 Skymoji Daily 已就绪"
-          }
-        }
-      }
-    },
     "Today's quiz is ready" : {
       "localizations" : {
         "ar" : {
@@ -10429,6 +10664,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "今日问答已就绪，保持你的 🔥 连胜！"
+          }
+        }
+      }
+    },
+    "Today's Skymoji Daily is ready" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تحدي Skymoji Daily لليوم جاهز"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "El Skymoji Daily de hoy está listo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le Skymoji Daily du jour est prêt"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日のSkymoji Dailyができました"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Skymoji Daily de hoje está pronto"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "今日的 Skymoji Daily 已就绪"
           }
         }
       }
@@ -10589,46 +10864,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "输入或选择任意表情符号。"
-          }
-        }
-      }
-    },
-    "UV index" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "مؤشر الأشعة فوق البنفسجية"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Índice UV"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Indice UV"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "UV指数"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Índice UV"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "紫外线指数"
           }
         }
       }
@@ -10869,6 +11104,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "使用 %@"
+          }
+        }
+      }
+    },
+    "UV index" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مؤشر الأشعة فوق البنفسجية"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Índice UV"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice UV"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "UV指数"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Índice UV"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "紫外线指数"
           }
         }
       }
@@ -12195,16 +12470,28 @@
     },
     "Your purchase is waiting for approval. Skymoji+ unlocks as soon as it's approved." : {
       "localizations" : {
-        "fr" : {
+        "ar" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Votre achat est en attente d’approbation. Skymoji+ se débloquera dès qu’il sera approuvé."
+            "value" : "عملية الشراء بانتظار الموافقة. سيُفتح Skymoji+ فور الموافقة عليها."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tu compra está pendiente de aprobación. Skymoji+ se desbloqueará en cuanto se apruebe."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Votre achat est en attente d’approbation. Skymoji+ se débloquera dès qu’il sera approuvé."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "購入は承認待ちです。承認されるとすぐに Skymoji+ が利用できるようになります。"
           }
         },
         "pt-BR" : {
@@ -12217,18 +12504,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你的购买正在等待批准。批准后即可解锁 Skymoji+。"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "購入は承認待ちです。承認されるとすぐに Skymoji+ が利用できるようになります。"
-          }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "عملية الشراء بانتظار الموافقة. سيُفتح Skymoji+ فور الموافقة عليها."
           }
         }
       }
@@ -12352,280 +12627,7 @@
           }
         }
       }
-    },
-    "a month" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "شهريًا"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "al mes"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "par mois"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "/月"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "por mês"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "每月"
-          }
-        }
-      }
-    },
-    "a year" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "سنويًا"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "al año"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "par an"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "/年"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "por ano"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "每年"
-          }
-        }
-      }
-    },
-    "mledoze/countries" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "mledoze/countries"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "mledoze/countries"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "mledoze/countries"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "mledoze/countries"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "mledoze/countries"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "mledoze/countries"
-          }
-        }
-      }
-    },
-    "📍 Weather where you are" : {
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "📍 الطقس حيث أنت"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "📍 El tiempo donde estés"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "📍 La météo là où vous êtes"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "📍 現在地の天気"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "📍 O clima onde você está"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "📍 你所在地的天气"
-          }
-        }
-      }
-    },
-    "🔥 %lld-day streak" : {
-      "localizations" : {
-        "ar" : {
-          "variations" : {
-            "plural" : {
-              "few" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "🔥 سلسلة %lld أيام"
-                }
-              },
-              "many" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "🔥 سلسلة %lld يومًا"
-                }
-              },
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "🔥 سلسلة يوم واحد"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "🔥 سلسلة %lld يوم"
-                }
-              },
-              "two" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "🔥 سلسلة يومين"
-                }
-              },
-              "zero" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "🔥 سلسلة %lld يوم"
-                }
-              }
-            }
-          }
-        },
-        "es" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "🔥 Racha de %lld día"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "🔥 Racha de %lld días"
-                }
-              }
-            }
-          }
-        },
-        "fr" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "🔥 Série de %lld jour"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "🔥 Série de %lld jours"
-                }
-              }
-            }
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🔥 %lld日連続"
-          }
-        },
-        "pt-BR" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "🔥 Sequência de %lld dia"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "🔥 Sequência de %lld dias"
-                }
-              }
-            }
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "🔥 连续 %lld 天"
-          }
-        }
-      }
-    },
-    "🗺️⛈️☀️" : {}
+    }
   },
   "version" : "1.0"
 }
