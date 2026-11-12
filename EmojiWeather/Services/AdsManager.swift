@@ -73,6 +73,7 @@ final class AdsManager: NSObject, FullScreenContentDelegate, BannerViewDelegate 
     @ObservationIgnored private var lastFullScreenAd: Date?
     @ObservationIgnored private var launchCount = 0
     @ObservationIgnored private var loadAttempts = 0
+    @ObservationIgnored private var bannerAttempts = 0
     @ObservationIgnored private var isLoadingInterstitial = false
     @ObservationIgnored private let logger = Logger(subsystem: "EmojiWeather", category: "Ads")
 
@@ -183,6 +184,7 @@ final class AdsManager: NSObject, FullScreenContentDelegate, BannerViewDelegate 
     nonisolated func bannerViewDidReceiveAd(_ bannerView: BannerView) {
         Task { @MainActor in
             self.logger.info("Home banner loaded")
+            self.bannerAttempts = 0
             self.isHomeBannerLoaded = true
         }
     }
@@ -191,6 +193,12 @@ final class AdsManager: NSObject, FullScreenContentDelegate, BannerViewDelegate 
         let message = error.localizedDescription
         Task { @MainActor in
             self.logger.error("Home banner failed: \(message, privacy: .public)")
+            // No fill is common for a new app: try again with a growing delay (30 s, 60 s, ... max 5 min).
+            self.bannerAttempts += 1
+            let delay = min(30 * self.bannerAttempts, 300)
+            try? await Task.sleep(for: .seconds(delay))
+            guard !self.isHomeBannerLoaded else { return }
+            self.homeBanner?.load(Request())
         }
     }
 
