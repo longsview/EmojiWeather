@@ -10,7 +10,7 @@ import FoundationModels
 struct WeatherSnapshot {
     let current: CurrentWeather
     let hourly: [HourWeather]
-    /// Hours 24 to 47, for the hourly strip's second page. Widgets and the watch only use `hourly`.
+    /// Hours 24 to 119, added 24 at a time by the hourly strip's arrow. Widgets and the watch only use `hourly`.
     var laterHourly: [HourWeather] = []
     let daily: [DayWeather]
     let fetchedAt: Date
@@ -52,7 +52,7 @@ final class WeatherProvider {
         let snapshot = WeatherSnapshot(
             current: current,
             hourly: Array(upcoming.prefix(24)),
-            laterHourly: Array(upcoming.dropFirst(24).prefix(24)),
+            laterHourly: Array(upcoming.dropFirst(24).prefix(96)),
             daily: Array(daily.forecast.prefix(10)),
             fetchedAt: .now,
             location: location
@@ -97,7 +97,7 @@ final class LocalForecastService {
     static let shared = LocalForecastService()
 
     private var cache: [String: (forecast: LocalForecast?, fetchedAt: Date)] = [:]
-    private var inFlight: [String: Task<LocalForecast?, Never>] = [:]
+    private var inFlight: [String: Task<FetchResult, Never>] = [:]
     private let session: URLSession = {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 15
@@ -115,15 +115,30 @@ final class LocalForecastService {
             return cached.forecast
         }
         // The city page prefetches, so the sheet may ask while that fetch is still running.
-        if let running = inFlight[key] { return await running.value }
+        if let running = inFlight[key] {
+            if case .found(let forecast) = await running.value { return forecast }
+            return nil
+        }
         let coordinate = location.coordinate
         let task = Task { await fetch(latitude: coordinate.latitude, longitude: coordinate.longitude) }
         inFlight[key] = task
         let result = await task.value
         inFlight[key] = nil
-        cache[key] = (result, .now)
-        return result
+        switch result {
+        case .found(let forecast):
+            cache[key] = (forecast, .now)
+            return forecast
+        case .notCovered:
+            // Outside the US: remember that, so the sheet doesn't keep asking.
+            cache[key] = (nil, .now)
+            return nil
+        case .failed:
+            // The Weather Service often has brief outages; try again next time.
+            return nil
+        }
     }
+
+    private enum FetchResult { case found(LocalForecast), notCovered, failed }
 
     /// What's already been fetched, so the forecast sheet can show the card without waiting.
     func cachedForecast(for location: CLLocation) -> LocalForecast? {
@@ -139,49 +154,69 @@ final class LocalForecastService {
         String(format: "%.2f,%.2f", location.coordinate.latitude, location.coordinate.longitude)
     }
 
-    private func fetch(latitude: Double, longitude: Double) async -> LocalForecast? {
+    private func fetch(latitude: Double, longitude: Double) async -> FetchResult {
         let point = String(format: "%.4f,%.4f", latitude, longitude)
-        guard let pointURL = URL(string: "https://api.weather.gov/points/\(point)"),
-              let points: PointsResponse = await get(pointURL),
-              let forecastURL = points.properties.forecast,
+        guard let pointURL = URL(string: "https://api.weather.gov/points/\(point)") else { return .failed }
+        let pointsResult: Response<PointsResponse> = await get(pointURL)
+        let points: PointsResponse
+        switch pointsResult {
+        case .ok(let value): points = value
+        case .notFound: return .notCovered
+        case .failed: return .failed
+        }
+        guard let forecastURL = points.properties.forecast,
               var components = URLComponents(url: forecastURL, resolvingAgainstBaseURL: false)
-        else { return nil }
+        else { return .notCovered }
 
         if DisplaySettings.temperatureUnit == .celsius {
             components.queryItems = [URLQueryItem(name: "units", value: "si")]
         }
-        guard let url = components.url, let forecast: ForecastResponse = await get(url) else { return nil }
+        guard let url = components.url, case .ok(let forecast) = await get(url) as Response<ForecastResponse>
+        else { return .failed }
         let periods = forecast.properties.periods.prefix(3).compactMap { period -> LocalForecast.Period? in
             let text = period.detailedForecast.trimmingCharacters(in: .whitespacesAndNewlines)
             return text.isEmpty ? nil : LocalForecast.Period(name: period.name, text: text)
         }
-        guard !periods.isEmpty else { return nil }
+        guard !periods.isEmpty else { return .failed }
 
         var discussion: String?
         if let office = points.properties.cwa, let text = await discussionText(office: office) {
             discussion = await DiscussionSummarizer.summary(of: text)
         }
         let officeName = points.properties.relativeLocation?.properties.city ?? points.properties.cwa ?? ""
-        return LocalForecast(periods: Array(periods), discussion: discussion, office: officeName)
+        return .found(LocalForecast(periods: Array(periods), discussion: discussion, office: officeName))
     }
 
     /// The latest Area Forecast Discussion's text for an office, like "LOX".
     private func discussionText(office: String) async -> String? {
         guard let listURL = URL(string: "https://api.weather.gov/products/types/AFD/locations/\(office)"),
-              let list: ProductList = await get(listURL),
+              case .ok(let list) = await get(listURL) as Response<ProductList>,
               let latest = list.graph.first?.id,
-              let product: Product = await get(latest) else { return nil }
+              case .ok(let product) = await get(latest) as Response<Product> else { return nil }
         return product.productText
     }
 
-    private func get<T: Decodable>(_ url: URL) async -> T? {
-        do {
-            let (data, response) = try await session.data(from: url)
-            guard (response as? HTTPURLResponse)?.statusCode == 200 else { return nil }
-            return try JSONDecoder().decode(T.self, from: data)
-        } catch {
-            return nil
+    private enum Response<T> { case ok(T), notFound, failed }
+
+    /// GETs and decodes JSON. The Weather Service's gridpoint forecasts often fail for a moment
+    /// (500 or 503), so server errors are retried twice before giving up.
+    private func get<T: Decodable>(_ url: URL) async -> Response<T> {
+        for attempt in 0..<3 {
+            if attempt > 0 { try? await Task.sleep(for: .seconds(Double(attempt) * 1.5)) }
+            do {
+                let (data, response) = try await session.data(from: url)
+                let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+                if status == 404 { return .notFound }
+                if status >= 500 { continue }
+                guard status == 200 else { return .failed }
+                return .ok(try JSONDecoder().decode(T.self, from: data))
+            } catch is DecodingError {
+                return .failed
+            } catch {
+                continue
+            }
         }
+        return .failed
     }
 
     // MARK: - api.weather.gov responses (only the fields Skymoji reads)

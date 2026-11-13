@@ -34,7 +34,7 @@ struct ForecastContent {
     let high: String?
     let low: String?
     let hours: [Hour]
-    /// Hours 24 to 47, shown when the hourly strip's arrow is tapped.
+    /// Hours 24 and on, added 24 at a time when the hourly strip's arrow is tapped.
     var laterHours: [Hour] = []
     let days: [Day]
     let tiles: [Tile]
@@ -62,7 +62,7 @@ extension ForecastContent {
 
         func makeHour(_ hour: HourWeather, isNow: Bool, showsDay: Bool = false) -> Hour {
             var time = isNow ? String(localized: "Now") : hour.date.formatted(DisplaySettings.hourStyle(timeZone))
-            // The second page starts mid-evening too, so name the day to show it's later.
+            // Added hours start at the same time of day as "Now", so name the day to show it's later.
             if showsDay { time = hour.date.formatted(DisplaySettings.weekdayStyle(timeZone)) + " " + time }
             return Hour(
                 time: time,
@@ -73,7 +73,8 @@ extension ForecastContent {
             )
         }
         hours = snapshot.hourly.enumerated().map { index, hour in makeHour(hour, isNow: index == 0) }
-        laterHours = snapshot.laterHourly.enumerated().map { index, hour in makeHour(hour, isNow: false, showsDay: index == 0) }
+        // Each block of 24 the arrow adds starts with the day's name.
+        laterHours = snapshot.laterHourly.enumerated().map { index, hour in makeHour(hour, isNow: false, showsDay: index % 24 == 0) }
         location = snapshot.location
 
         days = snapshot.daily.enumerated().map { index, day in
@@ -392,67 +393,55 @@ struct HourlyForecastView: View {
     let hours: [ForecastContent.Hour]
     var laterHours: [ForecastContent.Hour] = []
 
-    /// 0 shows the next 24 hours, 1 the 24 after that.
-    @State private var page = 0
+    /// How many of `laterHours` the arrow has added so far, 24 per tap.
+    @State private var addedCount = 0
 
-    private var shown: [ForecastContent.Hour] { page == 0 ? hours : laterHours }
+    private var shown: [ForecastContent.Hour] { hours + laterHours.prefix(addedCount) }
+    private var canAddMore: Bool { addedCount < laterHours.count }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text(page == 0 ? String(localized: "Next 24 hours") : String(localized: "Following 24 hours"))
-                    .font(.caption.weight(.semibold))
-                    .textCase(.uppercase)
-                    .foregroundStyle(.secondary)
-                    .accessibilityAddTraits(.isHeader)
-                Spacer()
-                if !laterHours.isEmpty {
-                    pageButton(to: 0, symbol: "chevron.backward", label: String(localized: "Next 24 hours"))
-                    pageButton(to: 1, symbol: "chevron.forward", label: String(localized: "Following 24 hours"))
-                }
-            }
-            ScrollView(.horizontal) {
-                HStack(spacing: 20) {
-                    ForEach(Array(shown.enumerated()), id: \.offset) { index, hour in
-                        VStack(spacing: 8) {
-                            Text(verbatim: hour.time)
-                                .font(.footnote.weight(.medium))
-                            Text(verbatim: hour.emoji)
-                                .font(.title2)
-                                .accessibilityHidden(true)
-                            Text(verbatim: hour.temperature)
-                                .font(.headline)
+        ForecastCard(title: String(localized: "Next \(shown.count) hours")) {
+            ScrollViewReader { proxy in
+                ScrollView(.horizontal) {
+                    HStack(spacing: 20) {
+                        ForEach(Array(shown.enumerated()), id: \.offset) { index, hour in
+                            VStack(spacing: 8) {
+                                Text(verbatim: hour.time)
+                                    .font(.footnote.weight(.medium))
+                                Text(verbatim: hour.emoji)
+                                    .font(.title2)
+                                    .accessibilityHidden(true)
+                                Text(verbatim: hour.temperature)
+                                    .font(.headline)
+                            }
+                            .id(index)
+                            // One VoiceOver stop per hour.
+                            .accessibilityElement(children: .ignore)
+                            .accessibilityLabel(Text(verbatim: hour.spoken))
                         }
-                        .id(index)
-                        // One VoiceOver stop per hour.
-                        .accessibilityElement(children: .ignore)
-                        .accessibilityLabel(Text(verbatim: hour.spoken))
+                        if canAddMore {
+                            Button(action: addHours) {
+                                Image(systemName: "chevron.forward")
+                                    .font(.body.weight(.bold))
+                                    .frame(width: 40, height: 40)
+                                    .background(Color.primary.opacity(0.1), in: .circle)
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(Text("Show 24 more hours"))
+                        }
                     }
                 }
+                .scrollIndicators(.hidden)
+                .onChange(of: addedCount) { old, _ in
+                    // Bring the first new hour into view.
+                    withAnimation { proxy.scrollTo(hours.count + old, anchor: .leading) }
+                }
             }
-            .scrollIndicators(.hidden)
-            .id(page)
-            .transition(.opacity)
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding()
-        .background(Color.primary.opacity(0.06), in: .rect(cornerRadius: 24))
-        .accessibilityElement(children: .contain)
     }
 
-    private func pageButton(to target: Int, symbol: String, label: String) -> some View {
-        Button {
-            withAnimation(.easeInOut(duration: 0.2)) { page = target }
-        } label: {
-            Image(systemName: symbol)
-                .font(.footnote.weight(.bold))
-                .frame(width: 32, height: 28)
-                .background(Color.primary.opacity(page == target ? 0.04 : 0.1), in: .capsule)
-        }
-        .buttonStyle(.plain)
-        .foregroundStyle(page == target ? .tertiary : .primary)
-        .disabled(page == target)
-        .accessibilityLabel(Text(label))
+    private func addHours() {
+        addedCount = min(addedCount + 24, laterHours.count)
     }
 }
 
