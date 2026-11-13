@@ -13,8 +13,9 @@ struct DetailsView: View {
                     .padding(.top, 8)
                     .accessibilityAddTraits(.isHeader)
 
-                HourlyForecastView(hours: forecast.hours)
+                HourlyForecastView(hours: forecast.hours, laterHours: forecast.laterHours)
                 ForecastAdCard()
+                LocalForecastCard(location: forecast.location)
                 if !forecast.notes.isEmpty {
                     WeatherNotesView(notes: forecast.notes)
                 }

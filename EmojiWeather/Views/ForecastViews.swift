@@ -1,3 +1,4 @@
+import CoreLocation
 import SwiftUI
 import WeatherKit
 
@@ -33,8 +34,12 @@ struct ForecastContent {
     let high: String?
     let low: String?
     let hours: [Hour]
+    /// Hours 24 to 47, shown when the hourly strip's arrow is tapped.
+    var laterHours: [Hour] = []
     let days: [Day]
     let tiles: [Tile]
+    /// Where the forecast is for, used to fetch the local forecast text.
+    var location: CLLocation?
     /// "Good to know": weather worth a precaution, most important first.
     var notes: [Note] = []
 
@@ -55,8 +60,8 @@ extension ForecastContent {
         high = today?.highTemperature.shortTemperature
         low = today?.lowTemperature.shortTemperature
 
-        hours = snapshot.hourly.enumerated().map { index, hour in
-            let time = index == 0 ? String(localized: "Now") : hour.date.formatted(DisplaySettings.hourStyle(timeZone))
+        func makeHour(_ hour: HourWeather, isNow: Bool) -> Hour {
+            let time = isNow ? String(localized: "Now") : hour.date.formatted(DisplaySettings.hourStyle(timeZone))
             return Hour(
                 time: time,
                 emoji: WeatherScene.emoji(for: hour.condition, isDaylight: hour.isDaylight),
@@ -65,6 +70,9 @@ extension ForecastContent {
                 spoken: "\(time), \(hour.condition.description), \(hour.temperature.spokenTemperature)"
             )
         }
+        hours = snapshot.hourly.enumerated().map { index, hour in makeHour(hour, isNow: index == 0) }
+        laterHours = snapshot.laterHourly.map { makeHour($0, isNow: false) }
+        location = snapshot.location
 
         days = snapshot.daily.enumerated().map { index, day in
             let name = index == 0 ? String(localized: "Today") : day.date.formatted(DisplaySettings.weekdayStyle(timeZone))
@@ -380,12 +388,30 @@ struct WeatherNotesView: View {
 
 struct HourlyForecastView: View {
     let hours: [ForecastContent.Hour]
+    var laterHours: [ForecastContent.Hour] = []
+
+    /// 0 shows the next 24 hours, 1 the 24 after that.
+    @State private var page = 0
+
+    private var shown: [ForecastContent.Hour] { page == 0 ? hours : laterHours }
 
     var body: some View {
-        ForecastCard(title: String(localized: "Next 24 hours")) {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text(page == 0 ? String(localized: "Next 24 hours") : String(localized: "Following 24 hours"))
+                    .font(.caption.weight(.semibold))
+                    .textCase(.uppercase)
+                    .foregroundStyle(.secondary)
+                    .accessibilityAddTraits(.isHeader)
+                Spacer()
+                if !laterHours.isEmpty {
+                    pageButton(to: 0, symbol: "chevron.backward", label: String(localized: "Next 24 hours"))
+                    pageButton(to: 1, symbol: "chevron.forward", label: String(localized: "Following 24 hours"))
+                }
+            }
             ScrollView(.horizontal) {
                 HStack(spacing: 20) {
-                    ForEach(Array(hours.enumerated()), id: \.offset) { _, hour in
+                    ForEach(Array(shown.enumerated()), id: \.offset) { index, hour in
                         VStack(spacing: 8) {
                             Text(verbatim: hour.time)
                                 .font(.footnote.weight(.medium))
@@ -395,6 +421,7 @@ struct HourlyForecastView: View {
                             Text(verbatim: hour.temperature)
                                 .font(.headline)
                         }
+                        .id(index)
                         // One VoiceOver stop per hour.
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel(Text(verbatim: hour.spoken))
@@ -402,6 +429,100 @@ struct HourlyForecastView: View {
                 }
             }
             .scrollIndicators(.hidden)
+            .id(page)
+            .transition(.opacity)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(Color.primary.opacity(0.06), in: .rect(cornerRadius: 24))
+        .accessibilityElement(children: .contain)
+    }
+
+    private func pageButton(to target: Int, symbol: String, label: String) -> some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.2)) { page = target }
+        } label: {
+            Image(systemName: symbol)
+                .font(.footnote.weight(.bold))
+                .frame(width: 32, height: 28)
+                .background(Color.primary.opacity(page == target ? 0.04 : 0.1), in: .capsule)
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(page == target ? .tertiary : .primary)
+        .disabled(page == target)
+        .accessibilityLabel(Text(label))
+    }
+}
+
+/// Today's written forecast from the local National Weather Service office, one swipeable page
+/// per period, plus a plain-English summary of what the forecasters are watching. US only: the
+/// card stays hidden elsewhere or when the Weather Service can't be reached.
+struct LocalForecastCard: View {
+    let location: CLLocation?
+
+    @State private var forecast: LocalForecast?
+    @State private var page: Int? = 0
+
+    private var pages: [LocalForecast.Period] {
+        guard let forecast else { return [] }
+        var pages = forecast.periods
+        if let discussion = forecast.discussion {
+            pages.append(.init(name: String(localized: "What forecasters are watching"), text: discussion))
+        }
+        return pages
+    }
+
+    var body: some View {
+        // A VStack rather than a Group, so the fetch runs even while there's nothing to show.
+        VStack(spacing: 0) {
+            if let forecast, !pages.isEmpty {
+                ForecastCard(title: String(localized: "Local forecast")) {
+                    ScrollView(.horizontal) {
+                        LazyHStack(alignment: .top, spacing: 0) {
+                            ForEach(Array(pages.enumerated()), id: \.offset) { index, period in
+                                VStack(alignment: .leading, spacing: 6) {
+                                    Text(verbatim: period.name)
+                                        .font(.headline)
+                                    Text(verbatim: period.text)
+                                        .font(.callout)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                }
+                                .frame(maxWidth: .infinity, alignment: .topLeading)
+                                .containerRelativeFrame(.horizontal)
+                                .id(index)
+                                .accessibilityElement(children: .combine)
+                            }
+                        }
+                        .scrollTargetLayout()
+                    }
+                    .scrollTargetBehavior(.paging)
+                    .scrollIndicators(.hidden)
+                    .scrollPosition(id: $page)
+
+                    HStack {
+                        if pages.count > 1 {
+                            HStack(spacing: 6) {
+                                ForEach(pages.indices, id: \.self) { index in
+                                    Circle()
+                                        .fill(Color.primary.opacity(index == (page ?? 0) ? 0.7 : 0.2))
+                                        .frame(width: 6, height: 6)
+                                }
+                            }
+                            .accessibilityHidden(true)
+                        }
+                        Spacer()
+                        Text("National Weather Service, \(forecast.office)")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                    }
+                }
+            }
+        }
+        .task(id: location.map { "\($0.coordinate.latitude),\($0.coordinate.longitude)" }) {
+            guard let location else { return }
+            forecast = await LocalForecastService.shared.forecast(for: location)
         }
     }
 }
