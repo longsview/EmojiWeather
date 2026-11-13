@@ -60,8 +60,10 @@ extension ForecastContent {
         high = today?.highTemperature.shortTemperature
         low = today?.lowTemperature.shortTemperature
 
-        func makeHour(_ hour: HourWeather, isNow: Bool) -> Hour {
-            let time = isNow ? String(localized: "Now") : hour.date.formatted(DisplaySettings.hourStyle(timeZone))
+        func makeHour(_ hour: HourWeather, isNow: Bool, showsDay: Bool = false) -> Hour {
+            var time = isNow ? String(localized: "Now") : hour.date.formatted(DisplaySettings.hourStyle(timeZone))
+            // The second page starts mid-evening too, so name the day to show it's later.
+            if showsDay { time = hour.date.formatted(DisplaySettings.weekdayStyle(timeZone)) + " " + time }
             return Hour(
                 time: time,
                 emoji: WeatherScene.emoji(for: hour.condition, isDaylight: hour.isDaylight),
@@ -71,7 +73,7 @@ extension ForecastContent {
             )
         }
         hours = snapshot.hourly.enumerated().map { index, hour in makeHour(hour, isNow: index == 0) }
-        laterHours = snapshot.laterHourly.map { makeHour($0, isNow: false) }
+        laterHours = snapshot.laterHourly.enumerated().map { index, hour in makeHour(hour, isNow: false, showsDay: index == 0) }
         location = snapshot.location
 
         days = snapshot.daily.enumerated().map { index, day in
@@ -463,6 +465,12 @@ struct LocalForecastCard: View {
     @State private var forecast: LocalForecast?
     @State private var page: Int? = 0
 
+    init(location: CLLocation?) {
+        self.location = location
+        // Usually prefetched by the city page, so the card is there as soon as the sheet opens.
+        _forecast = State(initialValue: location.flatMap { LocalForecastService.shared.cachedForecast(for: $0) })
+    }
+
     private var pages: [LocalForecast.Period] {
         guard let forecast else { return [] }
         var pages = forecast.periods
@@ -518,11 +526,14 @@ struct LocalForecastCard: View {
                             .minimumScaleFactor(0.8)
                     }
                 }
+                .transition(.opacity)
             }
         }
         .task(id: location.map { "\($0.coordinate.latitude),\($0.coordinate.longitude)" }) {
             guard let location else { return }
-            forecast = await LocalForecastService.shared.forecast(for: location)
+            let fetched = await LocalForecastService.shared.forecast(for: location)
+            guard fetched != forecast else { return }
+            withAnimation(.easeOut(duration: 0.3)) { forecast = fetched }
         }
     }
 }

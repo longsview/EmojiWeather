@@ -357,6 +357,7 @@ struct CityPageView: View {
         if let cached = weather.cachedWeather(for: target) {
             snapshot = cached
             WidgetSync.save(cached, for: place)
+            LocalForecastService.shared.prefetch(for: target)
             if !forceRefresh { return }
         }
 
@@ -366,6 +367,7 @@ struct CityPageView: View {
             let fresh = try await weather.weather(for: target, forceRefresh: forceRefresh)
             snapshot = fresh
             errorMessage = nil
+            LocalForecastService.shared.prefetch(for: target)
             // Weather is on screen, so the ad SDK can start (it waits a few more seconds itself).
             Task { await ads.start() }
             WidgetSync.save(fresh, for: place)

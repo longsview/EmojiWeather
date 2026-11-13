@@ -97,6 +97,7 @@ final class LocalForecastService {
     static let shared = LocalForecastService()
 
     private var cache: [String: (forecast: LocalForecast?, fetchedAt: Date)] = [:]
+    private var inFlight: [String: Task<LocalForecast?, Never>] = [:]
     private let session: URLSession = {
         let config = URLSessionConfiguration.default
         config.timeoutIntervalForRequest = 15
@@ -109,14 +110,33 @@ final class LocalForecastService {
 
     /// Returns nil outside the US, or when the Weather Service can't be reached.
     func forecast(for location: CLLocation) async -> LocalForecast? {
-        let coordinate = location.coordinate
-        let key = String(format: "%.2f,%.2f", coordinate.latitude, coordinate.longitude)
+        let key = Self.key(for: location)
         if let cached = cache[key], Date.now.timeIntervalSince(cached.fetchedAt) < 60 * 60 {
             return cached.forecast
         }
-        let result = await fetch(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        // The city page prefetches, so the sheet may ask while that fetch is still running.
+        if let running = inFlight[key] { return await running.value }
+        let coordinate = location.coordinate
+        let task = Task { await fetch(latitude: coordinate.latitude, longitude: coordinate.longitude) }
+        inFlight[key] = task
+        let result = await task.value
+        inFlight[key] = nil
         cache[key] = (result, .now)
         return result
+    }
+
+    /// What's already been fetched, so the forecast sheet can show the card without waiting.
+    func cachedForecast(for location: CLLocation) -> LocalForecast? {
+        cache[Self.key(for: location)]?.forecast
+    }
+
+    /// Starts fetching in the background (the city page calls this once weather is on screen).
+    func prefetch(for location: CLLocation) {
+        Task { _ = await forecast(for: location) }
+    }
+
+    private static func key(for location: CLLocation) -> String {
+        String(format: "%.2f,%.2f", location.coordinate.latitude, location.coordinate.longitude)
     }
 
     private func fetch(latitude: Double, longitude: Double) async -> LocalForecast? {
@@ -229,9 +249,17 @@ enum DiscussionSummarizer {
                 var body = section
                 if let range = body.range(of: "...") { body = String(body[range.upperBound...]) }
                 body = body.components(separatedBy: "&&").first ?? body
-                let cleaned = body
+                var cleaned = body
                     .replacingOccurrences(of: "\n", with: " ")
                     .replacingOccurrences(of: "  ", with: " ")
+                    .trimmingCharacters(in: .whitespacesAndNewlines)
+                // Sections often open with an issue time, like "12/1253 PM." or
+                // "Issued at 1253 PM PST Thu Nov 12 2026...".
+                cleaned = cleaned
+                    .replacingOccurrences(of: #"^(Issued at )?\d{1,2}/\d{3,4} ?[AP]M( [A-Z]{3})?\.*\s*"#,
+                                          with: "", options: [.regularExpression, .caseInsensitive])
+                    .replacingOccurrences(of: #"^(Issued at )?\d{3,4} [AP]M [A-Z]{3}( \w{3}){2} \d{1,2} \d{4}\.*\s*"#,
+                                          with: "", options: [.regularExpression, .caseInsensitive])
                     .trimmingCharacters(in: .whitespacesAndNewlines)
                 if cleaned.count > 40 { return String(cleaned.prefix(2_500)) }
             }
