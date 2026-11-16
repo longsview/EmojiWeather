@@ -155,7 +155,7 @@ struct ListRoomForTabBar: ViewModifier {
             content
                 // Plus a little extra when the status-bar column is on this side, to match the gap
                 // on the other side (right-to-left).
-                .contentMargins(.trailing, RoomForTabBar.sideRoom + (trailingSafeArea > 0 ? trailingSafeArea + 12 : 0), for: .scrollContent)
+                .contentMargins(.trailing, RoomForTabBar.sideRoom + (trailingSafeArea > 0 ? trailingSafeArea + 21 : 0), for: .scrollContent)
                 .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.trailing } action: { trailingSafeArea = $0 }
         } else {
             content.contentMargins(.bottom, RoomForTabBar.bottomRoom + 16, for: .scrollContent)
