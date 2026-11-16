@@ -54,26 +54,24 @@ struct RootView: View {
             Tab("Weather", systemImage: "sun.max.fill", value: AppTab.weather) {
                 HomeView(isVisible: tab == .weather)
                     .id(displayKey)
-                    .toolbarVisibility(.hidden, for: .tabBar)
+                    .modifier(RoomForTabBar(side: hasSideTabBar))
             }
             Tab("Map", systemImage: "map.fill", value: AppTab.map) {
                 MapTab()
                     .id(displayKey)
-                    .toolbarVisibility(.hidden, for: .tabBar)
+                    .modifier(RoomForTabBar(side: hasSideTabBar))
             }
             Tab("Settings", systemImage: "gearshape.fill", value: AppTab.settings) {
                 SettingsView()
-                    .toolbarVisibility(.hidden, for: .tabBar)
+                    .modifier(RoomForTabBar(side: hasSideTabBar))
             }
         }
         // The system tab bar is hidden and drawn by hand, so the quiz's round button can sit
         // beside it on every iPhone width (the system bar stays centred and leaves no room on
-        // 390-point phones). Insets rather than overlays, so content stays clear of it.
-        .safeAreaInset(edge: .bottom, spacing: 0) {
-            if !hasSideTabBar { navigationBar(vertical: false) }
-        }
-        .safeAreaInset(edge: .trailing, spacing: 0) {
-            if hasSideTabBar { navigationBar(vertical: true) }
+        // 390-point phones). Each tab makes room for it with RoomForTabBar, because TabView
+        // doesn't pass an outer safe-area inset down to its tabs.
+        .overlay(alignment: hasSideTabBar ? .trailing : .bottom) {
+            navigationBar(vertical: hasSideTabBar)
         }
         .sheet(isPresented: $showingQuiz) {
             QuizView()
@@ -105,7 +103,6 @@ extension RootView {
                     quizButton
                 }
                 .padding(.trailing, 12)
-                .frame(maxHeight: .infinity)
             } else {
                 HStack(spacing: 10) {
                     GlassTabBar(selection: $tab, vertical: false)
@@ -113,9 +110,23 @@ extension RootView {
                 }
                 .padding(.horizontal, 16)
                 .padding(.bottom, 4)
-                .frame(maxWidth: .infinity)
             }
         }
+    }
+}
+
+/// Hides the system tab bar and keeps a tab's content clear of the hand-drawn one: bottom
+/// padding on phones, trailing padding on the open iPhone Duo.
+struct RoomForTabBar: ViewModifier {
+    let side: Bool
+
+    /// The capsule is 60 points tall (or wide) plus a little breathing room.
+    static let thickness: CGFloat = 72
+
+    func body(content: Content) -> some View {
+        content
+            .toolbarVisibility(.hidden, for: .tabBar)
+            .safeAreaPadding(side ? .trailing : .bottom, Self.thickness)
     }
 }
 

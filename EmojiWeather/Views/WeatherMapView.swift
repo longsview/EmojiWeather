@@ -126,6 +126,12 @@ struct WeatherMapView: View {
             .glassEffect(.regular, in: .rect(cornerRadius: 12))
             .padding(.bottom, 8)
         }
+        // The map opens before the location fix arrives, and follows the Weather tab's place
+        // when it changes, so recentre on the new place.
+        .onChange(of: center.map { "\($0.latitude),\($0.longitude)" }) { _, _ in
+            guard let center else { return }
+            position = .region(MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 6, longitudeDelta: 6)))
+        }
         .onChange(of: showsRadar) { _, on in
             if on, let lastRegion { radar.update(region: lastRegion) }
         }
