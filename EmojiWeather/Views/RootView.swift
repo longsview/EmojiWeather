@@ -147,10 +147,12 @@ struct ListRoomForTabBar: ViewModifier {
     @Environment(\.horizontalSizeClass) private var sizeClass
 
     func body(content: Content) -> some View {
-        let side = sizeClass == .regular && UIDevice.current.userInterfaceIdiom == .phone
-        content
-            .contentMargins(.bottom, side ? 0 : RoomForTabBar.bottomRoom + 16, for: .scrollContent)
-            .contentMargins(.trailing, side ? RoomForTabBar.sideRoom : 0, for: .scrollContent)
+        // Only the bar's edge is changed, so the Form keeps its usual margins elsewhere.
+        if sizeClass == .regular && UIDevice.current.userInterfaceIdiom == .phone {
+            content.contentMargins(.trailing, RoomForTabBar.sideRoom, for: .scrollContent)
+        } else {
+            content.contentMargins(.bottom, RoomForTabBar.bottomRoom + 16, for: .scrollContent)
+        }
     }
 }
 
