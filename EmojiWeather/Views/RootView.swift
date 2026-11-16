@@ -3,9 +3,10 @@ import SwiftUI
 import WidgetKit
 
 /// The app's modes in a Liquid Glass tab bar (weather pages, the weather map, settings), with
-/// Skymoji Daily as a separate round button beside it.
+/// Skymoji Daily as our own round glass button beside it. It isn't a tab, because it only opens
+/// a sheet: iOS 27 draws a search-role tab as an ordinary fourth tab, so it's drawn by hand.
 struct RootView: View {
-    enum AppTab: Hashable { case weather, map, settings, daily }
+    enum AppTab: Hashable { case weather, map, settings }
 
     @State private var tab: AppTab = {
         #if DEBUG
@@ -36,28 +37,11 @@ struct RootView: View {
     /// Skymoji Daily opens as a sheet over whichever tab is showing.
     @State private var showingQuiz = false
 
-    /// An orange question bubble while today's quiz waits; once it's done, a check bubble in the
-    /// same color as the other tab icons. Tab bars tint every icon alike, so the orange is
-    /// baked into the image.
-    private var dailyIcon: Image {
-        guard !quiz.hasPlayedToday else { return Image(systemName: "checkmark.bubble.fill") }
-        let name = "questionmark.bubble.fill"
-        guard let symbol = UIImage(systemName: name) else { return Image(systemName: name) }
-        return Image(uiImage: symbol.withTintColor(.systemOrange, renderingMode: .alwaysOriginal))
-    }
+    @Environment(\.horizontalSizeClass) private var sizeClass
 
-    /// Picking the Daily button opens the quiz instead of switching tabs.
-    private var selection: Binding<AppTab> {
-        Binding(
-            get: { tab },
-            set: { newTab in
-                if newTab == .daily {
-                    showingQuiz = true
-                } else {
-                    tab = newTab
-                }
-            }
-        )
+    /// The open iPhone Duo puts the tab bar down the right edge instead of along the bottom.
+    private var hasSideTabBar: Bool {
+        sizeClass == .regular && UIDevice.current.userInterfaceIdiom == .phone
     }
 
     private var displayKey: String {
@@ -66,7 +50,7 @@ struct RootView: View {
     }
 
     var body: some View {
-        TabView(selection: selection) {
+        TabView(selection: $tab) {
             Tab("Weather", systemImage: "sun.max.fill", value: AppTab.weather) {
                 HomeView(isVisible: tab == .weather)
                     .id(displayKey)
@@ -78,17 +62,12 @@ struct RootView: View {
             Tab("Settings", systemImage: "gearshape.fill", value: AppTab.settings) {
                 SettingsView()
             }
-            // The search role puts it in its own glass button beside the tab bar, like a
-            // compose button: an action, not a place.
-            Tab(value: AppTab.daily, role: .search) {
-                Color.clear
-            } label: {
-                Label {
-                    Text("Daily")
-                } icon: {
-                    dailyIcon
-                }
-            }
+        }
+        .overlay(alignment: .bottomTrailing) {
+            DailyQuizButton(hasPlayedToday: quiz.hasPlayedToday) { showingQuiz = true }
+                .padding(.trailing, hasSideTabBar ? Self.sideBarInset : Self.bottomBarInset)
+                .padding(.bottom, hasSideTabBar ? Self.sideBarBottom : Self.bottomBarBottom)
+                .ignoresSafeArea(.container, edges: .bottom)
         }
         .sheet(isPresented: $showingQuiz) {
             QuizView()
@@ -104,6 +83,39 @@ struct RootView: View {
         }
         // Times everywhere follow the 12/24-hour choice.
         .environment(\.locale, DisplaySettings.locale)
+    }
+}
+
+
+extension RootView {
+    // Where the round button sits. Trailing follows the language direction, so it moves to the
+    // left side in Arabic along with the tab bar.
+    /// Phones: level with the floating tab bar, at its trailing end.
+    static let bottomBarInset: CGFloat = 20
+    static let bottomBarBottom: CGFloat = 26
+    /// Open iPhone Duo: under the tab bar that runs down the right edge.
+    static let sideBarInset: CGFloat = 20
+    static let sideBarBottom: CGFloat = 26
+}
+
+/// Skymoji Daily's round glass button: an orange question bubble while today's quiz waits,
+/// a check once it's done.
+struct DailyQuizButton: View {
+    let hasPlayedToday: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: hasPlayedToday ? "checkmark.bubble.fill" : "questionmark.bubble.fill")
+                .font(.system(size: 22, weight: .semibold))
+                .foregroundStyle(hasPlayedToday ? Color.primary : Color.orange)
+                .frame(width: 58, height: 58)
+                .contentShape(.circle)
+        }
+        .buttonStyle(.plain)
+        .glassEffect(.regular.interactive(), in: .circle)
+        .accessibilityLabel(Text("Daily"))
+        .accessibilityHint(Text(hasPlayedToday ? "Today's quiz is done" : "Play today's quiz"))
     }
 }
 
