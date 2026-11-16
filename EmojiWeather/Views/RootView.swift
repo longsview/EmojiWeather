@@ -109,7 +109,9 @@ extension RootView {
                     quizButton
                 }
                 .padding(.horizontal, 16)
-                .padding(.bottom, 4)
+                // Down into the home-indicator area, where the system tab bar sits (about
+                // 21 points from the bottom edge).
+                .offset(y: 16)
             }
         }
     }
@@ -120,13 +122,22 @@ extension RootView {
 struct RoomForTabBar: ViewModifier {
     let side: Bool
 
-    /// The capsule is 60 points tall (or wide) plus a little breathing room.
-    static let thickness: CGFloat = 72
+    /// How far content keeps clear: along the bottom, the 60-point capsule sits partly in the
+    /// home-indicator area, so less is needed than down the side.
+    static let bottomRoom: CGFloat = 52
+    static let sideRoom: CGFloat = 84
 
+    // Clear spacers rather than safeAreaPadding: Lists (Settings) ignore safe-area padding but
+    // honour insets.
     func body(content: Content) -> some View {
         content
             .toolbarVisibility(.hidden, for: .tabBar)
-            .safeAreaPadding(side ? .trailing : .bottom, Self.thickness)
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                if !side { Color.clear.frame(height: Self.bottomRoom).allowsHitTesting(false) }
+            }
+            .safeAreaInset(edge: .trailing, spacing: 0) {
+                if side { Color.clear.frame(width: Self.sideRoom).allowsHitTesting(false) }
+            }
     }
 }
 
