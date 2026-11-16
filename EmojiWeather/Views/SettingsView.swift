@@ -157,6 +157,9 @@ struct SettingsView: View {
             } message: {
                 Text(verbatim: restoreMessage ?? "")
             }
+            // The NavigationStack keeps the tab's insets from reaching the Form, so make room
+            // for the hand-drawn tab bar here.
+            .modifier(ListRoomForTabBar())
             .onChange(of: animateScenes) { WatchSync.shared.send() }
             .onChange(of: temperature) { WidgetCenter.shared.reloadAllTimelines() }
             .onChange(of: clock) { WidgetCenter.shared.reloadAllTimelines() }
