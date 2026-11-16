@@ -153,7 +153,9 @@ struct ListRoomForTabBar: ViewModifier {
         // Only the bar's edge is changed, so the Form keeps its usual margins elsewhere.
         if sizeClass == .regular && UIDevice.current.userInterfaceIdiom == .phone {
             content
-                .contentMargins(.trailing, RoomForTabBar.sideRoom + trailingSafeArea, for: .scrollContent)
+                // Plus a little extra when the status-bar column is on this side, to match the gap
+                // on the other side (right-to-left).
+                .contentMargins(.trailing, RoomForTabBar.sideRoom + (trailingSafeArea > 0 ? trailingSafeArea + 12 : 0), for: .scrollContent)
                 .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.trailing } action: { trailingSafeArea = $0 }
         } else {
             content.contentMargins(.bottom, RoomForTabBar.bottomRoom + 16, for: .scrollContent)
