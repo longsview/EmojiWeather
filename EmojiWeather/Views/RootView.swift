@@ -145,11 +145,16 @@ struct RoomForTabBar: ViewModifier {
 /// insets: content margins on the scrolling content instead.
 struct ListRoomForTabBar: ViewModifier {
     @Environment(\.horizontalSizeClass) private var sizeClass
+    /// The open Duo's status-bar column, when it's on the bar's side: the bar sits inside it,
+    /// but the Form's margins are measured from the screen edge.
+    @State private var trailingSafeArea: CGFloat = 0
 
     func body(content: Content) -> some View {
         // Only the bar's edge is changed, so the Form keeps its usual margins elsewhere.
         if sizeClass == .regular && UIDevice.current.userInterfaceIdiom == .phone {
-            content.contentMargins(.trailing, RoomForTabBar.sideRoom, for: .scrollContent)
+            content
+                .contentMargins(.trailing, RoomForTabBar.sideRoom + trailingSafeArea, for: .scrollContent)
+                .onGeometryChange(for: CGFloat.self) { $0.safeAreaInsets.trailing } action: { trailingSafeArea = $0 }
         } else {
             content.contentMargins(.bottom, RoomForTabBar.bottomRoom + 16, for: .scrollContent)
         }
