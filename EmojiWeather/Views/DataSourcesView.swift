@@ -15,6 +15,17 @@ struct DataSourcesView: View {
             }
 
             Section {
+                Link(destination: URL(string: "https://www.weather.gov")!) {
+                    Label("National Weather Service (NOAA)", systemImage: "antenna.radiowaves.left.and.right")
+                }
+                Text("In the US, the weather map's radar layer and the forecast's Local forecast card come from the National Weather Service, a US government source in the public domain.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            } header: {
+                Text("Radar and local forecasts")
+            }
+
+            Section {
                 Link(destination: URL(string: "https://www.geonames.org")!) {
                     Label("GeoNames", systemImage: "globe")
                 }

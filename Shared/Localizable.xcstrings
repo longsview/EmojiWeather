@@ -715,6 +715,46 @@
         }
       }
     },
+    "In the US, the weather map's radar layer and the forecast's Local forecast card come from the National Weather Service, a US government source in the public domain." : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "في الولايات المتحدة، تأتي طبقة الرادار في خريطة الطقس وبطاقة التوقعات المحلية من خدمة الأرصاد الجوية الوطنية، وهي مصدر حكومي أمريكي في الملك العام."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En EE. UU., la capa de radar del mapa del tiempo y la tarjeta Pronóstico local provienen del Servicio Meteorológico Nacional, una fuente del Gobierno de EE. UU. de dominio público."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aux États-Unis, la couche radar de la carte météo et la carte Prévisions locales proviennent du National Weather Service, une source du gouvernement américain du domaine public."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "米国では、天気マップのレーダー表示と予報の「地域の予報」カードは、パブリックドメインである米国政府の情報源、米国立気象局のデータです。"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nos EUA, a camada de radar do mapa do tempo e o cartão Previsão local vêm do Serviço Nacional de Meteorologia, uma fonte do governo dos EUA em domínio público."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在美国，天气地图的雷达图层和预报中的“本地预报”卡片来自美国国家气象局，属于公有领域的美国政府数据。"
+          }
+        }
+      }
+    },
     "Local forecast" : {
       "localizations" : {
         "ar" : {
@@ -751,6 +791,46 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "本地预报"
+          }
+        }
+      }
+    },
+    "National Weather Service (NOAA)" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "خدمة الأرصاد الجوية الوطنية (NOAA)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Servicio Meteorológico Nacional (NOAA)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "National Weather Service (NOAA)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "米国立気象局（NOAA）"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Serviço Nacional de Meteorologia (NOAA)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "美国国家气象局（NOAA）"
           }
         }
       }
@@ -831,6 +911,206 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "未来%lld小时"
+          }
+        }
+      }
+    },
+    "Off" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إيقاف"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desactivado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Désactivé"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オフ"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desativado"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关"
+          }
+        }
+      }
+    },
+    "On" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تشغيل"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activado"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activé"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オン"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ativado"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "开"
+          }
+        }
+      }
+    },
+    "Radar" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الرادار"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radar"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レーダー"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radar"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "雷达"
+          }
+        }
+      }
+    },
+    "Radar and local forecasts" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الرادار والتوقعات المحلية"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radar y pronósticos locales"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radar et prévisions locales"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レーダーと地域の予報"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radar e previsões locais"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "雷达和本地预报"
+          }
+        }
+      }
+    },
+    "Radar: NOAA/National Weather Service" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الرادار: NOAA/خدمة الأرصاد الجوية الوطنية"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radar: NOAA/Servicio Meteorológico Nacional"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radar : NOAA/National Weather Service"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "レーダー：NOAA/米国立気象局"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Radar: NOAA/Serviço Nacional de Meteorologia"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "雷达：NOAA/美国国家气象局"
           }
         }
       }
