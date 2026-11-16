@@ -54,25 +54,30 @@ struct RootView: View {
             Tab("Weather", systemImage: "sun.max.fill", value: AppTab.weather) {
                 HomeView(isVisible: tab == .weather)
                     .id(displayKey)
+                    .toolbarVisibility(.hidden, for: .tabBar)
             }
             Tab("Map", systemImage: "map.fill", value: AppTab.map) {
                 MapTab()
                     .id(displayKey)
+                    .toolbarVisibility(.hidden, for: .tabBar)
             }
             Tab("Settings", systemImage: "gearshape.fill", value: AppTab.settings) {
                 SettingsView()
+                    .toolbarVisibility(.hidden, for: .tabBar)
             }
         }
-        .overlay(alignment: .bottomTrailing) {
-            DailyQuizButton(hasPlayedToday: quiz.hasPlayedToday) { showingQuiz = true }
-                .padding(.trailing, hasSideTabBar ? Self.sideBarInset : Self.bottomBarInset)
-                .padding(.bottom, hasSideTabBar ? Self.sideBarBottom : Self.bottomBarBottom)
-                .ignoresSafeArea(.container, edges: .bottom)
+        // The system tab bar is hidden and drawn by hand, so the quiz's round button can sit
+        // beside it on every iPhone width (the system bar stays centred and leaves no room on
+        // 390-point phones). Insets rather than overlays, so content stays clear of it.
+        .safeAreaInset(edge: .bottom, spacing: 0) {
+            if !hasSideTabBar { navigationBar(vertical: false) }
+        }
+        .safeAreaInset(edge: .trailing, spacing: 0) {
+            if hasSideTabBar { navigationBar(vertical: true) }
         }
         .sheet(isPresented: $showingQuiz) {
             QuizView()
         }
-        .tabBarMinimizeBehavior(.never)
         .onChange(of: tab) { _, newTab in
             if newTab == .map { AppAnalytics.log(.mapOpened) }
         }
@@ -88,14 +93,84 @@ struct RootView: View {
 
 
 extension RootView {
-    // Where the round button sits. Trailing follows the language direction, so it moves to the
-    // left side in Arabic along with the tab bar.
-    /// Phones: level with the floating tab bar, at its trailing end.
-    static let bottomBarInset: CGFloat = 20
-    static let bottomBarBottom: CGFloat = 26
-    /// Open iPhone Duo: under the tab bar that runs down the right edge.
-    static let sideBarInset: CGFloat = 20
-    static let sideBarBottom: CGFloat = 26
+    /// The glass tab bar and the quiz's round button: side by side along the bottom on phones,
+    /// stacked down the right edge (left in right-to-left languages) on the open iPhone Duo.
+    @ViewBuilder
+    func navigationBar(vertical: Bool) -> some View {
+        let quizButton = DailyQuizButton(hasPlayedToday: quiz.hasPlayedToday) { showingQuiz = true }
+        GlassEffectContainer(spacing: 12) {
+            if vertical {
+                VStack(spacing: 12) {
+                    GlassTabBar(selection: $tab, vertical: true)
+                    quizButton
+                }
+                .padding(.trailing, 12)
+                .frame(maxHeight: .infinity)
+            } else {
+                HStack(spacing: 10) {
+                    GlassTabBar(selection: $tab, vertical: false)
+                    quizButton
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 4)
+                .frame(maxWidth: .infinity)
+            }
+        }
+    }
+}
+
+/// Weather, Map and Settings in one Liquid Glass capsule, like the system tab bar.
+struct GlassTabBar: View {
+    @Binding var selection: RootView.AppTab
+    let vertical: Bool
+
+    private struct Item {
+        let tab: RootView.AppTab
+        let title: LocalizedStringKey
+        let symbol: String
+    }
+
+    private let items = [
+        Item(tab: .weather, title: "Weather", symbol: "sun.max.fill"),
+        Item(tab: .map, title: "Map", symbol: "map.fill"),
+        Item(tab: .settings, title: "Settings", symbol: "gearshape.fill"),
+    ]
+
+    var body: some View {
+        let layout = vertical ? AnyLayout(VStackLayout(spacing: 2)) : AnyLayout(HStackLayout(spacing: 2))
+        layout {
+            ForEach(items, id: \.tab) { item in
+                Button {
+                    selection = item.tab
+                } label: {
+                    VStack(spacing: 2) {
+                        Image(systemName: item.symbol)
+                            .font(.system(size: 19, weight: .semibold))
+                            .frame(height: 24)
+                        Text(item.title)
+                            .font(.system(size: 10, weight: .semibold))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                    }
+                    .foregroundStyle(selection == item.tab ? Color.accentColor : Color.primary)
+                    .frame(width: 72, height: 52)
+                    .background {
+                        if selection == item.tab {
+                            Capsule().fill(Color.primary.opacity(0.08))
+                        }
+                    }
+                    .contentShape(.capsule)
+                }
+                .buttonStyle(.plain)
+                .accessibilityAddTraits(selection == item.tab ? [.isSelected, .isButton] : .isButton)
+            }
+        }
+        .padding(4)
+        .glassEffect(.regular.interactive(), in: .capsule)
+        .accessibilityElement(children: .contain)
+        .accessibilityAddTraits(.isTabBar)
+        .sensoryFeedback(.selection, trigger: selection)
+    }
 }
 
 /// Skymoji Daily's round glass button: an orange question bubble while today's quiz waits,
@@ -109,7 +184,7 @@ struct DailyQuizButton: View {
             Image(systemName: hasPlayedToday ? "checkmark.bubble.fill" : "questionmark.bubble.fill")
                 .font(.system(size: 22, weight: .semibold))
                 .foregroundStyle(hasPlayedToday ? Color.primary : Color.orange)
-                .frame(width: 58, height: 58)
+                .frame(width: 60, height: 60)
                 .contentShape(.circle)
         }
         .buttonStyle(.plain)
