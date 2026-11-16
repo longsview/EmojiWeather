@@ -155,7 +155,8 @@ final class LocalForecastService {
     }
 
     private func fetch(latitude: Double, longitude: Double) async -> FetchResult {
-        let point = String(format: "%.4f,%.4f", latitude, longitude)
+        // About 1 km is plenty: Weather Service grid squares are 2.5 km, so this shares less.
+        let point = String(format: "%.2f,%.2f", latitude, longitude)
         guard let pointURL = URL(string: "https://api.weather.gov/points/\(point)") else { return .failed }
         let pointsResult: Response<PointsResponse> = await get(pointURL)
         let points: PointsResponse
